@@ -49,6 +49,9 @@ public class HealthPortal extends Application
 	NurseMessagePortal nurseMesPortal = new NurseMessagePortal();
 	NurseSendMessage nurseSendMessage = new NurseSendMessage();
 	NurseMessageConfirmation nurseMessageConf = new NurseMessageConfirmation();
+
+	//need to keep track of the current user that is logged in
+	int currUser;
 	
 	public void start(Stage stage) 
 	{
