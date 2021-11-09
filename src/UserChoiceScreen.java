@@ -1,8 +1,7 @@
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -20,12 +19,15 @@ public class UserChoiceScreen extends StackPane
     private Button next;
     private StackPane root;
     private int currUser;
+    public Label errorLabel;
 
     //user choice screen constructor
     public UserChoiceScreen(StackPane rootPane, int user)
     {
         root = rootPane;
         currUser = user;
+
+        errorLabel = new Label();
 
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);

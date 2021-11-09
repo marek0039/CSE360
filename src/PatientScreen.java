@@ -10,6 +10,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import javafx.scene.control.*;
 
 public class PatientScreen extends StackPane
 {
@@ -20,12 +21,14 @@ public class PatientScreen extends StackPane
     private Button next, back;
     private StackPane root;
     private int currUser;
+    public Label errorLabel;
 
     public PatientScreen(StackPane rootPane, int user)
     {
         root = rootPane;
         currUser = user;
 
+        errorLabel = new Label();
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 

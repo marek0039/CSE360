@@ -1,6 +1,7 @@
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.layout.StackPane;
+import javafx.scene.paint.Color;
 
 public class ForwardButton implements EventHandler<ActionEvent>
 {
@@ -66,38 +67,49 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 break;
             case 2: //next button on user choice screen
                 //always remove the user choice screen first
-                root.getChildren().clear();
                 //check if the user chose patient or med professional
                 //based on combobox input using selectUser class
-                if(userChoice.menu.getValue() == "Patient")
+                //but first check if there is any input at all, if not prompt them to
+                //select a choice first using error label
+                if(userChoice.menu.getValue() == null)
                 {
-                    //if they chose patient add the patient choice screen
-                    root.getChildren().add(ps);
+                   userChoice.errorLabel.setText("Please select a user type before continuing.");
+                   userChoice.errorLabel.setTextFill(Color.RED);
                 }
-                else if(userChoice.menu.getValue() == "Medical Professional")
+                else
                 {
-                    //if they chose med prof add the med prof log on screen
-                    root.getChildren().add(mpls);
+                    if (userChoice.menu.getValue() == "Patient")
+                    {
+                        //if they chose patient add the patient choice screen
+                        root.getChildren().clear();
+                        root.getChildren().add(ps);
+                    }
+                    else if (userChoice.menu.getValue() == "Medical Professional")
+                    {
+                        //if they chose med prof add the med prof log on screen
+                        root.getChildren().clear();
+                        root.getChildren().add(mpls);
+                    }
                 }
-
-                //CONDITION FOR IF USER DOESNT SELECT ANYTHING.. ERROR HANDLING
-
                 break;
             case 3: //Next button on patient choice screen
                 //check if they chose new or existing patient
                 //always remove previous pane first
-                root.getChildren().clear();
                 if(ps.three.isSelected())
                 {
+                    root.getChildren().clear();
                     root.getChildren().add(newPForm);
                 }
                 else if(ps.four.isSelected())
                 {
+                    root.getChildren().clear();
                     root.getChildren().add(eplo);
                 }
-
-                //CONDITION FOR IF USER DOESNT SELECT ANYTHING.. ERROR HANDLING
-
+                else //if the user didn't choose new or existing, display the error label and don't move forward
+                {
+                    ps.errorLabel.setText("Please select if you are a new or existing patient to continue.");
+                    ps.errorLabel.setTextFill(Color.RED);
+                }
                 break;
             case 4: //back button on new patient form screen OR existing patient log on screen
                 //both go to patient choice screen
