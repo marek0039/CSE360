@@ -17,17 +17,6 @@ public class HealthPortal extends Application
 	
 	//home screen and user choice panes displayed to all
 	//patient guis
-	PatientScreen ps = new PatientScreen();
-	NewPatientForm newPForm = new NewPatientForm();
-	ExistingPLogOn eplo = new ExistingPLogOn();
-	NewPatientConfirmation newPConf = new NewPatientConfirmation();
-	ExistingPatientPortal epp = new ExistingPatientPortal();
-	PatientUpdateInfo pUpdateInfo = new PatientUpdateInfo();
-	UpdateInfoConfirmation updateInfoConf = new UpdateInfoConfirmation();
-	PatientSummary pSummary = new PatientSummary();
-	PatientMessagePortal pMesPortal = new PatientMessagePortal();
-	PatientSendMessage pSendMes = new PatientSendMessage();
-	PatientMessageConfirmation pMesConf = new PatientMessageConfirmation();
 
 	//medical professional guis
 	MedProfLoginScreen mpls = new MedProfLoginScreen();

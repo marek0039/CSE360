@@ -8,6 +8,18 @@ public class ForwardButton implements EventHandler<ActionEvent>
     //on what button is being pushed on what screen
     int cI;
     StackPane root;
+    UserChoiceScreen userChoice = new UserChoiceScreen(root);
+    PatientScreen ps = new PatientScreen(root);
+	NewPatientForm newPForm = new NewPatientForm(root);
+	ExistingPLogOn eplo = new ExistingPLogOn(root);
+	NewPatientConfirmation newPConf = new NewPatientConfirmation(root);
+	ExistingPatientPortal epp = new ExistingPatientPortal(root);
+	PatientUpdateInfo pUpdateInfo = new PatientUpdateInfo(root);
+	UpdateInfoConfirmation updateInfoConf = new UpdateInfoConfirmation(root);
+	PatientSummary pSummary = new PatientSummary(root);
+	PatientMessagePortal pMesPortal = new PatientMessagePortal(root);
+	PatientSendMessage pSendMes = new PatientSendMessage(root);
+	PatientMessageConfirmation pMesConf = new PatientMessageConfirmation(root);
 
     public ForwardButton(int caseInt, StackPane pane)
     {
@@ -19,7 +31,6 @@ public class ForwardButton implements EventHandler<ActionEvent>
     //Override the abstract method handle()
     public void handle(ActionEvent event)
     {
-        UserChoiceScreen userChoice = new UserChoiceScreen(root);
         switch(cI)
         {
             case 1: //start button on first page OR
