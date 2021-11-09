@@ -13,6 +13,7 @@ import javafx.scene.text.Text;
 
 public class ExistingPLogOn extends StackPane
 {
+    // Test 123
     //attributes of this class to be displayed on the pane
     private Color mainColor;
     private Text title, label, fName, lName, dob;
