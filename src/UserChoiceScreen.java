@@ -1,5 +1,6 @@
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Cursor;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.layout.*;
@@ -18,11 +19,14 @@ public class UserChoiceScreen extends StackPane
     public ComboBox menu;
     private Button next;
     private StackPane root;
+    private int currUser;
 
     //user choice screen constructor
-    public UserChoiceScreen(StackPane rootPane)
+    public UserChoiceScreen(StackPane rootPane, int user)
     {
         root = rootPane;
+        currUser = user;
+
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -56,7 +60,7 @@ public class UserChoiceScreen extends StackPane
         next = new Button("Next");
         //add forward method to handle where this button takes the user
         //this is case 2 in the switch statement for forward
-        ForwardButton handler = new ForwardButton(2, root);
+        ForwardButton handler = new ForwardButton(2, root, currUser);
         next.setOnAction(handler);
 
         //add combobox and button to the horizontal pane to be side

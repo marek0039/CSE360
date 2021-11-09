@@ -6,26 +6,48 @@ public class ForwardButton implements EventHandler<ActionEvent>
 {
     //int to store which case of forwarding we're on based
     //on what button is being pushed on what screen
-    int cI;
-    StackPane root;
-    UserChoiceScreen userChoice = new UserChoiceScreen(root);
-    PatientScreen ps = new PatientScreen(root);
-	NewPatientForm newPForm = new NewPatientForm(root);
-	ExistingPLogOn eplo = new ExistingPLogOn(root);
-	NewPatientConfirmation newPConf = new NewPatientConfirmation(root);
-	ExistingPatientPortal epp = new ExistingPatientPortal(root);
-	PatientUpdateInfo pUpdateInfo = new PatientUpdateInfo(root);
-	UpdateInfoConfirmation updateInfoConf = new UpdateInfoConfirmation(root);
-	PatientSummary pSummary = new PatientSummary(root);
-	PatientMessagePortal pMesPortal = new PatientMessagePortal(root);
-	PatientSendMessage pSendMes = new PatientSendMessage(root);
-	PatientMessageConfirmation pMesConf = new PatientMessageConfirmation(root);
+    private int cI;
+    private StackPane root;
+    private int currUser;
 
-    public ForwardButton(int caseInt, StackPane pane)
+    //patient guis
+    private UserChoiceScreen userChoice;
+    private PatientScreen ps;
+	private NewPatientForm newPForm;
+	private ExistingPLogOn eplo;
+	private NewPatientConfirmation newPConf;
+	private ExistingPatientPortal epp;
+	private PatientUpdateInfo pUpdateInfo;
+	private UpdateInfoConfirmation updateInfoConf;
+	private PatientSummary pSummary;
+	private PatientMessagePortal pMesPortal;
+	private PatientSendMessage pSendMes;
+	private PatientMessageConfirmation pMesConf;
+
+    //medical professional guis
+	MedProfLoginScreen mpls;
+	DocSelectPatient docSelPatient;
+	DocPatientSummary docSummary;
+	DocMemoConfirmation docMemoConf;
+	DocMessagePortal docMesPortal;
+	DocSendMessage docSendMessage;
+	DocMessageConfirmation docMessageConf;
+	NurseSelectPatient nurseSelect;
+	NurseCreatePatient nurseCreatePatient;
+	NurseCreatePatientConfirmation nurseCreateConf;
+	NurseVitals nurseVitals;
+	NurseVitalsConfirmation nurseVitalsConf;
+	NursePatientSummary nurseSummary;
+	NurseMessagePortal nurseMesPortal;
+	NurseSendMessage nurseSendMessage;
+	NurseMessageConfirmation nurseMessageConf;
+
+    public ForwardButton(int caseInt, StackPane pane, int user)
     {
 
         cI = caseInt;
         root = pane;
+        currUser = user;
     }
 
     //Override the abstract method handle()
@@ -38,6 +60,7 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 //all of them take you back to the user choice screen
                 //remove the previous pane from the root
                 root.getChildren().clear();
+                userChoice = new UserChoiceScreen(root, currUser);
                 //add the user choice pane to the root because that is the next screen
                 root.getChildren().add(userChoice);
                 break;

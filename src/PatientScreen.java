@@ -19,10 +19,13 @@ public class PatientScreen extends StackPane
     public RadioButton one, two, three, four;
     private Button next, back;
     private StackPane root;
+    private int currUser;
 
-    public PatientScreen(StackPane rootPane)
+    public PatientScreen(StackPane rootPane, int user)
     {
         root = rootPane;
+        currUser = user;
+
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -68,12 +71,12 @@ public class PatientScreen extends StackPane
         next = new Button("Next");
         //next button forward event handler, case 3, go to either existing patient
         //log on screen or new patient form screen
-        ForwardButton handler1 = new ForwardButton(3, root);
+        ForwardButton handler1 = new ForwardButton(3, root, currUser);
         next.setOnAction(handler1);
 
         back = new Button("Back");
         //back button forward event handler, case 1, go back to user choice screen
-        ForwardButton handler2 = new ForwardButton(1, root);
+        ForwardButton handler2 = new ForwardButton(1, root, currUser);
         back.setOnAction(handler2);
 
         //vertical pane to hold the various buttons and their questions
