@@ -17,9 +17,8 @@ public class NurseMessagePortal extends StackPane
     private StackPane root;
     private int currUser;
 
-    public NurseMessagePortal(StackPane rootPane, int user)
+    public NurseMessagePortal(int user)
     {
-        root = rootPane;
         currUser = user;
 
         //establish color Falu Red as done on home screen

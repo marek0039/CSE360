@@ -17,12 +17,10 @@ public class MedProfLoginScreen extends StackPane
     private Text title, label, username, password;
     private TextField uNameField, passField;
     private Button login, back;
-    private StackPane root;
     private int currUser;
 
-    public MedProfLoginScreen(StackPane rootPane, int user)
+    public MedProfLoginScreen(int user)
     {
-        root = rootPane;
         currUser = user;
 
         //establish color Falu Red as done on home screen

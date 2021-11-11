@@ -18,12 +18,10 @@ public class PatientUpdateInfo extends StackPane
     private TextField mailField1, mailField2, mailField3, mailField4;
     private TextArea medHisField;
     private Button submit, back;
-    private StackPane root;
     private int currUser;
 
-    public PatientUpdateInfo(StackPane root1, int user)
+    public PatientUpdateInfo(int user)
     {
-        root = root1;
         currUser = user;
 
         //establish color Falu Red as done on home screen
@@ -120,13 +118,13 @@ public class PatientUpdateInfo extends StackPane
         submit = new Button("Submit");
         //forward event handler for submit button after patient had updated
         //their personal information, they will be taken to confirmation page, case 10
-        ForwardButton handler1 = new ForwardButton(10,root,currUser);
+        ForwardButton handler1 = new ForwardButton(10,currUser);
         submit.setOnAction(handler1);
 
         back = new Button("Patient Menu");
         //forward event handler for the back button takes user back to existing
         //patient portal screen, case 11
-        ForwardButton handler2 = new ForwardButton(11,root,currUser);
+        ForwardButton handler2 = new ForwardButton(11,currUser);
         back.setOnAction(handler2);
 
         //Vertical panes to store each field with its title

@@ -18,9 +18,8 @@ public class ExistingPatientPortal extends StackPane
     private StackPane root;
     private int currUser;
 
-    public ExistingPatientPortal(StackPane rootPane, int user)
+    public ExistingPatientPortal(int user)
     {
-        root = rootPane;
         currUser = user;
 
         //establish color Falu Red as done on home screen

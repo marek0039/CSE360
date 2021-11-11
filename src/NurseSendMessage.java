@@ -17,12 +17,10 @@ public class NurseSendMessage extends StackPane
     private Text title, welcome, patient, dob, directions;
     private TextArea message;
     private Button send, back;
-    private StackPane root;
     private int currUser;
 
-    public NurseSendMessage(StackPane rootPane, int user)
+    public NurseSendMessage(int user)
     {
-        root = rootPane;
         currUser = user;
 
         //establish color Falu Red as done on home screen

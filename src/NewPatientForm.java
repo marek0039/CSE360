@@ -18,11 +18,10 @@ public class NewPatientForm extends StackPane
     public DatePicker dobPicker;
     private ComboBox doctorsList;
     private Button submit, back;
-    private StackPane root;
     private int currUser;
     public Label errorLabel;
 
-    public NewPatientForm(StackPane rootPane, int user)
+    public NewPatientForm(int user)
     {
         root = rootPane;
         currUser = user;
@@ -177,12 +176,12 @@ public class NewPatientForm extends StackPane
         //these will be handled in the event handlers for these buttons
         submit = new Button("Submit");
         //forward event handler for submit button, case 5, takes user to confirmation page
-        ForwardButton handler1 = new ForwardButton(5, root, currUser);
+        ForwardButton handler1 = new ForwardButton(5, currUser);
         submit.setOnAction(handler1);
 
         back = new Button("Back");
         //forward event handler for back button, case 4, takes user back to patient choice screen
-        ForwardButton handler2 = new ForwardButton(4, root, currUser);
+        ForwardButton handler2 = new ForwardButton(4, currUser);
         back.setOnAction(handler2);
 
         //vertical panes to attach the text element to it's corresponding

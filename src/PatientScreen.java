@@ -19,13 +19,11 @@ public class PatientScreen extends StackPane
     private Text title, welcome, question1, question2;
     public RadioButton one, two, three, four;
     private Button next, back;
-    private StackPane root;
     private int currUser;
     public Label errorLabel;
 
-    public PatientScreen(StackPane rootPane, int user)
+    public PatientScreen(int user)
     {
-        root = rootPane;
         currUser = user;
 
         errorLabel = new Label();
@@ -74,12 +72,12 @@ public class PatientScreen extends StackPane
         next = new Button("Next");
         //next button forward event handler, case 3, go to either existing patient
         //log on screen or new patient form screen
-        ForwardButton handler1 = new ForwardButton(3, root, currUser);
+        ForwardButton handler1 = new ForwardButton(3, currUser);
         next.setOnAction(handler1);
 
         back = new Button("Back");
         //back button forward event handler, case 1, go back to user choice screen
-        ForwardButton handler2 = new ForwardButton(1, root, currUser);
+        ForwardButton handler2 = new ForwardButton(1, currUser);
         back.setOnAction(handler2);
 
         //vertical pane to hold the various buttons and their questions
