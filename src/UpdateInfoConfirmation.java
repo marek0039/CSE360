@@ -15,12 +15,9 @@ public class UpdateInfoConfirmation extends StackPane
     private Color mainColor;
     private Text title, welcome, dob, confirmation;
     private Button summary, back;
-    private int currUser;
 
-    public UpdateInfoConfirmation(int user)
+    public UpdateInfoConfirmation()
     {
-        currUser = user;
-
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -49,14 +46,14 @@ public class UpdateInfoConfirmation extends StackPane
         //page incase they need to go back to a field
         summary = new Button("Summary");
         //forward event handler for taking patient to view summary
-        //after theyve updated their contact information, case 12
-        ForwardButton handler1 = new ForwardButton(12,currUser);
+        //after theyve updated their contact information, case 9
+        ForwardButton handler1 = new ForwardButton(9);
         summary.setOnAction(handler1);
 
         back = new Button("Patient Menu");
         //forward event handler for back button takes user to
-        //update the existing patient portal home screen
-        ForwardButton handler2 = new ForwardButton(11,currUser);
+        //update the existing patient portal home screen, case 5
+        ForwardButton handler2 = new ForwardButton(5);
         back.setOnAction(handler2);
 
         //Vertical pane to put the patient's name and dob stacked

@@ -15,12 +15,9 @@ public class NursePatientSummary extends StackPane
     private Text date1, date2, height, weight, bloodPressure, bodyTemp, allergies, prescription;
     private Text height2, weight2, bloodPressure2, bodyTemp2, allergies2, prescription2;
     private Button back, go;
-    private int currUser;
 
-    public NursePatientSummary(int user)
+    public NursePatientSummary()
     {
-        currUser = user;
-
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 

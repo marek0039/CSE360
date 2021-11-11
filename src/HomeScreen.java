@@ -15,13 +15,10 @@ public class HomeScreen extends StackPane
     private Color mainColor;
     private Text title, log;
     private Button start;
-    private int currUser;
 
     //home screen constructor
-    public HomeScreen(int user)
+    public HomeScreen()
     {
-        currUser = user;
-
         //set the color with it's rgb value
         //color name is "Falu Red" or #802020 in hex
         mainColor = Color.rgb(128,32,32);
@@ -53,8 +50,8 @@ public class HomeScreen extends StackPane
         //when pressed
         start = new Button("Start");
         //Button handler object to take care of the event that
-        //the user presses the start button
-        ForwardButton handler = new ForwardButton(1, root, currUser);
+        //the user presses the start button, case is 1
+        ForwardButton handler = new ForwardButton(1);
         start.setOnAction(handler);
 
         //add the title to the vertical pane

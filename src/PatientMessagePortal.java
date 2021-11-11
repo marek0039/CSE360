@@ -14,12 +14,9 @@ public class PatientMessagePortal extends StackPane
     private Color mainColor;
     private Text title, welcome, dob, prevMessages, message1, message2;
     private Button sendMessage, back;
-    private int currUser;
 
-    public PatientMessagePortal(int user)
+    public PatientMessagePortal()
     {
-        currUser = user;
-
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -48,14 +45,14 @@ public class PatientMessagePortal extends StackPane
         //button takes them back if they just wanted to read old messages
         sendMessage = new Button("Send Message");
         //forward event handler for the patient to go to the message screen
-        //where they can actually type out and send their message
-        ForwardButton handler1 = new ForwardButton(14,currUser);
+        //where they can actually type out and send their message, case 11
+        ForwardButton handler1 = new ForwardButton(11);
         sendMessage.setOnAction(handler1);
 
         back = new Button("Patient Menu");
         //forward event handler for the back button takes user back to existing
-        //patient portal screen, case 11
-        ForwardButton handler2 = new ForwardButton(11,currUser);
+        //patient portal screen, case 5
+        ForwardButton handler2 = new ForwardButton(5);
         back.setOnAction(handler2);
 
         //text objects for the messages
