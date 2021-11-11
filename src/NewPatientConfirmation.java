@@ -15,14 +15,9 @@ public class NewPatientConfirmation extends StackPane
     private Color mainColor;
     private Text title, welcome, dob, confirmation;
     private Button patientMenu, back;
-    private StackPane root;
-    private int currUser;
 
-    public NewPatientConfirmation(StackPane root1, int user)
+    public NewPatientConfirmation()
     {
-        root = root1;
-        currUser = user;
-
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -50,14 +45,14 @@ public class NewPatientConfirmation extends StackPane
         //inputted information, and back takes them back to the new patient form
         //page incase they need to go back to a field
         patientMenu = new Button("Patient Menu");
-        //forward event handler for patient menu button, case 7, takes user to existing patient
+        //forward event handler for patient menu button, case 5, takes user to existing patient
         //portal with their information
-        ForwardButton handler1 = new ForwardButton(7,root,currUser);
+        ForwardButton handler1 = new ForwardButton(5);
         patientMenu.setOnAction(handler1);
 
         back = new Button("Back");
-        //back button forward event handler, case 6, go back to new patient form screen
-        ForwardButton handler2 = new ForwardButton(6,root,currUser);
+        //back button forward event handler, case 2, go back to new patient select screen
+        ForwardButton handler2 = new ForwardButton(2);
         back.setOnAction(handler2);
 
         //Vertical pane to put the patient's name and dob stacked

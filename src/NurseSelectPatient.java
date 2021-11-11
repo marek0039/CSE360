@@ -1,3 +1,4 @@
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -10,6 +11,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
+
 public class NurseSelectPatient extends StackPane
 {
     //attributes of this class to be displayed on the pane
@@ -17,13 +24,41 @@ public class NurseSelectPatient extends StackPane
     private Text title, welcome, select, patient, create;
     private ComboBox patientList;
     private Button go, createButton, logout;
-    private StackPane root;
-    private int currUser;
 
-    public NurseSelectPatient(StackPane rootPane, int user)
+    public NurseSelectPatient()
     {
-        root = rootPane;
-        currUser = user;
+        String[] f_name_arr = new String[0];
+        String[] l_name_arr = new String[0];
+        try {
+            Connector connect = new Connector();
+            HealthPortal.statement = connect.getStatement();
+            String getConnection = "SELECT Connection from Professional WHERE ID=" + HealthPortal.currUser;
+            ResultSet rs = HealthPortal.statement.executeQuery(getConnection);
+            int doctorID = 0;
+            if (rs.getRow() == 1) {
+                rs.first();
+                doctorID = rs.getInt("Connection");
+            } else {
+                throw new FailedException("Cannot find User: " + HealthPortal.currUser);
+            }
+            List<String> patient_first_names = new ArrayList<String>();
+            List<String> patient_last_names = new ArrayList<String>();
+            if (doctorID != 0) {
+                String getpatients = "SELECT First_Name, Last_Name FROM Patient WHERE Doctor=" + doctorID;
+                rs = HealthPortal.statement.executeQuery(getpatients);
+                while(rs.next()) {
+                    patient_first_names.add(rs.getString("First_Name"));
+                    patient_last_names.add(rs.getString("Last_Name"));
+                }
+                f_name_arr = patient_first_names.toArray(new String[patient_first_names.size()]);
+                l_name_arr = patient_last_names.toArray(new String[patient_last_names.size()]);
+            }
+            else {
+                throw new FailedException("Did not Find Doctor.") ;
+            }
+        } catch (Exception e) {
+            System.err.print(e);
+        }
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -55,13 +90,27 @@ public class NurseSelectPatient extends StackPane
         //needs to be added from the database
         //dummy list as filler right now
         patientList = new ComboBox();
-        patientList.getItems().addAll("Adam Samler", "Jane Doe", "Johnny Appleseed");
+        String name;
+        for(int i=0; i < f_name_arr.length; i++) {
+            name = f_name_arr[i] + l_name_arr[i];
+            patientList.getItems().add(name);
+        }
 
         //buttons to allow the user to go to the patient's page or log out (back to med prof
         //log in screen) as well as create button to take user to create a new patient
         go = new Button("Go");
         createButton = new Button("Create");
         logout = new Button("Log Out");
+        //when user presses go, they read whatever patient the user selected and goes to there vitals page. Case 24
+        SelectPatientButton handler = new SelectPatientButton(24);
+        go.setOnAction(handler);
+        //when the user presses create, they are sent to the new patient creation form but the nurse vers. Case 22
+        ForwardButton forward1 = new ForwardButton(22);
+        createButton.setOnAction(forward1);
+        //when the user presses Log Out, they are sent back to the medical professional login screen. Case 14
+        ForwardButton forward2 = new ForwardButton(14);
+        logout.setOnAction(forward2);
+
 
         //Vertical pane to put the title and existing patient label together
         VBox titleBox = new VBox(5);
@@ -89,4 +138,23 @@ public class NurseSelectPatient extends StackPane
         //add the border pane to this stack pane
         this.getChildren().add(bp);
     } //end constructor
+
+    private class SelectPatientButton extends ForwardButton {
+
+        private SelectPatientButton(int caseInt) {
+            super(caseInt);
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
+
+            super.handle(event);
+        }
+    }
+
+    private class FailedException extends Exception {
+        private FailedException(String errorMessage) {
+            super(errorMessage);
+        }
+    }
 } //end nurse select patient class

@@ -17,14 +17,9 @@ public class MedProfLoginScreen extends StackPane
     private Text title, label, username, password;
     private TextField uNameField, passField;
     private Button login, back;
-    private StackPane root;
-    private int currUser;
 
-    public MedProfLoginScreen(StackPane rootPane, int user)
+    public MedProfLoginScreen()
     {
-        root = rootPane;
-        currUser = user;
-
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -57,7 +52,7 @@ public class MedProfLoginScreen extends StackPane
         login = new Button("Login");
         back = new Button("Back");
         //back button forward event handler, case 1, go back to user choice screen
-        ForwardButton handler = new ForwardButton(1, root, currUser);
+        ForwardButton handler = new ForwardButton(1);
         back.setOnAction(handler);
 
         //Vertical pane to put the title and existing patient label together

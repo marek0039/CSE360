@@ -15,14 +15,9 @@ public class ExistingPatientPortal extends StackPane
     private Color mainColor;
     private Text title, welcome, dob, update, view, message;
     private Button go1, go2, go3, back;
-    private StackPane root;
-    private int currUser;
 
-    public ExistingPatientPortal(StackPane rootPane, int user)
+    public ExistingPatientPortal()
     {
-        root = rootPane;
-        currUser = user;
-
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -61,28 +56,28 @@ public class ExistingPatientPortal extends StackPane
         //go3 will go to sending a message to a medical prof.
         //the back button will take them back to the previous screen
         go1 = new Button("Go");
-        //forward event handler for first go button, case 9, takes user to
+        //forward event handler for first go button, case 7, takes user to
         //update their contact info/personal info screen
-        ForwardButton handler1 = new ForwardButton(9, root, currUser);
+        ForwardButton handler1 = new ForwardButton(7);
         go1.setOnAction(handler1);
 
         go2 = new Button("Go");
-        //forward event handler for second go button, case 12, takes user to
+        //forward event handler for second go button, case 9, takes user to
         //view previous visit summary screen
-        ForwardButton handler2 = new ForwardButton(12, root, currUser);
+        ForwardButton handler2 = new ForwardButton(9);
         go2.setOnAction(handler2);
 
         go3 = new Button("Go");
-        //forward event handler for third go button, case 13, takes user to
+        //forward event handler for third go button, case 10, takes user to
         //message portal screen
-        ForwardButton handler3 = new ForwardButton(13, root, currUser);
+        ForwardButton handler3 = new ForwardButton(10);
         go3.setOnAction(handler3);
 
 
         back = new Button("Back");
-        //forward event handler for back button, case 8, takes user back
+        //forward event handler for back button, case 7, takes user back
         //to existing patient log on screen
-        ForwardButton handler4 = new ForwardButton(8, root, currUser);
+        ForwardButton handler4 = new ForwardButton(7);
         back.setOnAction(handler4);
 
         //vertical pane to store all the options and buttons in a stack

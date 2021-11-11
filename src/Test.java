@@ -22,7 +22,7 @@ public class Test {
             int assigned_port=session.setPortForwardingL(client_port, db_host, db_port); //set the port on your machine
             System.out.println("localhost:"+assigned_port+" -> "+db_host+":"+db_port);  //for debugging purposes
 
-            String jdbc_driver = "com.mysql.jdbc.Driver"; //driver to use for sql connection
+            String jdbc_driver = "com.mysql.cj.jdbc.Driver"; //driver to use for sql connection
             String url = "jdbc:mysql://" + db_host + ":" + client_port + "/"; //the sql url to use
             System.setProperty(jdbc_driver,""); //set the driver
 
@@ -30,6 +30,8 @@ public class Test {
             Connection connection = DriverManager.getConnection(url+db, db_user, db_pswd); //connect to sql db
 
             Statement statement = connection.createStatement(); //create a statement which will execute an sql cmd.
+
+            //EXAMPLE OF HOW TO DO A SQL QUERY
             String sql = "SELECT * FROM Patient";  //sql command
             ResultSet rs = statement.executeQuery(sql); //execute the command
             while (rs.next()) { //iterate through the lines generated
