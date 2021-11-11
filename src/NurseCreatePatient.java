@@ -19,6 +19,8 @@ public class NurseCreatePatient extends StackPane
     private TextArea medHisField;
     private DatePicker dobPicker;
     private Button submit, back;
+    private StackPane root;
+    private int currUser;
 
     public NurseCreatePatient(StackPane rootPane, int user)
     {

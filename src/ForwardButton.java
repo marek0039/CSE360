@@ -25,22 +25,22 @@ public class ForwardButton implements EventHandler<ActionEvent>
 	private PatientMessageConfirmation pMesConf;
 
     //medical professional guis
-	MedProfLoginScreen mpls;
-	DocSelectPatient docSelPatient;
-	DocPatientSummary docSummary;
-	DocMemoConfirmation docMemoConf;
-	DocMessagePortal docMesPortal;
-	DocSendMessage docSendMessage;
-	DocMessageConfirmation docMessageConf;
-	NurseSelectPatient nurseSelect;
-	NurseCreatePatient nurseCreatePatient;
-	NurseCreatePatientConfirmation nurseCreateConf;
-	NurseVitals nurseVitals;
-	NurseVitalsConfirmation nurseVitalsConf;
-	NursePatientSummary nurseSummary;
-	NurseMessagePortal nurseMesPortal;
-	NurseSendMessage nurseSendMessage;
-	NurseMessageConfirmation nurseMessageConf;
+	private MedProfLoginScreen mpls;
+	private DocSelectPatient docSelPatient;
+	private DocPatientSummary docSummary;
+	private DocMemoConfirmation docMemoConf;
+	private DocMessagePortal docMesPortal;
+	private DocSendMessage docSendMessage;
+	private DocMessageConfirmation docMessageConf;
+	private NurseSelectPatient nurseSelect;
+    private NurseCreatePatient nurseCreatePatient;
+    private NurseCreatePatientConfirmation nurseCreateConf;
+    private NurseVitals nurseVitals;
+    private NurseVitalsConfirmation nurseVitalsConf;
+    private NursePatientSummary nurseSummary;
+    private NurseMessagePortal nurseMesPortal;
+    private NurseSendMessage nurseSendMessage;
+    private NurseMessageConfirmation nurseMessageConf;
 
     public ForwardButton(int caseInt, StackPane pane, int user)
     {

@@ -17,10 +17,12 @@ public class NurseSelectPatient extends StackPane
     private Text title, welcome, select, patient, create;
     private ComboBox patientList;
     private Button go, createButton, logout;
+    private StackPane root;
+    private int currUser;
 
     public NurseSelectPatient(StackPane rootPane, int user)
     {
-        root =rootPane;
+        root = rootPane;
         currUser = user;
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);

@@ -30,19 +30,16 @@ public class Test {
             Connection connection = DriverManager.getConnection(url+db, db_user, db_pswd); //connect to sql db
 
             Statement statement = connection.createStatement(); //create a statement which will execute an sql cmd.
-            String sql = "SELECT * FROM test";  //sql command
+            String sql = "SELECT * FROM Patient";  //sql command
             ResultSet rs = statement.executeQuery(sql); //execute the command
             while (rs.next()) { //iterate through the lines generated
-                String name = rs.getString("Name"); //store each value...
-                String test_this = rs.getString("This");
-                int test_is = rs.getInt("Is");
-                int test_a = rs.getInt("A");
-                int test = rs.getInt("Test");
+                String name = rs.getString("First_Name"); //store each value...
+                String test_this = rs.getString("Last_Name");
+                int test_is = rs.getInt("PatientID");
                 System.out.println(name);       //and print them out.
                 System.out.println(test_this);
                 System.out.println(test_is);
-                System.out.println(test_a);
-                System.out.println(test);
+                System.out.println("\n");
             }
         } catch(Exception e) {  //catch exceptions
             System.err.print(e);

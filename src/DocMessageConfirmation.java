@@ -15,6 +15,8 @@ public class DocMessageConfirmation extends StackPane
     private Color mainColor;
     private Text title, welcome, patient, dob, confirmation;
     private Button back;
+    private StackPane root;
+    private int currUser;
 
     public DocMessageConfirmation(StackPane rootPane, int user)
     {
