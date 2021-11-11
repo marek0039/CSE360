@@ -214,6 +214,76 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 docSummary = new DocPatientSummary(root, currUser);
                 root.getChildren().add(docSummary);
                 break;
+            case 19:
+                root.getChildren().clear();
+                docSelPatient = new DocSelectPatient(root, currUser);
+                root.getChildren().add(docSelPatient);
+                break;
+            case 20:
+                root.getChildren().clear();
+                docMemoConf = new DocMemoConfirmation(root, currUser);
+                root.getChildren().add(docMemoConf);
+                break;
+            case 21:
+                root.getChildren().clear();
+                docMesPortal = new DocMessagePortal(root, currUser);
+                root.getChildren().add(docMesPortal);
+                break;
+            case 22:
+                root.getChildren().clear();
+                docSendMessage = new DocSendMessage(root, currUser);
+                root.getChildren().add(docSendMessage);
+                break;
+            case 23:
+                root.getChildren().clear();
+                docMessageConf = new DocMessageConfirmation(root, currUser);
+                root.getChildren().add(docMessageConf);
+                break;
+            case 24:
+                root.getChildren().clear();
+                nurseSelect = new NurseSelectPatient(root, currUser);
+                root.getChildren().add(nurseSelect);
+                break;
+            case 25:
+                root.getChildren().clear();
+                nurseCreatePatient = new NurseCreatePatient(root, currUser);
+                root.getChildren().add(nurseCreatePatient);
+                break;
+            case 26:
+                root.getChildren().clear();
+                nurseCreateConf = new NurseCreatePatientConfirmation(root, currUser);
+                root.getChildren().add(nurseCreateConf);
+                break;
+            case 27:
+                root.getChildren().clear();
+                nurseVitals = new NurseVitals(root, currUser);
+                root.getChildren().add(nurseVitals);
+                break;
+            case 28:
+                root.getChildren().clear();
+                nurseVitalsConf = new NurseVitalsConfirmation(root, currUser);
+                root.getChildren().add(nurseVitalsConf);
+                break;
+            case 29:
+                root.getChildren().clear();
+                nurseSummary = new NursePatientSummary(root, currUser);
+                root.getChildren().add(nurseSummary);
+                break;
+            case 30:
+                root.getChildren().clear();
+                nurseMesPortal = new NurseMessagePortal(root, currUser);
+                root.getChildren().add(nurseMesPortal);
+                break;
+            case 31:
+                root.getChildren().clear();
+                nurseSendMessage = new NurseSendMessage(root, currUser);
+                root.getChildren().add(nurseSendMessage);
+                break;
+            case 32:
+                root.getChildren().clear();
+                nurseMessageConf = new NurseMessageConfirmation(root, currUser);
+                root.getChildren().add(nurseMessageConf);
+                break;
         } //end switch
     } //end handle
 } //end forward class
