@@ -13,7 +13,7 @@ import javafx.scene.Scene;
 public class HealthPortal extends Application
 {
 	//main root pane for the whole gui
-	StackPane root = new StackPane();
+	public static StackPane root = new StackPane();
 	
 	//home screen and user choice panes displayed to all
 

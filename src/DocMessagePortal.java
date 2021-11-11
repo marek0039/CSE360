@@ -15,12 +15,10 @@ public class DocMessagePortal extends StackPane
     private Color mainColor;
     private Text title, welcome, patient, dob, prevMessages, message1, message2;
     private Button sendMessage, back;
-    private StackPane root;
     private int currUser;
 
-    public DocMessagePortal(StackPane rootPane, int user)
+    public DocMessagePortal(int user)
     {
-        root = rootPane;
         currUser = user;
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);

@@ -19,12 +19,10 @@ public class NurseCreatePatient extends StackPane
     private TextArea medHisField;
     private DatePicker dobPicker;
     private Button submit, back;
-    private StackPane root;
     private int currUser;
 
     public NurseCreatePatient(StackPane rootPane, int user)
     {
-        root = rootPane;
         currUser = user;
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);

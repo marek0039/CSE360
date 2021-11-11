@@ -15,12 +15,10 @@ public class PatientSummary extends StackPane
     private Text date1, date2, height, weight, bloodPressure, bodyTemp, allergies, prescription;
     private Text height2, weight2, bloodPressure2, bodyTemp2, allergies2, prescription2;
     private Button back;
-    private StackPane root;
     private int currUser;
 
-    public PatientSummary(StackPane root1, int user)
+    public PatientSummary(int user)
     {
-        root = root1;
         currUser = user;
 
         //establish color Falu Red as done on home screen
@@ -151,7 +149,7 @@ public class PatientSummary extends StackPane
         back = new Button("Patient Menu");
         //forward event handler for the back button takes user back to existing
         //patient portal screen, case 11
-        ForwardButton handler = new ForwardButton(11,root,currUser);
+        ForwardButton handler = new ForwardButton(11,currUser);
         back.setOnAction(handler);
 
         //vertical panes for each group of information on the page, to be placed

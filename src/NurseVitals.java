@@ -19,14 +19,11 @@ public class NurseVitals extends StackPane
     private DatePicker visitDate;
     private TextArea docNotes;
     private Button back, go, submit;
-
-    private StackPane root;
     private int currUser;
 
-    public NurseVitals(StackPane rootPane, int currentUser)
+    public NurseVitals(int currentUser)
     {
         // initialize parameters
-        root = rootPane;
         currUser = currentUser;
 
         //establish color Falu Red as done on home screen
