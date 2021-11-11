@@ -24,12 +24,11 @@ public class NurseSelectPatient extends StackPane
     private Text title, welcome, select, patient, create;
     private ComboBox patientList;
     private Button go, createButton, logout;
-    private StackPane root;
     private int currUser;
     private Statement statement;
 
-    public NurseSelectPatient(StackPane rootPane, int user) throws SQLException {
-        root = rootPane;
+    public NurseSelectPatient(int user)
+    {
         currUser = user;
         String[] f_name_arr = new String[0];
         String[] l_name_arr = new String[0];

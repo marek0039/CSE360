@@ -1,3 +1,4 @@
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -6,6 +7,10 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class UserChoiceScreen extends StackPane
 {
@@ -17,14 +22,12 @@ public class UserChoiceScreen extends StackPane
     private Text title, question, select;
     public ComboBox menu;
     private Button next;
-    private StackPane root;
     private int currUser;
     public Label errorLabel;
 
     //user choice screen constructor
-    public UserChoiceScreen(StackPane rootPane, int user)
+    public UserChoiceScreen(int user)
     {
-        root = rootPane;
         currUser = user;
 
         errorLabel = new Label();
@@ -62,7 +65,7 @@ public class UserChoiceScreen extends StackPane
         next = new Button("Next");
         //add forward method to handle where this button takes the user
         //this is case 2 in the switch statement for forward
-        ForwardButton handler = new ForwardButton(2, root, currUser);
+        ForwardButton handler = new ForwardButton(2, currUser);
         next.setOnAction(handler);
 
         //add combobox and button to the horizontal pane to be side
@@ -93,6 +96,5 @@ public class UserChoiceScreen extends StackPane
         //other elements to the stack plane/this user choice screen object
         this.getChildren().add(title);
         this.getChildren().add(bp);
-
     }//end user choice screen constructor
 }//end user choice screen class

@@ -20,9 +20,8 @@ public class DocSendMessage extends StackPane
     private StackPane root;
     private int currUser;
 
-    public DocSendMessage(StackPane rootPane, int user)
+    public DocSendMessage(int user)
     {
-        root = rootPane;
         currUser = user;
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);

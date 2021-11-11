@@ -17,13 +17,10 @@ public class DocPatientSummary extends StackPane
     private Text sendMessage, newMeds;
     private TextField notesField, presField;
     private Button back, go , submit;
-    private StackPane root;
     private int currUser;
 
-    public DocPatientSummary(StackPane rootPane, int user)
+    public DocPatientSummary(int user)
     {
-
-        root = rootPane;
         currUser = user;
 
 

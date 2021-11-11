@@ -17,12 +17,10 @@ public class DocSelectPatient extends StackPane
     private Text title, welcome, select, patient;
     private ComboBox patientList;
     private Button go, logout;
-    private StackPane root;
     private int curruser;
 
-    public DocSelectPatient(StackPane root1, int user)
+    public DocSelectPatient(int user)
     {
-        root = root1;
         curruser = user;
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
@@ -58,13 +56,13 @@ public class DocSelectPatient extends StackPane
         go = new Button("Go");
         //TO BE HANDLED W DATABASE DATA
         //forward handler for going to default dummy patient summary page
-        ForwardButton handler1 = new ForwardButton(18, root, curruser);
+        ForwardButton handler1 = new ForwardButton(18, curruser);
         go.setOnAction(handler1);
 
         logout = new Button("Log Out");
         //forward handler for taking user back to medical professional log
         //in page, case 17
-        ForwardButton handler2 = new ForwardButton(17, root, curruser);
+        ForwardButton handler2 = new ForwardButton(17, curruser);
         logout.setOnAction(handler2);
 
         //Vertical pane to put the title and existing patient label together

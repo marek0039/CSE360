@@ -15,13 +15,11 @@ public class HomeScreen extends StackPane
     private Color mainColor;
     private Text title, log;
     private Button start;
-    private StackPane root;
     private int currUser;
 
     //home screen constructor
-    public HomeScreen(StackPane rootPane, int user)
+    public HomeScreen(int user)
     {
-        root = rootPane;
         currUser = user;
 
         //set the color with it's rgb value

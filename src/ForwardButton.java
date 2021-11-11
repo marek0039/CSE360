@@ -7,7 +7,6 @@ public class ForwardButton implements EventHandler<ActionEvent>
     //int to store which case of forwarding we're on based
     //on what button is being pushed on what screen
     private int cI;
-    private StackPane root;
     private int currUser;
 
     //patient guis
@@ -50,6 +49,11 @@ public class ForwardButton implements EventHandler<ActionEvent>
         currUser = user;
     }
 
+    public void setCurrUser(int user)
+    {
+        currUser = user;
+    }
+
     //Override the abstract method handle()
     public void handle(ActionEvent event)
     {
@@ -66,22 +70,14 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 break;
             case 2: //next button on user choice screen
                 //always remove the user choice screen first
-                root.getChildren().clear();
+
                 //check if the user chose patient or med professional
                 //based on combobox input using selectUser class
-                if(userChoice.menu.getValue() == "Patient")
-                {
+
                     //if they chose patient add the patient choice screen
+                    root.getChildren().clear();
                     ps = new PatientScreen(root, currUser);
                     root.getChildren().add(ps);
-                }
-                else if(userChoice.menu.getValue() == "Medical Professional")
-                {
-                    //if they chose med prof add the med prof log on screen
-                    mpls = new MedProfLoginScreen(root, currUser);
-                    root.getChildren().add(mpls);
-                }
-
                 //CONDITION FOR IF USER DOESNT SELECT ANYTHING.. ERROR HANDLING
 
                 break;
@@ -283,6 +279,12 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 root.getChildren().clear();
                 nurseMessageConf = new NurseMessageConfirmation(root, currUser);
                 root.getChildren().add(nurseMessageConf);
+                break;
+            case 33:
+                //if they chose med prof add the med prof log on screen
+                root.getChildren().clear();
+                mpls = new MedProfLoginScreen(root, currUser);
+                root.getChildren().add(mpls);
                 break;
         } //end switch
     } //end handle
