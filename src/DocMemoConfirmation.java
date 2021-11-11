@@ -15,11 +15,9 @@ public class DocMemoConfirmation extends StackPane
     private Color mainColor;
     private Text title, welcome, patient, dob, confirmation;
     private Button patientChoice;
-    private int curruser;
 
-    public DocMemoConfirmation(int user)
+    public DocMemoConfirmation()
     {
-        curruser = user;
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 

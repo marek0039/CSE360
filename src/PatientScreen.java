@@ -1,3 +1,4 @@
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -19,13 +20,10 @@ public class PatientScreen extends StackPane
     private Text title, welcome, question1, question2;
     public RadioButton one, two, three, four;
     private Button next, back;
-    private int currUser;
-    public Label errorLabel;
+    private Label errorLabel;
 
-    public PatientScreen(int user)
+    public PatientScreen()
     {
-        currUser = user;
-
         errorLabel = new Label();
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
@@ -70,14 +68,14 @@ public class PatientScreen extends StackPane
 
         //buttons to go to the next screen, or go back to the previous screen
         next = new Button("Next");
-        //next button forward event handler, case 3, go to either existing patient
+        //next button forward event handler, set case to 3 but will get changed in PatientStatusButton
         //log on screen or new patient form screen
-        ForwardButton handler1 = new ForwardButton(3, currUser);
+        PatientStatusButton handler1 = new PatientStatusButton(3);
         next.setOnAction(handler1);
 
         back = new Button("Back");
         //back button forward event handler, case 1, go back to user choice screen
-        ForwardButton handler2 = new ForwardButton(1, currUser);
+        ForwardButton handler2 = new ForwardButton(1);
         back.setOnAction(handler2);
 
         //vertical pane to hold the various buttons and their questions
@@ -116,4 +114,22 @@ public class PatientScreen extends StackPane
         //add the border pane containing all the attributes to this stack pane
         this.getChildren().add(bp);
     } //end constructor
+
+    private class PatientStatusButton extends ForwardButton {
+
+        public PatientStatusButton(int caseInt) {
+            super(caseInt);
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
+            if (three.isSelected()) {
+                super.setcI(4);
+            }
+            if (four.isSelected()) {
+                super.setcI(6);
+            }
+            super.handle(event);
+        }
+    }
 } //end patient screen class

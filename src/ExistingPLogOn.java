@@ -25,12 +25,10 @@ public class ExistingPLogOn extends StackPane
     private TextField fNameField, lNameField, dobPicker;
     //private DatePicker dobPicker;
     private Button submit, back;
-    private int currUser;
     private Label errorLabel;
-    public ExistingPLogOn(int user)
-    {
-        currUser = user;
 
+    public ExistingPLogOn()
+    {
         errorLabel = new Label();
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
@@ -66,14 +64,14 @@ public class ExistingPLogOn extends StackPane
         //buttons to allow the user to submit and log in, or go back to the
         //previous page in case they did not mean to enter this one
         submit = new Button("Submit");
-        //forward event handler for submit button, case 7, takes user to existing patient
+        //forward event handler for submit button, case 5, takes user to existing patient
         //portal with their information
-        PatientLoginButton handler1 = new PatientLoginButton(7, currUser);
+        PatientLoginButton handler1 = new PatientLoginButton(5);
         submit.setOnAction(handler1);
 
         back = new Button("Back");
-        //forward event handler for back button, case 4, takes user back to patient choice screen
-        ForwardButton handler2 = new ForwardButton(4, currUser);
+        //forward event handler for back button, case 2, takes user back to patient choice screen
+        ForwardButton handler2 = new ForwardButton(2);
         back.setOnAction(handler2);
 
         //Vertical pane to put the title and existing patient label together
@@ -104,9 +102,9 @@ public class ExistingPLogOn extends StackPane
 
     private class PatientLoginButton extends ForwardButton
     {
-        private PatientLoginButton(int caseInt, StackPane root1, int user)
+        private PatientLoginButton(int caseInt)
         {
-            super(caseInt, root1, user);
+            super(caseInt);
         }
 
         @Override
@@ -139,8 +137,7 @@ public class ExistingPLogOn extends StackPane
                         String pFirstName = rs.getString("First_Name");
                         String pLastName = rs.getString("Last_Name");
                         String dob = rs.getString("DOB");
-                        currUser = rs.getInt("PatientID");
-                        super.setCurrUser(currUser);
+                        HealthPortal.currUser = rs.getInt("PatientID");
                         super.handle(event);
                     }
                     else {
