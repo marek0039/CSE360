@@ -1,8 +1,6 @@
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -17,16 +15,18 @@ public class ExistingPLogOn extends StackPane
     //attributes of this class to be displayed on the pane
     private Color mainColor;
     private Text title, label, fName, lName, dob;
-    private TextField fNameField, lNameField;
-    private DatePicker dobPicker;
+    public TextField fNameField, lNameField;
+    public DatePicker dobPicker;
     private Button submit, back;
     private StackPane root;
     private int currUser;
+    public Label errorLabel;
 
     public ExistingPLogOn(StackPane rootPane, int user)
     {
         root = rootPane;
         currUser = user;
+        errorLabel = new Label();
 
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
@@ -74,7 +74,7 @@ public class ExistingPLogOn extends StackPane
 
         //Vertical pane to put the title and existing patient label together
         VBox titleBox = new VBox(5);
-        titleBox.getChildren().addAll(title, label);
+        titleBox.getChildren().addAll(title, label, errorLabel);
 
         //Vertical pane to put the log on requirements in the center of the page
         VBox centerElements = new VBox(8);

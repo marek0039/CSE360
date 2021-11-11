@@ -84,7 +84,7 @@ public class PatientScreen extends StackPane
 
         //vertical pane to hold the various buttons and their questions
         VBox buttonContent = new VBox(10);
-        buttonContent.getChildren().addAll(welcome, question1, one, two, question2, three, four, next, back);
+        buttonContent.getChildren().addAll(welcome, errorLabel, question1, one, two, question2, three, four, next, back);
 
         //some insets to better center the buttons/questions for aesthetic
         //insets object prevents having to type the same thing a million times

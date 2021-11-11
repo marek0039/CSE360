@@ -11,20 +11,22 @@ public class NewPatientForm extends StackPane
     //create attributes for this screen
     private Color mainColor;
     private Text title, form, required, fName, lName, dob, email;
-    private Text phone, medHis, pharmacy, mailAddress, insurance, insNum, finish, doctorChoice;
-    private TextField fNameField, lNameField, emailField, pharmField, numField, insField, insNumField;
-    private TextField mailField1, mailField2, mailField3, mailField4;
-    private TextArea medHisField;
-    private DatePicker dobPicker;
+    public Text phone, medHis, pharmacy, mailAddress, insurance, insNum, finish, doctorChoice;
+    public TextField fNameField, lNameField, emailField, pharmField, numField, insField, insNumField;
+    public TextField mailField1, mailField2, mailField3, mailField4;
+    public TextArea medHisField;
+    public DatePicker dobPicker;
     private ComboBox doctorsList;
     private Button submit, back;
     private StackPane root;
     private int currUser;
+    public Label errorLabel;
 
     public NewPatientForm(StackPane rootPane, int user)
     {
         root = rootPane;
         currUser = user;
+        errorLabel = new Label();
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -243,7 +245,7 @@ public class NewPatientForm extends StackPane
         //create a vertical pane for the title, new patient form text,
         //and required text
         VBox topText = new VBox(5);
-        topText.getChildren().addAll(title, form, required);
+        topText.getChildren().addAll(title, form, required, errorLabel);
 
         //add the top text with its contents to the top left
         //of this stack pane

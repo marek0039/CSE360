@@ -1,7 +1,7 @@
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.layout.StackPane;
-
+import javafx.scene.paint.Color;
 public class ForwardButton implements EventHandler<ActionEvent>
 {
     //int to store which case of forwarding we're on based
@@ -65,43 +65,37 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 root.getChildren().add(userChoice);
                 break;
             case 2: //next button on user choice screen
-                //always remove the user choice screen first
-                root.getChildren().clear();
-                //check if the user chose patient or med professional
-                //based on combobox input using selectUser class
-                if(userChoice.menu.getValue() == "Patient")
-                {
-                    //if they chose patient add the patient choice screen
-                    ps = new PatientScreen(root, currUser);
-                    root.getChildren().add(ps);
-                }
-                else if(userChoice.menu.getValue() == "Medical Professional")
-                {
-                    //if they chose med prof add the med prof log on screen
-                    mpls = new MedProfLoginScreen(root, currUser);
-                    root.getChildren().add(mpls);
-                }
-
-                //CONDITION FOR IF USER DOESNT SELECT ANYTHING.. ERROR HANDLING
-
+              if (userChoice.menu.getValue() == "Patient")
+              {
+                  //if they chose patient add the patient choice screen
+                  root.getChildren().clear();
+                  ps = new PatientScreen(root, currUser);
+                  root.getChildren().add(ps);
+              }
+              else if (userChoice.menu.getValue() == "Medical Professional")
+              {
+                  //if they chose med prof add the med prof log on screen
+                  root.getChildren().clear();
+                  mpls = new MedProfLoginScreen(root, currUser);
+                  root.getChildren().add(mpls);
+              }
                 break;
             case 3: //Next button on patient choice screen
                 //check if they chose new or existing patient
                 //always remove previous pane first
-                root.getChildren().clear();
-                if(ps.three.isSelected())
+                if (ps.three.isSelected())
                 {
+                    root.getChildren().clear();
                     newPForm = new NewPatientForm(root, currUser);
                     root.getChildren().add(newPForm);
                 }
-                else if(ps.four.isSelected())
+                else if (ps.four.isSelected())
                 {
+                    root.getChildren().clear();
                     eplo = new ExistingPLogOn(root, currUser);
                     root.getChildren().add(eplo);
+
                 }
-
-                //CONDITION FOR IF USER DOESNT SELECT ANYTHING.. ERROR HANDLING
-
                 break;
             case 4: //back button on new patient form screen OR existing patient log on screen
                 //both go to patient choice screen
@@ -114,9 +108,6 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 root.getChildren().clear();
                 newPConf = new NewPatientConfirmation(root, currUser);
                 root.getChildren().add(newPConf);
-
-                //NEED TO CONFIRM THAT USER ENTERED EVERYTHING REQUIRED.. ERROR HANDLING
-
                 break;
             case 6: //back button on new patient confirmation screen takes you back
                 //to the new patient form
@@ -129,10 +120,6 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 root.getChildren().clear();
                 epp = new ExistingPatientPortal(root, currUser);
                 root.getChildren().add(epp);
-
-                //NEED TO CONFIRM USER ENTERED ALL LOG IN INFORMATION & EXISTS IN
-                //SYSTEM IN CASE OF EXISTING PATIENT LOG ON.. ERROR HANDLING
-
                 break;
             case 8: //back button on existing patient portal screen takes you back
                 //to existing patient log on because the patient has already
@@ -182,104 +169,98 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 break;
             case 15: //user selects to send a message, and move forward to message
                 //confirmation page
-
-                //WE NEED TO MAKE SURE THEY'VE SELECTED A RECIPIENT AND PUT MESSAGE CONTENT
-                //IN THE FIELD BEFORE THIS HAPPENS
-
                 root.getChildren().clear();
                 pMesConf = new PatientMessageConfirmation(root, currUser);
                 root.getChildren().add(pMesConf);
                 break;
-            case 16: //medical professional has logged in they go to doctor screen
-                //if they're a doctor OR nurse screen if theyre a nurse
-
-                //NEED TO DETERMINE WHETHER MED PROF IS A DOCTOR OR NURSE
-                //VIA DATABASE DATA BEFORE WRITING CODE TO GO TO NEXT PAGE
-
-                break;
-            case 17: //doctor selects logout/back from patient choice page
-                //it takes them back to med prof login screen
+            case 16: //user selected med prof from user choice screen
+                // OR doctor or nurse selects logout/back from patient choice page
+                //it takes them back to med prof login screen OR doctor hit go back on
+                //the memo or message confirmation screens
                 root.getChildren().clear();
                 mpls = new MedProfLoginScreen(root, currUser);
                 root.getChildren().add(mpls);
                 break;
-            case 18://doctor selects patient from list and hits go
-                //to be taken to their patient page
-
-                //NEED TO CREATE CONDITIONS BY PULLING FROM DATABASE
-                //I.E. WHICH PATIENT WAS SELECTED BEFORE SENDING THE GO BUTTON ANYWHERE
-                //for now its on the default example screen
-
-                root.getChildren().clear();
-                docSummary = new DocPatientSummary(root, currUser);
-                root.getChildren().add(docSummary);
-                break;
-            case 19:
+            case 17: //med prof has pressed log in and is a doctor OR doc has hit
+                //back on the patient summary page of a patient
                 root.getChildren().clear();
                 docSelPatient = new DocSelectPatient(root, currUser);
                 root.getChildren().add(docSelPatient);
                 break;
-            case 20:
+            case 18://doctor selects patient from list and hits go
+                //to be taken to their patient summary page
+                root.getChildren().clear();
+                docSummary = new DocPatientSummary(root, currUser);
+                root.getChildren().add(docSummary);
+                break;
+            case 19: //doctor has written memos on the patient summary and selected submit
                 root.getChildren().clear();
                 docMemoConf = new DocMemoConfirmation(root, currUser);
                 root.getChildren().add(docMemoConf);
                 break;
-            case 21:
+            case 20: //doctor selected go on patient summary page to send/view messages
+                //OR back on the doc send message page
                 root.getChildren().clear();
                 docMesPortal = new DocMessagePortal(root, currUser);
                 root.getChildren().add(docMesPortal);
                 break;
-            case 22:
+            case 21: //doctor has selected to send a message to the patient
+                //selected from the message portal
                 root.getChildren().clear();
                 docSendMessage = new DocSendMessage(root, currUser);
                 root.getChildren().add(docSendMessage);
                 break;
-            case 23:
+            case 22: //doctor has selected send on the doctor send message page
                 root.getChildren().clear();
                 docMessageConf = new DocMessageConfirmation(root, currUser);
                 root.getChildren().add(docMessageConf);
                 break;
-            case 24:
+            case 23: //nurse has selected login on the med prof log in screen OR
+                //back on the nurse create patient screen OR back on the nurse vitals screen
                 root.getChildren().clear();
                 nurseSelect = new NurseSelectPatient(root, currUser);
                 root.getChildren().add(nurseSelect);
                 break;
-            case 25:
+            case 24: //nurse has selected create to create a new patient on the nurse select
+                //patient screen
                 root.getChildren().clear();
                 nurseCreatePatient = new NurseCreatePatient(root, currUser);
                 root.getChildren().add(nurseCreatePatient);
                 break;
-            case 26:
+            case 25: //nurse has selected submit on the nurse create patient screen
                 root.getChildren().clear();
                 nurseCreateConf = new NurseCreatePatientConfirmation(root, currUser);
                 root.getChildren().add(nurseCreateConf);
                 break;
-            case 27:
+            case 26: //nurse has selected go after selecting a patient OR nurse has
+                //selected patient summary after creating a new patient
                 root.getChildren().clear();
                 nurseVitals = new NurseVitals(root, currUser);
                 root.getChildren().add(nurseVitals);
                 break;
-            case 28:
+            case 27: //nurse has selected submit after adding vitals to vitals screen
                 root.getChildren().clear();
                 nurseVitalsConf = new NurseVitalsConfirmation(root, currUser);
                 root.getChildren().add(nurseVitalsConf);
                 break;
-            case 29:
+            case 28: //nurse has selected patient summary on the vitals confirmation screen
+                //OR on the nurse vitals screen OR nurse selected back on the nurse message portal screen
                 root.getChildren().clear();
                 nurseSummary = new NursePatientSummary(root, currUser);
                 root.getChildren().add(nurseSummary);
                 break;
-            case 30:
+            case 29: //nurse selected go on the nurse patient summary screen
+                //OR nurse selected back on the nurse send message screen
                 root.getChildren().clear();
                 nurseMesPortal = new NurseMessagePortal(root, currUser);
                 root.getChildren().add(nurseMesPortal);
                 break;
-            case 31:
+            case 30: //nurse selected send message on the nurse message portal screen
                 root.getChildren().clear();
                 nurseSendMessage = new NurseSendMessage(root, currUser);
                 root.getChildren().add(nurseSendMessage);
                 break;
-            case 32:
+            case 31: //nurse selected send on the nurse send message screen
                 root.getChildren().clear();
                 nurseMessageConf = new NurseMessageConfirmation(root, currUser);
                 root.getChildren().add(nurseMessageConf);
