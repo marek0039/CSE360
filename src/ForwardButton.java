@@ -25,22 +25,22 @@ public class ForwardButton implements EventHandler<ActionEvent>
 	private PatientMessageConfirmation pMesConf;
 
     //medical professional guis
-	MedProfLoginScreen mpls;
-	DocSelectPatient docSelPatient;
-	DocPatientSummary docSummary;
-	DocMemoConfirmation docMemoConf;
-	DocMessagePortal docMesPortal;
-	DocSendMessage docSendMessage;
-	DocMessageConfirmation docMessageConf;
-	NurseSelectPatient nurseSelect;
-	NurseCreatePatient nurseCreatePatient;
-	NurseCreatePatientConfirmation nurseCreateConf;
-	NurseVitals nurseVitals;
-	NurseVitalsConfirmation nurseVitalsConf;
-	NursePatientSummary nurseSummary;
-	NurseMessagePortal nurseMesPortal;
-	NurseSendMessage nurseSendMessage;
-	NurseMessageConfirmation nurseMessageConf;
+	private MedProfLoginScreen mpls;
+	private DocSelectPatient docSelPatient;
+	private DocPatientSummary docSummary;
+	private DocMemoConfirmation docMemoConf;
+	private DocMessagePortal docMesPortal;
+	private DocSendMessage docSendMessage;
+	private DocMessageConfirmation docMessageConf;
+	private NurseSelectPatient nurseSelect;
+    private NurseCreatePatient nurseCreatePatient;
+    private NurseCreatePatientConfirmation nurseCreateConf;
+    private NurseVitals nurseVitals;
+    private NurseVitalsConfirmation nurseVitalsConf;
+    private NursePatientSummary nurseSummary;
+    private NurseMessagePortal nurseMesPortal;
+    private NurseSendMessage nurseSendMessage;
+    private NurseMessageConfirmation nurseMessageConf;
 
     public ForwardButton(int caseInt, StackPane pane, int user)
     {
@@ -72,11 +72,13 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 if(userChoice.menu.getValue() == "Patient")
                 {
                     //if they chose patient add the patient choice screen
+                    ps = new PatientScreen(root, currUser);
                     root.getChildren().add(ps);
                 }
                 else if(userChoice.menu.getValue() == "Medical Professional")
                 {
                     //if they chose med prof add the med prof log on screen
+                    mpls = new MedProfLoginScreen(root, currUser);
                     root.getChildren().add(mpls);
                 }
 
@@ -89,10 +91,12 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 root.getChildren().clear();
                 if(ps.three.isSelected())
                 {
+                    newPForm = new NewPatientForm(root, currUser);
                     root.getChildren().add(newPForm);
                 }
                 else if(ps.four.isSelected())
                 {
+                    eplo = new ExistingPLogOn(root, currUser);
                     root.getChildren().add(eplo);
                 }
 
@@ -102,11 +106,13 @@ public class ForwardButton implements EventHandler<ActionEvent>
             case 4: //back button on new patient form screen OR existing patient log on screen
                 //both go to patient choice screen
                 root.getChildren().clear();
+                ps = new PatientScreen(root, currUser);
                 root.getChildren().add(ps);
                 break;
             case 5: //submit button on new patient form
                 //takes patient to new patient confirmation page
                 root.getChildren().clear();
+                newPConf = new NewPatientConfirmation(root, currUser);
                 root.getChildren().add(newPConf);
 
                 //NEED TO CONFIRM THAT USER ENTERED EVERYTHING REQUIRED.. ERROR HANDLING
@@ -115,11 +121,13 @@ public class ForwardButton implements EventHandler<ActionEvent>
             case 6: //back button on new patient confirmation screen takes you back
                 //to the new patient form
                 root.getChildren().clear();
+                newPForm = new NewPatientForm(root, currUser);
                 root.getChildren().add(newPForm);
                 break;
             case 7: //submit button on existing patient log on screen OR patient menu button on
                 //new patient confirmation screen both go to existing patient portal screen
                 root.getChildren().clear();
+                epp = new ExistingPatientPortal(root, currUser);
                 root.getChildren().add(epp);
 
                 //NEED TO CONFIRM USER ENTERED ALL LOG IN INFORMATION & EXISTS IN
@@ -131,38 +139,45 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 //been created in the database and thus they should be able to log in
                 //even if they just filled out the new patient form
                 root.getChildren().clear();
+                eplo = new ExistingPLogOn(root, currUser);
                 root.getChildren().add(eplo);
                 break;
             case 9: //user selects go from existing patient portal screen to
                 //update their contact information OR user selects back on update contact info confirmation
                 root.getChildren().clear();
+                pUpdateInfo = new PatientUpdateInfo(root, currUser);
                 root.getChildren().add(pUpdateInfo);
                 break;
             case 10: //user selects submit after updating their contact information
                 //they should go to the update contact info confirmation screen
                 root.getChildren().clear();
+                updateInfoConf = new UpdateInfoConfirmation(root, currUser);
                 root.getChildren().add(updateInfoConf);
                 break;
             case 11: //user selects back from update contact info OR visit summary OR send message
                 //all from the existing patient portal page, they will be taken back there
                 root.getChildren().clear();
+                epp = new ExistingPatientPortal(root, currUser);
                 root.getChildren().add(epp);
                 break;
             case 12: //user selects go from existing patient portal screen to
                 //view their previous visit summary OR user selects view summary
                 //from update contact info confirmation page OR
                 root.getChildren().clear();
+                pSummary = new PatientSummary(root, currUser);
                 root.getChildren().add(pSummary);
                 break;
             case 13: //user selects go from existing patient portal screen to
                 //send a message (takes them to their message portal screen) OR
                 //user selects back from send message screen
                 root.getChildren().clear();
+                pMesPortal = new PatientMessagePortal(root, currUser);
                 root.getChildren().add(pMesPortal);
                 break;
             case 14: //user selects to go to the screen to actually type out
                 //and send a message from message portal screen
                 root.getChildren().clear();
+                pSendMes = new PatientSendMessage(root, currUser);
                 root.getChildren().add(pSendMes);
                 break;
             case 15: //user selects to send a message, and move forward to message
@@ -172,6 +187,7 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 //IN THE FIELD BEFORE THIS HAPPENS
 
                 root.getChildren().clear();
+                pMesConf = new PatientMessageConfirmation(root, currUser);
                 root.getChildren().add(pMesConf);
                 break;
             case 16: //medical professional has logged in they go to doctor screen
@@ -184,6 +200,7 @@ public class ForwardButton implements EventHandler<ActionEvent>
             case 17: //doctor selects logout/back from patient choice page
                 //it takes them back to med prof login screen
                 root.getChildren().clear();
+                mpls = new MedProfLoginScreen(root, currUser);
                 root.getChildren().add(mpls);
                 break;
             case 18://doctor selects patient from list and hits go
@@ -194,6 +211,7 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 //for now its on the default example screen
 
                 root.getChildren().clear();
+                docSummary = new DocPatientSummary(root, currUser);
                 root.getChildren().add(docSummary);
                 break;
         } //end switch

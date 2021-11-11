@@ -1,8 +1,18 @@
-import java.sql.*;  //used for sql stuff
-import com.jcraft.jsch.*;    //used for ssh connection
+import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.Session;
 
-public class Test {
-    public static void main(String[] args) {
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
+
+public class Connector {
+    private Statement statement;
+
+    public Statement getStatement() {
+        return statement;
+    }
+
+    public Connector() {
         try {
             String ssh_host = "70.162.165.24";  //ip of the sql server
             String ssh_user = "marek";          //user on the server (this is like the desktop user, don't change)
@@ -29,18 +39,7 @@ public class Test {
             Class.forName(jdbc_driver);
             Connection connection = DriverManager.getConnection(url+db, db_user, db_pswd); //connect to sql db
 
-            Statement statement = connection.createStatement(); //create a statement which will execute an sql cmd.
-            String sql = "SELECT * FROM Patient";  //sql command
-            ResultSet rs = statement.executeQuery(sql); //execute the command
-            while (rs.next()) { //iterate through the lines generated
-                String name = rs.getString("First_Name"); //store each value...
-                String test_this = rs.getString("Last_Name");
-                int test_is = rs.getInt("PatientID");
-                System.out.println(name);       //and print them out.
-                System.out.println(test_this);
-                System.out.println(test_is);
-                System.out.println("\n");
-            }
+            statement = connection.createStatement(); //create a statement which will execute an sql cmd.
         } catch(Exception e) {  //catch exceptions
             System.err.print(e);
         }
