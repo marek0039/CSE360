@@ -19,13 +19,9 @@ public class PatientSendMessage extends StackPane
     private ComboBox medList;
     private TextArea message;
     private Button send, back;
-    private int curruser;
-    private StackPane root;
 
-    public PatientSendMessage(StackPane root1, int user)
+    public PatientSendMessage()
     {
-        root = root1;
-        curruser = user;
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -60,13 +56,13 @@ public class PatientSendMessage extends StackPane
         //and they have selected a medical professional, or go back to the previous page
         send = new Button("Send");
         //forward event handler for the patient to go to message confirmation page
-        //after theyve sent the message
-        ForwardButton handler1 = new ForwardButton(15, root, curruser);
+        //after they have sent the message, case 12
+        ForwardButton handler1 = new ForwardButton(12);
         send.setOnAction(handler1);
 
         back = new Button("Back");
-        //forward event handler for patient to back to the message portal screen, case 13
-        ForwardButton handler2 = new ForwardButton(13, root, curruser);
+        //forward event handler for patient to back to the message portal screen, case 10
+        ForwardButton handler2 = new ForwardButton(10);
         back.setOnAction(handler2);
 
         //combo box with a list of medical professionals to send the message to

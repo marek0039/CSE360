@@ -15,15 +15,9 @@ public class NurseVitalsConfirmation extends StackPane
     private Color mainColor;
     private Text title, welcome, patient, dob, confirmation;
     private Button patientSummary, back;
-    private StackPane root;
-    private int currUser;
 
-    public NurseVitalsConfirmation(StackPane rootPane, int user)
+    public NurseVitalsConfirmation()
     {
-
-        root = rootPane;
-        currUser = user;
-
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 

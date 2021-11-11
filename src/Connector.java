@@ -32,7 +32,7 @@ public class Connector {
             int assigned_port=session.setPortForwardingL(client_port, db_host, db_port); //set the port on your machine
             System.out.println("localhost:"+assigned_port+" -> "+db_host+":"+db_port);  //for debugging purposes
 
-            String jdbc_driver = "com.mysql.jdbc.Driver"; //driver to use for sql connection
+            String jdbc_driver = "com.mysql.cj.jdbc.Driver"; //driver to use for sql connection
             String url = "jdbc:mysql://" + db_host + ":" + client_port + "/"; //the sql url to use
             System.setProperty(jdbc_driver,""); //set the driver
 

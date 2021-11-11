@@ -17,16 +17,9 @@ public class DocPatientSummary extends StackPane
     private Text sendMessage, newMeds;
     private TextField notesField, presField;
     private Button back, go , submit;
-    private StackPane root;
-    private int currUser;
 
-    public DocPatientSummary(StackPane rootPane, int user)
+    public DocPatientSummary()
     {
-
-        root = rootPane;
-        currUser = user;
-
-
         //create attributes for this screen
 
         //establish color Falu Red as done on home screen
