@@ -14,13 +14,9 @@ public class NurseMessagePortal extends StackPane
     private Color mainColor;
     private Text title, welcome, patient, dob, prevMessages, message1, message2;
     private Button sendMessage, back;
-    private StackPane root;
-    private int currUser;
 
-    public NurseMessagePortal(int user)
+    public NurseMessagePortal()
     {
-        currUser = user;
-
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 

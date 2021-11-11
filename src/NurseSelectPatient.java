@@ -24,31 +24,28 @@ public class NurseSelectPatient extends StackPane
     private Text title, welcome, select, patient, create;
     private ComboBox patientList;
     private Button go, createButton, logout;
-    private int currUser;
-    private Statement statement;
 
-    public NurseSelectPatient(int user)
+    public NurseSelectPatient()
     {
-        currUser = user;
         String[] f_name_arr = new String[0];
         String[] l_name_arr = new String[0];
         try {
             Connector connect = new Connector();
-            statement = connect.getStatement();
-            String getConnection = "SELECT Connection from Professional WHERE ID=" + currUser;
-            ResultSet rs = statement.executeQuery(getConnection);
+            HealthPortal.statement = connect.getStatement();
+            String getConnection = "SELECT Connection from Professional WHERE ID=" + HealthPortal.currUser;
+            ResultSet rs = HealthPortal.statement.executeQuery(getConnection);
             int doctorID = 0;
             if (rs.getRow() == 1) {
                 rs.first();
                 doctorID = rs.getInt("Connection");
             } else {
-                throw new FailedException("Cannot find User: " + currUser);
+                throw new FailedException("Cannot find User: " + HealthPortal.currUser);
             }
             List<String> patient_first_names = new ArrayList<String>();
             List<String> patient_last_names = new ArrayList<String>();
             if (doctorID != 0) {
                 String getpatients = "SELECT First_Name, Last_Name FROM Patient WHERE Doctor=" + doctorID;
-                rs = statement.executeQuery(getpatients);
+                rs = HealthPortal.statement.executeQuery(getpatients);
                 while(rs.next()) {
                     patient_first_names.add(rs.getString("First_Name"));
                     patient_last_names.add(rs.getString("Last_Name"));
@@ -104,11 +101,14 @@ public class NurseSelectPatient extends StackPane
         go = new Button("Go");
         createButton = new Button("Create");
         logout = new Button("Log Out");
-        SelectPatientButton handler = new SelectPatientButton(27, root, currUser);
+        //when user presses go, they read whatever patient the user selected and goes to there vitals page. Case 24
+        SelectPatientButton handler = new SelectPatientButton(24);
         go.setOnAction(handler);
-        ForwardButton forward1 = new ForwardButton(25, root, currUser);
+        //when the user presses create, they are sent to the new patient creation form but the nurse vers. Case 22
+        ForwardButton forward1 = new ForwardButton(22);
         createButton.setOnAction(forward1);
-        ForwardButton forward2 = new ForwardButton(1, root, currUser);
+        //when the user presses Log Out, they are sent back to the medical professional login screen. Case 14
+        ForwardButton forward2 = new ForwardButton(14);
         logout.setOnAction(forward2);
 
 
@@ -141,9 +141,8 @@ public class NurseSelectPatient extends StackPane
 
     private class SelectPatientButton extends ForwardButton {
 
-        private SelectPatientButton(int caseInt, StackPane pane, int user) {
-            super(caseInt, pane, user);
-
+        private SelectPatientButton(int caseInt) {
+            super(caseInt);
         }
 
         @Override

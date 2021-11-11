@@ -19,13 +19,9 @@ public class NurseVitals extends StackPane
     private DatePicker visitDate;
     private TextArea docNotes;
     private Button back, go, submit;
-    private int currUser;
 
-    public NurseVitals(int currentUser)
+    public NurseVitals()
     {
-        // initialize parameters
-        currUser = currentUser;
-
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 

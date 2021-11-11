@@ -22,14 +22,11 @@ public class UserChoiceScreen extends StackPane
     private Text title, question, select;
     public ComboBox menu;
     private Button next;
-    private int currUser;
-    public Label errorLabel;
+    private Label errorLabel;
 
     //user choice screen constructor
-    public UserChoiceScreen(int user)
+    public UserChoiceScreen()
     {
-        currUser = user;
-
         errorLabel = new Label();
 
         //establish color Falu Red as done on home screen
@@ -65,7 +62,7 @@ public class UserChoiceScreen extends StackPane
         next = new Button("Next");
         //add forward method to handle where this button takes the user
         //this is case 2 in the switch statement for forward
-        ForwardButton handler = new ForwardButton(2, currUser);
+        ForwardButton handler = new ForwardButton(2);
         next.setOnAction(handler);
 
         //add combobox and button to the horizontal pane to be side

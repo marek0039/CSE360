@@ -15,11 +15,9 @@ public class PatientMessageConfirmation extends StackPane
     private Color mainColor;
     private Text title, welcome, dob, confirmation;
     private Button back;
-    private int curruser;
 
-    public PatientMessageConfirmation(int user)
+    public PatientMessageConfirmation()
     {
-        curruser = user;
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -47,8 +45,8 @@ public class PatientMessageConfirmation extends StackPane
         //with options to send messages, update info, or view summary
         back = new Button("Patient Menu");
         //forward event handler for the back button takes user back to existing
-        //patient portal screen, case 11
-        ForwardButton handler = new ForwardButton(11, curruser);
+        //patient portal screen, case 5
+        ForwardButton handler = new ForwardButton(5);
         back.setOnAction(handler);
 
         //vertical box to store title and welcome contents

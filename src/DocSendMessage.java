@@ -17,12 +17,9 @@ public class DocSendMessage extends StackPane
     private Text title, welcome, patient, dob, directions;
     private TextArea message;
     private Button send, back;
-    private StackPane root;
-    private int currUser;
 
-    public DocSendMessage(int user)
+    public DocSendMessage()
     {
-        currUser = user;
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
