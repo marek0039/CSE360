@@ -55,7 +55,7 @@ public class NewPatientForm extends StackPane
         lName.setFont(Font.font("Times New Roman", 12));
         lName.setFill(Color.BLACK);
 
-        dob = new Text("Patient Date of Birth:");
+        dob = new Text("Patient Date of Birth: (Use Format YYYY-MM-DD");
         dob.setFont(Font.font("Times New Roman", 12));
         dob.setFill(Color.BLACK);
 
