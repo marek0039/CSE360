@@ -37,7 +37,7 @@ public class Test {
             while (rs.next()) { //iterate through the lines generated
                 String name = rs.getString("First_Name"); //store each value...
                 String test_this = rs.getString("Last_Name");
-                String test_is = rs.getString("DOB");
+                int test_is = rs.getInt("PatientID");
                 System.out.println(name);       //and print them out.
                 System.out.println(test_this);
                 System.out.println(test_is);

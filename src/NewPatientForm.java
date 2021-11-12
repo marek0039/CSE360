@@ -18,9 +18,6 @@ public class NewPatientForm extends StackPane
     public DatePicker dobPicker;
     private ComboBox doctorsList;
     private Button submit, back;
-
-    public NewPatientForm()
-    {
     private int currUser;
     public Label errorLabel;
 
@@ -178,13 +175,6 @@ public class NewPatientForm extends StackPane
         //the program should go to the previous screen
         //these will be handled in the event handlers for these buttons
         submit = new Button("Submit");
-        //forward event handler for submit button, case 4, takes user to confirmation page
-        ForwardButton handler1 = new ForwardButton(3);
-        submit.setOnAction(handler1);
-
-        back = new Button("Back");
-        //forward event handler for back button, case 2, takes user back to patient choice screen
-        ForwardButton handler2 = new ForwardButton(2);
         //forward event handler for submit button, case 5, takes user to confirmation page
         ForwardButton handler1 = new ForwardButton(5, currUser);
         submit.setOnAction(handler1);
