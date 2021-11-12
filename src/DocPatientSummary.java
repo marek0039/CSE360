@@ -1,6 +1,7 @@
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -11,17 +12,17 @@ public class DocPatientSummary extends StackPane
 {
     private Color mainColor;
     private Text title, welcome, dob, contactInfo, email;
-    private Text phone, medHisTitle, medHis, pharmacy, insurance, insuranceNum, address, doctorNotes, pName;
+    private Text phone, medHisTitle, medHis, pharmacy, insurance, doctorNotes, pName;
     private Text date1, date2, height, weight, bloodPressure, bodyTemp, allergies, prescription;
     private Text height2, weight2, bloodPressure2, bodyTemp2, allergies2, prescription2;
     private Text sendMessage, newMeds;
     private TextField notesField, presField;
     private Button back, go , submit;
+    private Label errLabel;
 
     public DocPatientSummary()
     {
-        //create attributes for this screen
-
+        errLabel = new Label(); //label which will display an error done by the user.
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -65,14 +66,6 @@ public class DocPatientSummary extends StackPane
         insurance = new Text("Insurance: Aetna");
         insurance.setFont(Font.font("Times New Roman", 14));
         insurance.setFill(Color.BLACK);
-
-        address = new Text("Address: 12345 E University Dr.\nTempe, AZ 85281");
-        address.setFont(Font.font("Times New Roman", 14));
-        address.setFill(Color.BLACK);
-
-        insuranceNum = new Text("Insurance Number: 6352");
-        insuranceNum.setFont(Font.font("Times New Roman", 14));
-        insuranceNum.setFill(Color.BLACK);
 
         pharmacy = new Text("Pharmacy: CVS #602");
         pharmacy.setFont(Font.font("Times New Roman", 14));
@@ -179,10 +172,10 @@ public class DocPatientSummary extends StackPane
         nameBox.getChildren().addAll(pName, dob);
 
         VBox contactBox = new VBox(2);
-        contactBox.getChildren().addAll(contactInfo, phone, email, address);
+        contactBox.getChildren().addAll(contactInfo, phone, email);
 
         VBox insBox = new VBox(2);
-        insBox.getChildren().addAll(insurance, insuranceNum, pharmacy);
+        insBox.getChildren().addAll(insurance, pharmacy);
 
         VBox prevMedBox = new VBox(2);
         prevMedBox.getChildren().addAll(medHisTitle, medHis);
@@ -214,9 +207,9 @@ public class DocPatientSummary extends StackPane
         VBox column3 = new VBox(16);
         column3.getChildren().addAll(visit1Box, visit2Box);
 
-        //vbox for title and doctor greeting
+        //vbox for title and doctor greeting as well as the error label.
         VBox titleBox = new VBox(2);
-        titleBox.getChildren().addAll(title, welcome);
+        titleBox.getChildren().addAll(title, welcome, errLabel);
 
         //vbox for send message label and buttons
         VBox messageBox = new VBox(2);
