@@ -34,6 +34,7 @@ public class Connector {
 
             String jdbc_driver = "com.mysql.cj.jdbc.Driver"; //driver to use for sql connection
             String url = "jdbc:mysql://" + db_host + ":" + assigned_port + "/"; //the sql url to use
+            String url = "jdbc:mysql://" + db_host + ":" + client_port + "/"; //the sql url to use
             System.setProperty(jdbc_driver,""); //set the driver
 
             Class.forName(jdbc_driver);

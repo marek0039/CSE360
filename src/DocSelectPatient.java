@@ -56,6 +56,9 @@ public class DocSelectPatient extends StackPane
         }
 
         errLabel = new Label(); //label which will display an error done by the user.
+
+    public DocSelectPatient()
+    {
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -91,6 +94,7 @@ public class DocSelectPatient extends StackPane
         //TO BE HANDLED W DATABASE DATA
         //forward handler for going to default dummy patient summary page, case 15
         SelectPatientButton handler1 = new SelectPatientButton(15);
+        ForwardButton handler1 = new ForwardButton(15);
         go.setOnAction(handler1);
 
         logout = new Button("Log Out");

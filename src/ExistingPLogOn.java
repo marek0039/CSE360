@@ -4,6 +4,7 @@ import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.*;
 import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -26,9 +27,18 @@ public class ExistingPLogOn extends StackPane
     //private DatePicker dobPicker;
     private Button submit, back;
     private Label errorLabel;
+    public TextField fNameField, lNameField;
+    public DatePicker dobPicker;
+    private Button submit, back;
+    private StackPane root;
+    private int currUser;
+    public Label errorLabel;
 
     public ExistingPLogOn()
     {
+        errorLabel = new Label();
+        root = rootPane;
+        currUser = user;
         errorLabel = new Label();
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
