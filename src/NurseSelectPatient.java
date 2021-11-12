@@ -3,6 +3,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -24,19 +25,18 @@ public class NurseSelectPatient extends StackPane
     private Text title, welcome, select, patient, create;
     private ComboBox patientList;
     private Button go, createButton, logout;
+    private Label errLabel;
 
     public NurseSelectPatient()
     {
         String[] f_name_arr = new String[0];
         String[] l_name_arr = new String[0];
         try {
-            Connector connect = new Connector();
-            HealthPortal.statement = connect.getStatement();
             String getConnection = "SELECT Connection from Professional WHERE ID=" + HealthPortal.currUser;
             ResultSet rs = HealthPortal.statement.executeQuery(getConnection);
             int doctorID = 0;
+            rs.last();
             if (rs.getRow() == 1) {
-                rs.first();
                 doctorID = rs.getInt("Connection");
             } else {
                 throw new FailedException("Cannot find User: " + HealthPortal.currUser);
@@ -59,6 +59,8 @@ public class NurseSelectPatient extends StackPane
         } catch (Exception e) {
             System.err.print(e);
         }
+
+        errLabel = new Label();
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -114,7 +116,7 @@ public class NurseSelectPatient extends StackPane
 
         //Vertical pane to put the title and existing patient label together
         VBox titleBox = new VBox(5);
-        titleBox.getChildren().addAll(title, welcome, select);
+        titleBox.getChildren().addAll(title, welcome, select, errLabel);
 
         //Vertical pane to put the log on requirements in the center of the page
         VBox centerElements = new VBox(8);
@@ -147,8 +149,32 @@ public class NurseSelectPatient extends StackPane
 
         @Override
         public void handle(ActionEvent event) {
-
-            super.handle(event);
+            if (patientList.getSelectionModel().isEmpty()) {
+                errLabel.setText("Please Select a Patient");
+                errLabel.setTextFill(Color.RED);
+            }
+            else {
+                try {
+                    String name = (String) patientList.getValue();
+                    String[] name_list = name.split(" ");
+                    System.out.println(name);
+                    String fname = name_list[0];
+                    String lname = name_list[1];
+                    String query = "SELECT PatientID FROM Patient WHERE First_Name='"
+                            + fname + "' AND Last_Name='" + lname + "';";
+                    ResultSet rs = HealthPortal.statement.executeQuery(query);
+                    rs.last();
+                    if(rs.getRow() == 0) {
+                        throw new FailedException("SQL Query FAILED!!!");
+                    }
+                    else {
+                        HealthPortal.currPatient = rs.getInt("PatientID");
+                        super.handle(event);
+                    }
+                } catch(Exception e) {
+                    System.err.print(e);
+                }
+            }
         }
     }
 
