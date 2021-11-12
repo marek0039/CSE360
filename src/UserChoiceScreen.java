@@ -75,6 +75,7 @@ public class UserChoiceScreen extends StackPane
         //these attributes
         middleText.getChildren().add(question);
         middleText.getChildren().add(select);
+        middleText.getChildren().add(errorLabel);
         middleText.getChildren().add(attributes);
 
         //put the vertical pane in the center of the borderpane

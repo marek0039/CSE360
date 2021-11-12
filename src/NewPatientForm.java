@@ -11,16 +11,21 @@ public class NewPatientForm extends StackPane
     //create attributes for this screen
     private Color mainColor;
     private Text title, form, required, fName, lName, dob, email;
-    private Text phone, medHis, pharmacy, mailAddress, insurance, insNum, finish, doctorChoice;
-    private TextField fNameField, lNameField, emailField, pharmField, numField, insField, insNumField;
-    private TextField mailField1, mailField2, mailField3, mailField4;
-    private TextArea medHisField;
-    private DatePicker dobPicker;
+    public Text phone, medHis, pharmacy, mailAddress, insurance, insNum, finish, doctorChoice;
+    public TextField fNameField, lNameField, emailField, pharmField, numField, insField, insNumField;
+    public TextField mailField1, mailField2, mailField3, mailField4;
+    public TextArea medHisField;
+    public DatePicker dobPicker;
     private ComboBox doctorsList;
     private Button submit, back;
+    private int currUser;
+    public Label errorLabel;
 
-    public NewPatientForm()
+    public NewPatientForm(int user)
     {
+        root = rootPane;
+        currUser = user;
+        errorLabel = new Label();
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -170,13 +175,13 @@ public class NewPatientForm extends StackPane
         //the program should go to the previous screen
         //these will be handled in the event handlers for these buttons
         submit = new Button("Submit");
-        //forward event handler for submit button, case 4, takes user to confirmation page
-        ForwardButton handler1 = new ForwardButton(3);
+        //forward event handler for submit button, case 5, takes user to confirmation page
+        ForwardButton handler1 = new ForwardButton(5, currUser);
         submit.setOnAction(handler1);
 
         back = new Button("Back");
-        //forward event handler for back button, case 2, takes user back to patient choice screen
-        ForwardButton handler2 = new ForwardButton(2);
+        //forward event handler for back button, case 4, takes user back to patient choice screen
+        ForwardButton handler2 = new ForwardButton(4, currUser);
         back.setOnAction(handler2);
 
         //vertical panes to attach the text element to it's corresponding
@@ -239,7 +244,7 @@ public class NewPatientForm extends StackPane
         //create a vertical pane for the title, new patient form text,
         //and required text
         VBox topText = new VBox(5);
-        topText.getChildren().addAll(title, form, required);
+        topText.getChildren().addAll(title, form, required, errorLabel);
 
         //add the top text with its contents to the top left
         //of this stack pane

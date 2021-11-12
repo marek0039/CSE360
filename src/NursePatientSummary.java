@@ -11,7 +11,7 @@ public class NursePatientSummary extends StackPane
     //create attributes for this screen
     private Color mainColor;
     private Text title, welcome, patient, dob, contactInfo, email, sendMessage;
-    private Text phone, medHisTitle, medHis, pharmacy, insurance, doctorNotes, notes;
+    private Text phone, medHisTitle, medHis, pharmacy, insurance, insuranceNum, address, doctorNotes, notes;
     private Text date1, date2, height, weight, bloodPressure, bodyTemp, allergies, prescription;
     private Text height2, weight2, bloodPressure2, bodyTemp2, allergies2, prescription2;
     private Button back, go;
@@ -65,6 +65,14 @@ public class NursePatientSummary extends StackPane
         pharmacy = new Text("Pharmacy: CVS #602");
         pharmacy.setFont(Font.font("Times New Roman", 14));
         pharmacy.setFill(Color.BLACK);
+
+        address = new Text("Address: 12345 E University Dr.\nTempe, AZ 85281");
+        address.setFont(Font.font("Times New Roman", 14));
+        address.setFill(Color.BLACK);
+
+        insuranceNum = new Text("Insurance Number: 6352");
+        insuranceNum.setFont(Font.font("Times New Roman", 14));
+        insuranceNum.setFill(Color.BLACK);
 
         //labels previous medical history
         medHisTitle = new Text("Previous Medical History:");
@@ -164,10 +172,10 @@ public class NursePatientSummary extends StackPane
         nameBox.getChildren().addAll(patient, dob);
 
         VBox contactBox = new VBox(2);
-        contactBox.getChildren().addAll(contactInfo, phone, email);
+        contactBox.getChildren().addAll(contactInfo, phone, email, address);
 
         VBox insBox = new VBox(2);
-        insBox.getChildren().addAll(insurance, pharmacy);
+        insBox.getChildren().addAll(insurance, insuranceNum, pharmacy);
 
         VBox prevMedBox = new VBox(2);
         prevMedBox.getChildren().addAll(medHisTitle, medHis);
