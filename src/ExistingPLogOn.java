@@ -112,10 +112,7 @@ public class ExistingPLogOn extends StackPane
         {
 
             //Format = YYYY-MM-DD
-
-            ResultSet rs = null;
-            Connector connect = new Connector();
-            Statement statement = connect.getStatement();
+            ResultSet rs;
             String[] delim = dobPicker.getText().split("-");
 
             if(fNameField.getText().isEmpty() || lNameField.getText().isEmpty() || dobPicker.getText().isEmpty())
@@ -131,7 +128,7 @@ public class ExistingPLogOn extends StackPane
                     String lName = lNameField.getText();
                     String birthday = dob.getText();
                     String sql = "select First_Name, Last_Name, DOB, PatientID from Patient where First_Name = " + fName + ", Last_Name = " + lName + ", DOB = " + birthday;
-                    rs = statement.executeQuery(sql);
+                    rs = HealthPortal.statement.executeQuery(sql);
                     if (rs.getRow() == 1) {
                         rs.first();
                         String pFirstName = rs.getString("First_Name");

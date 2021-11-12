@@ -1,6 +1,7 @@
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -17,11 +18,11 @@ public class DocPatientSummary extends StackPane
     private Text sendMessage, newMeds;
     private TextField notesField, presField;
     private Button back, go , submit;
+    private Label errLabel;
 
     public DocPatientSummary()
     {
-        //create attributes for this screen
-
+        errLabel = new Label(); //label which will display an error done by the user.
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -206,9 +207,9 @@ public class DocPatientSummary extends StackPane
         VBox column3 = new VBox(16);
         column3.getChildren().addAll(visit1Box, visit2Box);
 
-        //vbox for title and doctor greeting
+        //vbox for title and doctor greeting as well as the error label.
         VBox titleBox = new VBox(2);
-        titleBox.getChildren().addAll(title, welcome);
+        titleBox.getChildren().addAll(title, welcome, errLabel);
 
         //vbox for send message label and buttons
         VBox messageBox = new VBox(2);
