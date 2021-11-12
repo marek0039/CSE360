@@ -17,7 +17,7 @@ public class Connector {
             String ssh_host = "70.162.165.24";  //ip of the sql server
             String ssh_user = "marek";          //user on the server (this is like the desktop user, don't change)
             String db_host = "localhost";       //this is the database host. It is local on the ssh machine
-            int client_port = 4321;             //port on your computer which will hold the ssh connection.
+            int client_port = 0;             //port on your computer which will hold the ssh connection.
             int db_port = 3306;                 //port on server which will holds the database
             String db_user = "root";            //username for the database
             String db_pswd = "root";            //password for the database
@@ -29,11 +29,11 @@ public class Connector {
 
             Session session = jsch.getSession(ssh_user, ssh_host);  //start the ssh session
             session.connect();  //connect
-            int assigned_port=session.setPortForwardingL(client_port, db_host, db_port); //set the port on your machine
+            int assigned_port = session.setPortForwardingL(client_port, db_host, db_port); //set the port on your machine
             System.out.println("localhost:"+assigned_port+" -> "+db_host+":"+db_port);  //for debugging purposes
 
             String jdbc_driver = "com.mysql.cj.jdbc.Driver"; //driver to use for sql connection
-            String url = "jdbc:mysql://" + db_host + ":" + client_port + "/"; //the sql url to use
+            String url = "jdbc:mysql://" + db_host + ":" + assigned_port + "/"; //the sql url to use
             System.setProperty(jdbc_driver,""); //set the driver
 
             Class.forName(jdbc_driver);

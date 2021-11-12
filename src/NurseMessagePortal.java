@@ -8,17 +8,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 public class NurseMessagePortal extends StackPane
 {
     //create attributes for this screen
     private Color mainColor;
     private Text title, welcome, patient, dob, prevMessages, message1, message2;
     private Button sendMessage, back;
-    private String nurseFName, nurseLName, pFirstName, pLastName, dateOfBirth;
-    private String sender1, text1, date1, sender2, text2, date2;
 
     public NurseMessagePortal()
     {
@@ -30,57 +25,19 @@ public class NurseMessagePortal extends StackPane
         title.setFont(Font.font("Plantagenet Cherokee", 23));
         title.setFill(mainColor);
 
-        //SQL query for grabbing the name and date of birth of the current patient the nurse has selected
-        //using currPatient global variable
-        ResultSet rs = null;
-        try
-        {
-            String sql = "select First_Name, Last_Name, DOB from Patient where PatientID =" + HealthPortal.currPatient;
-            rs = HealthPortal.statement.executeQuery(sql);
-
-            if (rs.first() == true)
-            {
-                pFirstName = rs.getString("First_Name");
-                pLastName = rs.getString("Last_Name");
-                dateOfBirth = rs.getString("DOB");
-            }
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-
-        //sql query to grab the name and last name of the nurse currently logged in
-        ResultSet rs3 = null;
-        try
-        {
-            String sql = "select First_Name, Last_Name, from Professional where ID =" + HealthPortal.currUser;
-            rs3 = HealthPortal.statement.executeQuery(sql);
-
-            if (rs3.first() == true)
-            {
-                nurseFName = rs.getString("First_Name");
-                nurseLName = rs.getString("Last_Name");
-            }
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-
         //black text labeling the name of the patient and dob of the patient
         //as well as which nurse is logged on currently
         //Note: these will need to be read in from the patient chosen by the nurse
         //text fields/areas so they will end up being parsed input rather than this dummy default text
-        welcome = new Text("Welcome in, Nurse " + nurseFName + " " + nurseLName);
+        welcome = new Text("Welcome in, Nurse Jackson");
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);
 
-        patient = new Text("Patient: " + pFirstName + " " + pLastName);
+        patient = new Text("Patient: Adam Samler");
         patient.setFont(Font.font("Times New Roman", 14));
         patient.setFill(Color.BLACK);
 
-        dob = new Text("DOB: " + dateOfBirth);
+        dob = new Text("DOB: 01/09/2007");
         dob.setFont(Font.font("Times New Roman", 14));
         dob.setFill(Color.BLACK);
 
@@ -88,55 +45,18 @@ public class NurseMessagePortal extends StackPane
         prevMessages.setFont(Font.font("Times New Roman", 14));
         prevMessages.setFill(Color.BLACK);
 
-
-        //SQL for the messages to be displayed on this users screen
-        String[] results = new String[6];
-        ResultSet rs2 = null;
-        try
-        {
-            String sql2 = "SELECT Sender, Text, Date From Message WHERE Recipient = " + HealthPortal.currUser + "And Date IN (SELECT t1.Date FROM Message t1 left join Message t2 on t1.Date <= t2.Date group by t1.Date having count(distinct t2.Date)<=2)";
-            rs2 = HealthPortal.statement.executeQuery(sql2);
-            int i = 0;
-            if (rs2.first() == true)
-            {
-                while(rs2.next())
-                {
-                    results[i] = rs2.getString("Sender");
-                    results[i+1] = rs2.getString("Text");
-                    results[i+2] = rs2.getString("Date");
-                    i = i+3;
-                }
-
-                sender1 = results[0];
-                text1 = results[1];
-                date1 = results[2];
-                sender2 = results[3];
-                text2 = results[4];
-                date2 = results[5];
-            }
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-
         //buttons for the user to send a message, takes them to the
         //screen where they can type out and send a message, back
-        //button takes them back
+        //button takes them back if they just wanted to read old messages
         sendMessage = new Button("Send Message");
-        ForwardButton handler1 = new ForwardButton(28);
-        sendMessage.setOnAction(handler1);
-
         back = new Button("Back");
-        ForwardButton handler2 = new ForwardButton(26);
-        back.setOnAction(handler2);
 
         //text objects for the messages
-        message1 = new Text(text1);
+        message1 = new Text("Hi Adam,\n\nI wanted to check in and see how you're doing today.\nLet me know if you need an appointment with Dr. Sparky!");
         message1.setFont(Font.font("Times New Roman", 10));
         message1.setFill(Color.BLACK);
 
-        message2 = new Text(text2);
+        message2 = new Text("Hope you are having a great summer Adam!");
         message2.setFont(Font.font("Times New Roman", 10));
         message2.setFill(Color.BLACK);
 
@@ -144,7 +64,7 @@ public class NurseMessagePortal extends StackPane
         //the string array has the message titles and messages, for the titles we will have to figure out if we
         //want to parse these in in any way or just say 'message 1' 'message 2' etc.
         //as defaults that don't change, for now it's the same as our mockup
-        String[] messageTitles = new String[] {date1 + " " + sender1, date2 + " " + sender2};
+        String[] messageTitles = new String[] {"03/04 Nurse Johnson", "08/15 Dr. Sparky"};
         Text[] message = new Text[] {message1, message2};
 
         //Note: the strings for the text objects of messages will be parsed from input so these are dummy messages
