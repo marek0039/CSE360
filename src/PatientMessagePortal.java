@@ -39,9 +39,8 @@ public class PatientMessagePortal extends StackPane
             String sql = "select First_Name, Last_Name, DOB from Patient where PatientID =" + HealthPortal.currUser;
             rs = HealthPortal.statement.executeQuery(sql);
 
-            if (rs.getRow() == 1)
+            if (rs.first() == true)
             {
-                rs.first();
                 pFirstName = rs.getString("First_Name");
                 pLastName = rs.getString("Last_Name");
                 dateOfBirth = rs.getString("DOB");
@@ -90,7 +89,7 @@ public class PatientMessagePortal extends StackPane
             String sql2 = "SELECT Sender, Text, Date From Message WHERE Recipient = " + HealthPortal.currUser + "And Date IN (SELECT t1.Date FROM Message t1 left join Message t2 on t1.Date <= t2.Date group by t1.Date having count(distinct t2.Date)<=2)";
             rs2 = HealthPortal.statement.executeQuery(sql2);
             int i = 0;
-            if (rs2.getRow() == 2)
+            if (rs2.first() == true)
             {
                 while(rs2.next())
                 {
@@ -126,7 +125,7 @@ public class PatientMessagePortal extends StackPane
         //the string array has the message titles and messages, for the titles we will have to figure out if we
         //want to parse these in in any way or just say 'message 1' 'message 2' etc.
         //as defaults that don't change, for now it's the same as our mockup
-        String[] messageTitles = new String[] {date1 + sender1, date2 + sender2};
+        String[] messageTitles = new String[] {date1 + " " + sender1, date2 + " " + sender2};
         Text[] message = new Text[] {message1, message2};
 
         //Note: the strings for the text objects of messages will be parsed from input so these are dummy messages
