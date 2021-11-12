@@ -1,3 +1,4 @@
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -5,6 +6,8 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
+import java.sql.SQLException;
 
 public class NewPatientForm extends StackPane
 {
@@ -15,7 +18,7 @@ public class NewPatientForm extends StackPane
     private TextField fNameField, lNameField, emailField, pharmField, numField, insField, insNumField;
     private TextField mailField1, mailField2, mailField3, mailField4;
     private TextArea medHisField;
-    private DatePicker dobPicker;
+    private TextField dobPicker;
     private ComboBox doctorsList;
     private Button submit, back;
 
@@ -149,8 +152,9 @@ public class NewPatientForm extends StackPane
 
         //date picker object in order for the patient
         //to pick their date of birth most effectively
-        dobPicker = new DatePicker();
+        dobPicker = new TextField();
         dobPicker.setPromptText("*");
+        dobPicker.setStyle("-fx-prompt-text-fill: red");
         //Note: this isn't working to set the prompt * color to red
         //for the date picker so another method must be tried later
         //dobPicker.setStyle("-fx-prompt-text-fill: red");
@@ -171,7 +175,7 @@ public class NewPatientForm extends StackPane
         //these will be handled in the event handlers for these buttons
         submit = new Button("Submit");
         //forward event handler for submit button, case 4, takes user to confirmation page
-        ForwardButton handler1 = new ForwardButton(3);
+        NewPatientFormButton handler1 = new NewPatientFormButton(3);
         submit.setOnAction(handler1);
 
         back = new Button("Back");
@@ -256,4 +260,53 @@ public class NewPatientForm extends StackPane
         //add the border pane to this stack pane
         this.getChildren().add(bp);
     } //end constructor
+    private class NewPatientFormButton extends ForwardButton {
+        private NewPatientFormButton(int caseInt) {
+
+
+            super(caseInt);
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
+            // String[] deLim = dobPicker.getText().split(());
+
+            //this takes
+            if ((fNameField.getText().isEmpty()) || (lNameField.getText().isEmpty()) || (dobPicker.getText().isEmpty()) || (emailField.getText().isEmpty()) || (numField.getText().isEmpty()) || (medHisField.getText().isEmpty()) || (pharmField.getText().isEmpty()) || (insField.getText().isEmpty()) || (insNumField.getText().isEmpty()) || (mailField1.getText().isEmpty()) || (mailField3.getText().isEmpty()) || (mailField4.getText().isEmpty())) {
+                NewPatientFormButton.errorLabel.setText("Please fill in all required fields denoted by the *");
+                NewPatientFormButton.errorLabel.setTextFill(Color.RED);
+            }
+
+            else if(delim[0].length() == 4 && delim[1].length() == 1 && delim[2].length() == 2)
+            {
+                try {
+                    String fName = fNameField.getText();
+                    String lName = lNameField.getText();
+                    String birthday = dob.getText();
+                    String sql = "select First_Name, Last_Name, DOB, PatientID from Patient where First_Name = " + fName + ", Last_Name = " + lName + ", DOB = " + birthday;
+                    rs = statement.executeQuery(sql);
+                    if (rs.getRow() == 1) {
+                        rs.first();
+                        String pFirstName = rs.getString("First_Name");
+                        String pLastName = rs.getString("Last_Name");
+                        String dob = rs.getString("DOB");
+                        HealthPortal.currUser = rs.getInt("PatientID");
+                        super.handle(event);
+                    }
+                    else {
+                        errorLabel.setText("Enter Valid Login Info or go back");
+                        errorLabel.setTextFill(Color.RED);
+                    }
+                }
+                catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            //if(//info is right)
+
+        }
+    }
+        }
+    }
 }//end new patient form class
+
