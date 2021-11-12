@@ -65,11 +65,6 @@ public class NurseSelectPatient extends StackPane
         }
 
         errLabel = new Label(); //label which will display an error done by the user.
-    private int currUser;
-
-    public NurseSelectPatient(int user)
-    {
-        currUser = user;
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 

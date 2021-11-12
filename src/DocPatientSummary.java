@@ -12,7 +12,7 @@ public class DocPatientSummary extends StackPane
 {
     private Color mainColor;
     private Text title, welcome, dob, contactInfo, email;
-    private Text phone, medHisTitle, medHis, pharmacy, insurance, insuranceNum, address, doctorNotes, pName;
+    private Text phone, medHisTitle, medHis, pharmacy, insurance, doctorNotes, pName;
     private Text date1, date2, height, weight, bloodPressure, bodyTemp, allergies, prescription;
     private Text height2, weight2, bloodPressure2, bodyTemp2, allergies2, prescription2;
     private Text sendMessage, newMeds;
@@ -66,14 +66,6 @@ public class DocPatientSummary extends StackPane
         insurance = new Text("Insurance: Aetna");
         insurance.setFont(Font.font("Times New Roman", 14));
         insurance.setFill(Color.BLACK);
-
-        address = new Text("Address: 12345 E University Dr.\nTempe, AZ 85281");
-        address.setFont(Font.font("Times New Roman", 14));
-        address.setFill(Color.BLACK);
-
-        insuranceNum = new Text("Insurance Number: 6352");
-        insuranceNum.setFont(Font.font("Times New Roman", 14));
-        insuranceNum.setFill(Color.BLACK);
 
         pharmacy = new Text("Pharmacy: CVS #602");
         pharmacy.setFont(Font.font("Times New Roman", 14));
@@ -180,10 +172,10 @@ public class DocPatientSummary extends StackPane
         nameBox.getChildren().addAll(pName, dob);
 
         VBox contactBox = new VBox(2);
-        contactBox.getChildren().addAll(contactInfo, phone, email, address);
+        contactBox.getChildren().addAll(contactInfo, phone, email);
 
         VBox insBox = new VBox(2);
-        insBox.getChildren().addAll(insurance, insuranceNum, pharmacy);
+        insBox.getChildren().addAll(insurance, pharmacy);
 
         VBox prevMedBox = new VBox(2);
         prevMedBox.getChildren().addAll(medHisTitle, medHis);
