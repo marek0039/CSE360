@@ -1,5 +1,9 @@
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Button;
+import javafx.scene.control.*;
+import javafx.scene.control.TextField;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
@@ -9,12 +13,20 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 public class ExistingPLogOn extends StackPane
 {
     // Test 123
     //attributes of this class to be displayed on the pane
     private Color mainColor;
     private Text title, label, fName, lName, dob;
+    private TextField fNameField, lNameField, dobPicker;
+    //private DatePicker dobPicker;
+    private Button submit, back;
+    private Label errorLabel;
     public TextField fNameField, lNameField;
     public DatePicker dobPicker;
     private Button submit, back;
@@ -22,12 +34,12 @@ public class ExistingPLogOn extends StackPane
     private int currUser;
     public Label errorLabel;
 
-    public ExistingPLogOn(StackPane rootPane, int user)
+    public ExistingPLogOn()
     {
+        errorLabel = new Label();
         root = rootPane;
         currUser = user;
         errorLabel = new Label();
-
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -50,26 +62,26 @@ public class ExistingPLogOn extends StackPane
         lName.setFont(Font.font("Times New Roman", 14));
         lName.setFill(Color.BLACK);
 
-        dob = new Text("Patient Date of Birth:");
+        dob = new Text("Patient Date of Birth (Use Format YYYY-MM-DD): ");
         dob.setFont(Font.font("Times New Roman", 14));
         dob.setFill(Color.BLACK);
 
         //text fields and date picker for the patient to input information
         fNameField = new TextField();
         lNameField = new TextField();
-        dobPicker = new DatePicker();
+        dobPicker = new TextField();
 
         //buttons to allow the user to submit and log in, or go back to the
         //previous page in case they did not mean to enter this one
         submit = new Button("Submit");
-        //forward event handler for submit button, case 7, takes user to existing patient
+        //forward event handler for submit button, case 5, takes user to existing patient
         //portal with their information
-        ForwardButton handler1 = new ForwardButton(7, root, currUser);
+        PatientLoginButton handler1 = new PatientLoginButton(5);
         submit.setOnAction(handler1);
 
         back = new Button("Back");
-        //forward event handler for back button, case 4, takes user back to patient choice screen
-        ForwardButton handler2 = new ForwardButton(4, root, currUser);
+        //forward event handler for back button, case 2, takes user back to patient choice screen
+        ForwardButton handler2 = new ForwardButton(2);
         back.setOnAction(handler2);
 
         //Vertical pane to put the title and existing patient label together
@@ -97,4 +109,55 @@ public class ExistingPLogOn extends StackPane
         //add the border pane to this stack pane
         this.getChildren().add(bp);
     } //end constructor
+
+    private class PatientLoginButton extends ForwardButton
+    {
+        private PatientLoginButton(int caseInt)
+        {
+            super(caseInt);
+        }
+
+        @Override
+        public void handle(ActionEvent event)
+        {
+
+            //Format = YYYY-MM-DD
+            ResultSet rs;
+            String[] delim = dobPicker.getText().split("-");
+
+            if(fNameField.getText().isEmpty() || lNameField.getText().isEmpty() || dobPicker.getText().isEmpty())
+            {
+                errorLabel.setText("Please enter all necessary info");
+                errorLabel.setTextFill(Color.RED);
+            }
+
+            else if(delim[0].length() == 4 && delim[1].length() == 1 && delim[2].length() == 2)
+            {
+                try {
+                    String fName = fNameField.getText();
+                    String lName = lNameField.getText();
+                    String birthday = dob.getText();
+                    String sql = "select First_Name, Last_Name, DOB, PatientID from Patient where First_Name = " + fName + ", Last_Name = " + lName + ", DOB = " + birthday;
+                    rs = HealthPortal.statement.executeQuery(sql);
+                    if (rs.getRow() == 1) {
+                        rs.first();
+                        String pFirstName = rs.getString("First_Name");
+                        String pLastName = rs.getString("Last_Name");
+                        String dob = rs.getString("DOB");
+                        HealthPortal.currUser = rs.getInt("PatientID");
+                        super.handle(event);
+                    }
+                    else {
+                        errorLabel.setText("Enter Valid Login Info or go back");
+                        errorLabel.setTextFill(Color.RED);
+                    }
+                }
+                catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            //if(//info is right)
+
+        }
+    }
 } //end existing patient log on class
