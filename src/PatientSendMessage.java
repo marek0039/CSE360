@@ -169,4 +169,12 @@ public class PatientSendMessage extends StackPane
         //add the border pane to this stack pane
         this.getChildren().add(bp);
     } //end constructor
+
+    // custom exception to print error messages
+    private static class FailedException extends Exception {
+        private FailedException(String errorMessage) {
+            super(errorMessage);
+        } // end constructor
+    } // end FailedException class
+
 } //end class
