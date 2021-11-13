@@ -26,6 +26,43 @@ public class DocMessagePortal extends StackPane
         title.setFont(Font.font("Plantagenet Cherokee", 23));
         title.setFill(mainColor);
 
+        //SQL to grab current patient's name the doctor is on
+        ResultSet rs = null;
+        try
+        {
+            String sql = "select First_Name, Last_Name, DOB from Patient where PatientID =" + HealthPortal.currPatient + ";";
+            rs = HealthPortal.statement.executeQuery(sql);
+            rs.last();
+            if (rs.getRow() == 1)
+            {
+                pFirstName = rs.getString("First_Name");
+                pLastName = rs.getString("Last_Name");
+                dateOfBirth = rs.getString("DOB");
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        //sql query to grab the name and last name of the nurse currently logged in
+        ResultSet rs3 = null;
+        try
+        {
+            String sql = "select First_Name, Last_Name, from Professional where ID =" + HealthPortal.currUser + ";";
+            rs3 = HealthPortal.statement.executeQuery(sql);
+            rs3.last();
+            if (rs3.getRow() == 1)
+            {
+                docFirstName = rs3.getString("First_Name");
+                docLastName = rs3.getString("Last_Name");
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        
         //black text labeling the name of the patient and dob of the patient
         //as well as which doctor is logged on currently
         //Note: these will need to be read in from the patient list the doctor chose from
@@ -51,6 +88,39 @@ public class DocMessagePortal extends StackPane
         //button takes them back if they just wanted to read old messages
         sendMessage = new Button("Send Message");
         back = new Button("Back");
+        ForwardButton handler2 = new ForwardButton(15);
+        back.setOnAction(handler2);
+
+        //SQL for the messages to be displayed on this users screen
+        String[] results = new String[6];
+        ResultSet rs2 = null;
+        try
+        {
+            String sql2 = "SELECT Sender, Text, Date From Message WHERE Recipient =" + HealthPortal.currUser + "And Date IN (SELECT t1.Date FROM Message t1 left join Message t2 on t1.Date <= t2.Date group by t1.Date having count(distinct t2.Date)<=2)";
+            rs2 = HealthPortal.statement.executeQuery(sql2);
+            int i = 0;
+            if (rs2.first())
+            {
+                while(rs2.next())
+                {
+                    results[i] = rs2.getString("Sender");
+                    results[i+1] = rs2.getString("Text");
+                    results[i+2] = rs2.getString("Date");
+                    i = i+3;
+                }
+
+                sender1 = results[0];
+                text1 = results[1];
+                date1 = results[2];
+                sender2 = results[3];
+                text2 = results[4];
+                date2 = results[5];
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
 
         //text objects for the messages
         message1 = new Text("Hi Adam,\n\nThanks for visiting me today, please message back if you have any questions for me.\n\nHave a great day!");

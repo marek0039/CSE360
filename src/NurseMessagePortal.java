@@ -25,6 +25,44 @@ public class NurseMessagePortal extends StackPane
         title.setFont(Font.font("Plantagenet Cherokee", 23));
         title.setFill(mainColor);
 
+        //SQL query for grabbing the name and date of birth of the current patient the nurse has selected
+        //using currPatient global variable
+        ResultSet rs = null;
+        try
+        {
+            String sql = "select First_Name, Last_Name, DOB from Patient where PatientID =" + HealthPortal.currPatient;
+            rs = HealthPortal.statement.executeQuery(sql);
+            rs.last();
+            if (rs.getRow() == 1)
+            {
+                pFirstName = rs.getString("First_Name");
+                pLastName = rs.getString("Last_Name");
+                dateOfBirth = rs.getString("DOB");
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        //sql query to grab the name and last name of the nurse currently logged in
+        ResultSet rs3 = null;
+        try
+        {
+            String sql = "select First_Name, Last_Name, from Professional where ID =" + HealthPortal.currUser;
+            rs3 = HealthPortal.statement.executeQuery(sql);
+            rs3.last();
+            if (rs3.getRow() == 1)
+            {
+                nurseFName = rs.getString("First_Name");
+                nurseLName = rs.getString("Last_Name");
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
         //black text labeling the name of the patient and dob of the patient
         //as well as which nurse is logged on currently
         //Note: these will need to be read in from the patient chosen by the nurse
