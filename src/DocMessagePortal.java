@@ -96,39 +96,6 @@ public class DocMessagePortal extends StackPane
         sendMessage.setOnAction(handler1);
 
         back = new Button("Back");
-        ForwardButton handler2 = new ForwardButton(15);
-        back.setOnAction(handler2);
-
-        //SQL for the messages to be displayed on this users screen
-        String[] results = new String[6];
-        ResultSet rs2 = null;
-        try
-        {
-            String sql2 = "SELECT Sender, Text, Date From Message WHERE Recipient =" + HealthPortal.currUser + "And Date IN (SELECT t1.Date FROM Message t1 left join Message t2 on t1.Date <= t2.Date group by t1.Date having count(distinct t2.Date)<=2)";
-            rs2 = HealthPortal.statement.executeQuery(sql2);
-            int i = 0;
-            if (rs2.first())
-            {
-                while(rs2.next())
-                {
-                    results[i] = rs2.getString("Sender");
-                    results[i+1] = rs2.getString("Text");
-                    results[i+2] = rs2.getString("Date");
-                    i = i+3;
-                }
-
-                sender1 = results[0];
-                text1 = results[1];
-                date1 = results[2];
-                sender2 = results[3];
-                text2 = results[4];
-                date2 = results[5];
-            }
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
 
         //text objects for the messages
         message1 = new Text(text1);

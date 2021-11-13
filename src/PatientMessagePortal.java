@@ -31,26 +31,6 @@ public class PatientMessagePortal extends StackPane
         title.setFont(Font.font("Plantagenet Cherokee", 23));
         title.setFill(mainColor);
 
-        //SQL queries for grabbing the name and date of birth of the current user
-        //logged in to display on the screen
-        ResultSet rs = null;
-        try
-        {
-            String sql = "select First_Name, Last_Name, DOB from Patient where PatientID =" + HealthPortal.currUser;
-            rs = HealthPortal.statement.executeQuery(sql);
-            rs.last();
-            if (rs.getRow() == 1)
-            {
-                pFirstName = rs.getString("First_Name");
-                pLastName = rs.getString("Last_Name");
-                dateOfBirth = rs.getString("DOB");
-            }
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-
         //black text labeling the name of the patient and dob of the patient
         //Note: these will need to be read in from the existing patient log in
         //text fields/areas so they will end up being parsed input rather than this dummy default text
