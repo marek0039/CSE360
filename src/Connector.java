@@ -29,7 +29,7 @@ public class Connector {
 
             Session session = jsch.getSession(ssh_user, ssh_host);  //start the ssh session
             session.connect();  //connect
-            int assigned_port=session.setPortForwardingL(client_port, db_host, db_port); //set the port on your machine
+            int assigned_port = session.setPortForwardingL(client_port, db_host, db_port); //set the port on your machine
             System.out.println("localhost:"+assigned_port+" -> "+db_host+":"+db_port);  //for debugging purposes
 
             String jdbc_driver = "com.mysql.cj.jdbc.Driver"; //driver to use for sql connection
