@@ -9,12 +9,17 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class DocMessagePortal extends StackPane
 {
     //create attributes for this screen
     private Color mainColor;
     private Text title, welcome, patient, dob, prevMessages, message1, message2;
     private Button sendMessage, back;
+    private String pFirstName, pLastName, dateOfBirth, docFirstName, docLastName;
+    private String sender1, text1, date1, sender2, text2, date2;
 
     public DocMessagePortal()
     {
@@ -26,19 +31,56 @@ public class DocMessagePortal extends StackPane
         title.setFont(Font.font("Plantagenet Cherokee", 23));
         title.setFill(mainColor);
 
+        //SQL to grab current patient's name the doctor is on
+        ResultSet rs = null;
+        try
+        {
+            String sql = "select First_Name, Last_Name, DOB from Patient where PatientID =" + HealthPortal.currPatient + ";";
+            rs = HealthPortal.statement.executeQuery(sql);
+            rs.last();
+            if (rs.getRow() == 1)
+            {
+                pFirstName = rs.getString("First_Name");
+                pLastName = rs.getString("Last_Name");
+                dateOfBirth = rs.getString("DOB");
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
+        //sql query to grab the name and last name of the nurse currently logged in
+        ResultSet rs3 = null;
+        try
+        {
+            String sql = "select First_Name, Last_Name, from Professional where ID =" + HealthPortal.currUser + ";";
+            rs3 = HealthPortal.statement.executeQuery(sql);
+            rs3.last();
+            if (rs3.getRow() == 1)
+            {
+                docFirstName = rs3.getString("First_Name");
+                docLastName = rs3.getString("Last_Name");
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+
         //black text labeling the name of the patient and dob of the patient
         //as well as which doctor is logged on currently
         //Note: these will need to be read in from the patient list the doctor chose from
         //text fields/areas so they will end up being parsed input rather than this dummy default text
-        welcome = new Text("Welcome in, Doctor Sparky");
+        welcome = new Text("Welcome in, Doctor " + docFirstName + " " + docLastName);
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);
 
-        patient = new Text("Patient: Adam Samler");
+        patient = new Text("Patient: " + pFirstName + " " + pLastName);
         patient.setFont(Font.font("Times New Roman", 14));
         patient.setFill(Color.BLACK);
 
-        dob = new Text("DOB: 01/09/2007");
+        dob = new Text("DOB: " + dateOfBirth);
         dob.setFont(Font.font("Times New Roman", 14));
         dob.setFill(Color.BLACK);
 
@@ -48,16 +90,19 @@ public class DocMessagePortal extends StackPane
 
         //buttons for the user to send a message, takes them to the
         //screen where they can type out and send a message, back
-        //button takes them back if they just wanted to read old messages
+        //button takes them back
         sendMessage = new Button("Send Message");
+        ForwardButton handler1 = new ForwardButton(19);
+        sendMessage.setOnAction(handler1);
+
         back = new Button("Back");
 
         //text objects for the messages
-        message1 = new Text("Hi Adam,\n\nThanks for visiting me today, please message back if you have any questions for me.\n\nHave a great day!");
+        message1 = new Text(text1);
         message1.setFont(Font.font("Times New Roman", 10));
         message1.setFill(Color.BLACK);
 
-        message2 = new Text("Hope you are having a great summer Adam!");
+        message2 = new Text(text2);
         message2.setFont(Font.font("Times New Roman", 10));
         message2.setFill(Color.BLACK);
 
@@ -65,7 +110,7 @@ public class DocMessagePortal extends StackPane
         //the string array has the message titles and messages, for the titles we will have to figure out if we
         //want to parse these in in any way or just say 'message 1' 'message 2' etc.
         //as defaults that don't change, for now it's the same as our mockup
-        String[] messageTitles = new String[] {"03/04 Nurse Johnson", "08/15 Dr. Sparky"};
+        String[] messageTitles = new String[] {date1 + " " + sender1, date2 + " " + sender2};
         Text[] message = new Text[] {message2, message1};
 
         //Note: the strings for the text objects of messages will be parsed from input so these are dummy messages
