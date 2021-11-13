@@ -11,7 +11,7 @@ public class PatientSummary extends StackPane
     //create attributes for this screen
     private Color mainColor;
     private Text title, welcome, dob, contactInfo, email;
-    private Text phone, medHisTitle, medHis, pharmacy, insurance, insuranceNum, address, doctorNotes, notes;
+    private Text phone, medHisTitle, medHis, pharmacy, insurance, doctorNotes, notes;
     private Text date1, date2, height, weight, bloodPressure, bodyTemp, allergies, prescription;
     private Text height2, weight2, bloodPressure2, bodyTemp2, allergies2, prescription2;
     private Button back;
@@ -56,14 +56,6 @@ public class PatientSummary extends StackPane
         insurance = new Text("Insurance: Aetna");
         insurance.setFont(Font.font("Times New Roman", 14));
         insurance.setFill(Color.BLACK);
-
-        address = new Text("Address: 12345 E University Dr.\nTempe, AZ 85281");
-        address.setFont(Font.font("Times New Roman", 14));
-        address.setFill(Color.BLACK);
-
-        insuranceNum = new Text("Insurance Number: 6352");
-        insuranceNum.setFont(Font.font("Times New Roman", 14));
-        insuranceNum.setFill(Color.BLACK);
 
         pharmacy = new Text("Pharmacy: CVS #602");
         pharmacy.setFont(Font.font("Times New Roman", 14));
@@ -141,7 +133,7 @@ public class PatientSummary extends StackPane
         prescription2.setFill(Color.BLACK);
 
         //doctor's notes will be parsed in as well, this is the label for them
-        doctorNotes = new Text("\nDoctor/Nurse's Notes:");
+        doctorNotes = new Text("Doctor/Nurse's Notes:");
         doctorNotes.setFont(Font.font("Times New Roman", 14));
         doctorNotes.setFill(Color.BLACK);
 
@@ -163,10 +155,10 @@ public class PatientSummary extends StackPane
         nameBox.getChildren().addAll(welcome, dob);
 
         VBox contactBox = new VBox(2);
-        contactBox.getChildren().addAll(contactInfo, phone, email, address);
+        contactBox.getChildren().addAll(contactInfo, phone, email);
 
         VBox insBox = new VBox(2);
-        insBox.getChildren().addAll(insurance, insuranceNum, pharmacy);
+        insBox.getChildren().addAll(insurance, pharmacy);
 
         VBox prevMedBox = new VBox(2);
         prevMedBox.getChildren().addAll(medHisTitle, medHis);

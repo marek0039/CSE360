@@ -8,18 +8,12 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-
 public class PatientMessagePortal extends StackPane
 {
     //create attributes for this screen
     private Color mainColor;
     private Text title, welcome, dob, prevMessages, message1, message2;
     private Button sendMessage, back;
-    private String pFirstName, pLastName, dateOfBirth;
-    private String sender1, text1, date1, sender2, text2, date2;
 
     public PatientMessagePortal()
     {
@@ -54,11 +48,11 @@ public class PatientMessagePortal extends StackPane
         //black text labeling the name of the patient and dob of the patient
         //Note: these will need to be read in from the existing patient log in
         //text fields/areas so they will end up being parsed input rather than this dummy default text
-        welcome = new Text("Patient: " + pFirstName + " " + pLastName);
+        welcome = new Text("Patient: Adam Samler");
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);
 
-        dob = new Text("DOB: " + dateOfBirth);
+        dob = new Text("DOB: 01/09/2007");
         dob.setFont(Font.font("Times New Roman", 14));
         dob.setFill(Color.BLACK);
 
@@ -81,43 +75,12 @@ public class PatientMessagePortal extends StackPane
         ForwardButton handler2 = new ForwardButton(5);
         back.setOnAction(handler2);
 
-        //SQL for the messages to be displayed on this users screen
-        String[] results = new String[6];
-        ResultSet rs2 = null;
-        try
-        {
-            String sql2 = "SELECT Sender, Text, Date From Message WHERE Recipient = " + HealthPortal.currUser + "And Date IN (SELECT t1.Date FROM Message t1 left join Message t2 on t1.Date <= t2.Date group by t1.Date having count(distinct t2.Date)<=2)";
-            rs2 = HealthPortal.statement.executeQuery(sql2);
-            int i = 0;
-            if (rs2.first() == true)
-            {
-                while(rs2.next())
-                {
-                    results[i] = rs2.getString("Sender");
-                    results[i+1] = rs2.getString("Text");
-                    results[i+2] = rs2.getString("Date");
-                    i = i+3;
-                }
-
-                sender1 = results[0];
-                text1 = results[1];
-                date1 = results[2];
-                sender2 = results[3];
-                text2 = results[4];
-                date2 = results[5];
-            }
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
-
         //text objects for the messages
-        message1 = new Text(text1);
+        message1 = new Text("Hi Adam, I wanted to check to see how your knee was feeling.\nHope taking some time off baseball helped, please let me know\nif you need to schedule a follow-up appointment with Dr. Sparky.");
         message1.setFont(Font.font("Times New Roman", 10));
         message1.setFill(Color.BLACK);
 
-        message2 = new Text(text2);
+        message2 = new Text("Hope you are having a great summer Adam!");
         message2.setFont(Font.font("Times New Roman", 10));
         message2.setFill(Color.BLACK);
 
@@ -125,7 +88,7 @@ public class PatientMessagePortal extends StackPane
         //the string array has the message titles and messages, for the titles we will have to figure out if we
         //want to parse these in in any way or just say 'message 1' 'message 2' etc.
         //as defaults that don't change, for now it's the same as our mockup
-        String[] messageTitles = new String[] {date1 + " " + sender1, date2 + " " + sender2};
+        String[] messageTitles = new String[] {"03/04 Nurse Johnson", "08/15 Dr. Sparky"};
         Text[] message = new Text[] {message1, message2};
 
         //Note: the strings for the text objects of messages will be parsed from input so these are dummy messages
