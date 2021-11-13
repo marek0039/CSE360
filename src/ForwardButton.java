@@ -61,7 +61,7 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 //all of them take you back to the user choice screen
                 //remove the previous pane from the root
                 HealthPortal.root.getChildren().clear();
-                userChoice = new UserChoiceScreen();
+                userChoice = new UserChoiceScreen(cI);
                 //add the user choice pane to the root because that is the next screen
                 HealthPortal.root.getChildren().add(userChoice);
                 break;

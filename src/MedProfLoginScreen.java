@@ -1,6 +1,8 @@
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
@@ -10,6 +12,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class MedProfLoginScreen extends StackPane
 {
     //attributes of this class to be displayed on the pane
@@ -17,9 +22,11 @@ public class MedProfLoginScreen extends StackPane
     private Text title, label, username, password;
     private TextField uNameField, passField;
     private Button login, back;
+    private Label errorLabel;
 
     public MedProfLoginScreen()
     {
+        errorLabel = new Label();
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -80,4 +87,74 @@ public class MedProfLoginScreen extends StackPane
         //add the border pane to this stack pane
         this.getChildren().add(bp);
     } //end constructor
+
+    private class MedicalProfessionalLoginButton extends ForwardButton
+    {
+        private int num_rows;
+        private MedicalProfessionalLoginButton(int caseInt)
+        {
+            super(caseInt);
+        }
+
+        @Override
+        public void handle(ActionEvent event)
+        {
+            //Format = YYYY-MM-DD
+
+            ResultSet rs = null;
+            //String[] delim = dobPicker.getText().split("-");
+
+            if(uNameField.getText().isEmpty() || passField.getText().isEmpty())
+            {
+                errorLabel.setText("Please enter all necessary login info");
+                errorLabel.setTextFill(Color.RED);
+            }
+            //delim[0].length() == 4 && delim[1].length() == 1 && delim[2].length() == 2
+            else
+            {
+                try {
+                    String username = uNameField.getText();
+                    String password = passField.getText();
+                    String sql = "SELECT ID FROM Professional WHERE username='"+ username + "' and password='"+ password+ "';";
+                    rs = HealthPortal.statement.executeQuery(sql);
+
+                    if(rs.next())
+                    {
+                        this.num_rows++;
+                    }
+                    if(rs.getRow() == 1) {
+                        while (rs.next()) {
+                            int id = rs.getInt("ID");
+                            HealthPortal.currUser = id;
+                        }
+                        super.handle(event);
+                    }
+
+//                    rs.next();
+//                    if (rs.getRow() == 1) {
+//                        System.out.print("Error6\n");
+//                        rs.first();
+//                       int pFirstName = rs.getInt("PatientID");
+//                        System.out.print(pFirstName + "\n");
+//                        String pLastName = rs.getString("Last_Name");
+//                        System.out.print(pLastName + "\n");
+//                        String dob = rs.getString("DOB");
+//                        System.out.print(dob + "\n");
+//                        HealthPortal.currUser = rs.getInt("PatientID");
+//                        super.handle(event);
+//                    }
+                    else
+                    {
+                        errorLabel.setText("Enter Valid Login Info or go back");
+                        errorLabel.setTextFill(Color.RED);
+                    }
+                }
+                catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            //if(//info is right)
+
+        }
+    }
 } //end med prof log on class
