@@ -1,16 +1,11 @@
 import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Cursor;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 
 public class UserChoiceScreen extends StackPane
 {
@@ -22,11 +17,11 @@ public class UserChoiceScreen extends StackPane
     private Text title, question, select;
     public ComboBox menu;
     private Button next;
+    private RadioButton one, two;
     private Label errorLabel;
 
     //user choice screen constructor
-    public UserChoiceScreen()
-    {
+    public UserChoiceScreen() {
         errorLabel = new Label();
 
         //establish color Falu Red as done on home screen
@@ -55,6 +50,7 @@ public class UserChoiceScreen extends StackPane
 
         //combobox object for the menu which will contain
         //options 'Patient' and 'Medical Professional'
+
         menu = new ComboBox();
         menu.getItems().addAll("Patient", "Medical Professional");
 
@@ -62,8 +58,13 @@ public class UserChoiceScreen extends StackPane
         next = new Button("Next");
         //add forward method to handle where this button takes the user
         //this is case 2 in the switch statement for forward
-        ForwardButton handler = new ForwardButton(2);
+
+        UserSelectButton handler = new UserSelectButton(caseInt);
         next.setOnAction(handler);
+
+        //ForwardButton handler = new ForwardButton(2);
+        //next.setOnAction(handler);
+
 
         //add combobox and button to the horizontal pane to be side
         //by side underneath text
@@ -95,4 +96,35 @@ public class UserChoiceScreen extends StackPane
         this.getChildren().add(title);
         this.getChildren().add(bp);
     }//end user choice screen constructor
+    private class UserSelectButton extends ForwardButton
+    {
+        public UserSelectButton(int caseInt)
+        {
+            super(caseInt);
+        }
+
+        @Override
+        public void handle(ActionEvent event)
+        {
+            if(menu.getValue() == null)
+            {
+                errorLabel.setText("Please select one before continuing");
+                errorLabel.setTextFill(Color.RED);
+            }
+            else
+            {
+                if(menu.getValue() == "Patient")
+                {
+                    super.setcI(2);
+                }
+
+                else
+                {
+                    super.setcI(14);
+                }
+            }
+
+            super.handle(event);
+        }
+    }
 }//end user choice screen class
