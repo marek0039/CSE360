@@ -48,7 +48,7 @@ public class PatientSendMessage extends StackPane
                 throw new FailedException("Cannot find user: " + HealthPortal.currUser);
             }
         } catch (Exception e) {
-            system.out.print(e);
+            System.out.print(e);
         }
         welcome = new Text("Patient: " + patient_name);
         welcome.setFont(Font.font("Times New Roman", 14));
@@ -96,13 +96,13 @@ public class PatientSendMessage extends StackPane
             // execute the query
             ResultSet rs = HealthPortal.statement.executeQuery(patientNameQuery);
             rs.last(); // jump to the last row of the query
-            if (rs.getRow() = 1) { // check to make sure 1 patient was found
+            if (rs.getRow() == 1) { // check to make sure 1 patient was found
                 doctor_id = rs.getInt("Doctor");
             } else { // otherwise, throw an exception.
                 throw new FailedException("Cannot find user: " + HealthPortal.currUser);
             }
         } catch (Exception e) {
-            system.out.print(e);
+            System.out.print(e);
         }
 
         // Get the doctor's last name and the nurse ID that is connected to them
@@ -111,16 +111,16 @@ public class PatientSendMessage extends StackPane
             String profNameQuery = "SELECT First_Name, Last_Name, Connection from Professionals " +
                     "WHERE ID=" + doctor_id + ";";
             // execute the query
-            ResultSet rs = HealthPortal.statement.executeQuery(doctorNameQuery);
+            ResultSet rs = HealthPortal.statement.executeQuery(profNameQuery);
             rs.last(); // jump to the last row of the query
-            if (rs.getRow() = 1) { // check to make sure 1 doctor was found
+            if (rs.getRow() == 1) { // check to make sure 1 doctor was found
                 doctor_name = "Doctor " + rs.getString("Last_Name");
                 nurse_id = rs.getInt("Connection");
             } else { // otherwise, throw an exception.
                 throw new FailedException("Cannot find doctor: " + doctor_id);
             }
         } catch (Exception e) {
-            system.out.print(e);
+            System.out.print(e);
         }
 
         // Get the nurse's last name
@@ -131,13 +131,13 @@ public class PatientSendMessage extends StackPane
             // execute the query
             ResultSet rs = HealthPortal.statement.executeQuery(nurseNameQuery);
             rs.last(); // jump to the last row of the query
-            if (rs.getRow() = 1) { // check to make sure 1 nurse was found
+            if (rs.getRow() == 1) { // check to make sure 1 nurse was found
                 nurse_name = "Nurse " + rs.getString("Last_Name");
             } else { // otherwise, throw an exception.
                 throw new FailedException("Cannot find nurse: " + nurse_id);
             }
         } catch (Exception e) {
-            system.out.print(e);
+            System.out.print(e);
         }
 
         // create combo box to display the patient's nurse and doctor.
@@ -168,13 +168,13 @@ public class PatientSendMessage extends StackPane
 
         //add the border pane to this stack pane
         this.getChildren().add(bp);
-    } //end constructor
+    } //end PatientSendMessage constructor
 
-    // custom exception to print error messages
+    // the following class is a custom exception to print error messages
     private static class FailedException extends Exception {
         private FailedException(String errorMessage) {
             super(errorMessage);
         } // end constructor
     } // end FailedException class
 
-} //end class
+} //end PatientSendMessage class
