@@ -1,3 +1,4 @@
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -211,4 +212,36 @@ public class PatientSummary extends StackPane
         //add the border pane to this stack pane
         this.getChildren().add(bp);
     } //end constructor
-} //end class
+    /*public void handle(ActionEvent event) {
+        String [] results = new String[6];
+        resultSet rs = 2;
+        String sql2 = "SELECT Patient Contact Information Insurance Previous Medical History Visit Date Height Weight Blood Pressure Body Temp Allergies Presccription Visit Date Height Weight Blood Pressure Body Temp Allergies Prescription"
+        int i = 0;
+        if (rs2.first() == true) {
+            while(rs2.next()) {
+                result[i] = rs2.getString(columnLabel:"Patient");
+                result[i + 1] = rs2.getString(columnLabl:"Contact Information");
+                result[i + 2] = rs2.getString(columnLabl:"Insurance");
+                result[i + 3] = rs2.getString(columnLabel:"Previous Medical History");
+                result[i + 4] = rs2.getString(columnLabl:"Visit Date");
+                result[i + 5] = rs2.getString(columnLabel:"Weight");
+                result[i + 6] = rs2.getString(columnLabl:"Blood Pressure");
+                result[i + 7] = rs2.getString(columnLabel:"Body Temp");
+                result[i + 8] = rs2.getString(columnLabel:"Allergies");
+                result[i + 9] = rs2.getString(columnLabel:"Prescription");
+                i = i + 10;
+            } */
+
+
+
+
+
+
+        }
+
+
+
+
+
+//} //end class
+

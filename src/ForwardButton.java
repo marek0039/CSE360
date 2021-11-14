@@ -60,7 +60,7 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 //back button on patient choice screen OR med prof log on screen
                 //all of them take you back to the user choice screen
                 //remove the previous pane from the root
-                HealthPortal.root.getChildren().clear();
+               HealthPortal.root.getChildren().clear();
                 userChoice = new UserChoiceScreen(cI);
                 //add the user choice pane to the root because that is the next screen
                 HealthPortal.root.getChildren().add(userChoice);
@@ -103,7 +103,8 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 //to existing patient log on because the patient has already
                 //been created in the database and thus they should be able to log in
                 //even if they just filled out the new patient form
-                HealthPortal.root.getChildren().clear();
+
+               HealthPortal.root.getChildren().clear();
                 eplo = new ExistingPLogOn();
                 HealthPortal.root.getChildren().add(eplo);
                 break;
@@ -156,12 +157,21 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 //VIA DATABASE DATA BEFORE WRITING CODE TO GO TO NEXT PAGE
 
                 break;
+            /*
+            *********** THIS IS THE ISSUE. LOOK INTO IT. BOTH OPTIONS TAKES YOU TO SAME PAGE ************
+            */
             case 14: //doctor selects logout/back from patient choice page
                 //if they chose med prof add the med prof log on screen
                 //it takes them back to med prof login screen
+
+                /* Testing... delete this later */
                 HealthPortal.root.getChildren().clear();
-                mpls = new MedProfLoginScreen();
-                HealthPortal.root.getChildren().add(mpls);
+                newPForm = new NewPatientForm();
+                HealthPortal.root.getChildren().add(newPForm);
+
+        //        HealthPortal.root.getChildren().clear();
+         //       mpls = new MedProfLoginScreen();
+         //       HealthPortal.root.getChildren().add(mpls);
                 break;
             case 15://doctor selects patient from list and hits go
                 //to be taken to their patient page

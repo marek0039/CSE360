@@ -7,7 +7,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-import java.sql.SQLException;
+import java.sql.*;
 
 public class NewPatientForm extends StackPane
 {
@@ -21,9 +21,12 @@ public class NewPatientForm extends StackPane
     private TextField dobPicker;
     private ComboBox doctorsList;
     private Button submit, back;
+    private Label errorLabel;
 
+    Connector connectorObj = new Connector();
     public NewPatientForm()
     {
+        errorLabel = new Label();
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -261,6 +264,7 @@ public class NewPatientForm extends StackPane
         this.getChildren().add(bp);
     } //end constructor
     private class NewPatientFormButton extends ForwardButton {
+        private int num_rows;
         private NewPatientFormButton(int caseInt) {
 
 
@@ -269,44 +273,87 @@ public class NewPatientForm extends StackPane
 
         @Override
         public void handle(ActionEvent event) {
+            ResultSet rs = null;
             // String[] deLim = dobPicker.getText().split(());
 
             //this takes
             if ((fNameField.getText().isEmpty()) || (lNameField.getText().isEmpty()) || (dobPicker.getText().isEmpty()) || (emailField.getText().isEmpty()) || (numField.getText().isEmpty()) || (medHisField.getText().isEmpty()) || (pharmField.getText().isEmpty()) || (insField.getText().isEmpty()) || (insNumField.getText().isEmpty()) || (mailField1.getText().isEmpty()) || (mailField3.getText().isEmpty()) || (mailField4.getText().isEmpty())) {
-                NewPatientFormButton.errorLabel.setText("Please fill in all required fields denoted by the *");
-                NewPatientFormButton.errorLabel.setTextFill(Color.RED);
+                errorLabel.setText("Please fill in all required fields denoted by the *");
+                errorLabel.setTextFill(Color.RED);
             }
 
-            else if(delim[0].length() == 4 && delim[1].length() == 1 && delim[2].length() == 2)
+            else
             {
                 try {
-                    String fName = fNameField.getText();
+                    String [] results = new String[6];
+                    // resultSet rs = 2;
+                    String sql2 = "INSERT INTO Patient(First_Name,Last_Name, Email, Phone Number, Pharmacy, Mailing_Address, Insurance_Company, Insurance_Number,";
+
+                    Statement statement = connectorObj.getStatement();
+
+
+                    String sqlExample = "INSERT INTO Patient VALUES (" + fName + ", " + lName + ", " + dob + ", " + email + ", " + phone + ", " + medHis + ", " + pharmacy
+                            + ", " + insurance + ", " + insNum + ", " + mailAddress + ");";
+                    System.out.println(fName + ", " + lName + ", " + dob + ", " + email + ", " + phone + ", " + medHis + ", " + pharmacy
+                            + ", " + insurance + ", " + insNum + ", " + mailAddress);
+                  // statement.executeUpdate(sqlExample);
+                    int i = 0;
+
+
+                    /*String fName = fNameField.getText();
                     String lName = lNameField.getText();
-                    String birthday = dob.getText();
-                    String sql = "select First_Name, Last_Name, DOB, PatientID from Patient where First_Name = " + fName + ", Last_Name = " + lName + ", DOB = " + birthday;
-                    rs = statement.executeQuery(sql);
-                    if (rs.getRow() == 1) {
-                        rs.first();
-                        String pFirstName = rs.getString("First_Name");
-                        String pLastName = rs.getString("Last_Name");
-                        String dob = rs.getString("DOB");
-                        HealthPortal.currUser = rs.getInt("PatientID");
+                    String birthday = dobPicker.getText();
+                    String email = emailField.getText();
+                    String phone = numField.getText();
+                    String medHis = medHisField.getText();
+                    String pharmacy = pharmField.getText();
+                    String insurance= insField.getText();
+                    String insNum = insNumField.getText();
+                    String mailAddress = mailField1.getText();
+
+
+
+                    String sql = "SELECT PatientID FROM Patient WHERE First_Name='"+ fName + "' and Last_Name='"+ lName+ "' and DOB='"+ birthday + "';";
+                    rs = HealthPortal.statement.executeQuery(sql);
+
+                    if(rs.next())
+                    {
+                        this.num_rows++;
+                    }
+                    if(rs.getRow() == 1) {
+                        while (rs.next()) {
+                            int id = rs.getInt("PatientID");
+                            HealthPortal.currUser = id;
+                        }
                         super.handle(event);
                     }
-                    else {
+
+//
+//                    } */
+
+                   /* else
+                    {
                         errorLabel.setText("Enter Valid Login Info or go back");
                         errorLabel.setTextFill(Color.RED);
-                    }
+                    } */
+                    throw new SQLException();
                 }
+
                 catch (SQLException e) {
-                    e.printStackTrace();
+                    System.out.println("Message:" + e.getMessage()) ;
+                   // e.printStackTrace();
                 }
             }
             //if(//info is right)
 
         }
     }
-        }
-    }
-}//end new patient form class
+} //end existing patient log on class
+
+//if(//info is right)
+
+
+
+
+//end new patient form class
 
