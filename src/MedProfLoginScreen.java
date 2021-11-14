@@ -27,6 +27,7 @@ public class MedProfLoginScreen extends StackPane
 
     public MedProfLoginScreen()
     {
+        errorLabel = new Label();
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
