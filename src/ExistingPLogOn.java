@@ -129,18 +129,54 @@ public class ExistingPLogOn extends StackPane
                     String birthday = dob.getText();
                     String sql = "select First_Name, Last_Name, DOB, PatientID from Patient where First_Name = " + fName + ", Last_Name = " + lName + ", DOB = " + birthday;
                     rs = HealthPortal.statement.executeQuery(sql);
-                    if (rs.getRow() == 1) {
-                        rs.first();
-                        String pFirstName = rs.getString("First_Name");
-                        String pLastName = rs.getString("Last_Name");
-                        String dob = rs.getString("DOB");
-                        HealthPortal.currUser = rs.getInt("PatientID");
+
+                    rs.last();
+                    if(rs.getRow() == 1)
+                    {
+                        int id = rs.getInt("PatientID");
+                        HealthPortal.currUser = id;
                         super.handle(event);
                     }
-                    else {
+
+                    else
+                    {
                         errorLabel.setText("Enter Valid Login Info or go back");
                         errorLabel.setTextFill(Color.RED);
                     }
+
+                    /*if(rs.next())
+                    {
+                        this.num_rows++;
+                    }*/
+                    /*if(rs.getRow() == 1) {
+                        rs.();
+                        while (rs.next()) {
+                            int id = rs.getInt("PatientID");
+                            System.out.print(id);
+                            HealthPortal.currUser = id;
+                        }
+
+                        super.handle(event);
+                    }*/
+
+//                    rs.next();
+//                    if (rs.getRow() == 1) {
+//                        System.out.print("Error6\n");
+//                        rs.first();
+//                       int pFirstName = rs.getInt("PatientID");
+//                        System.out.print(pFirstName + "\n");
+//                        String pLastName = rs.getString("Last_Name");
+//                        System.out.print(pLastName + "\n");
+//                        String dob = rs.getString("DOB");
+//                        System.out.print(dob + "\n");
+//                        HealthPortal.currUser = rs.getInt("PatientID");
+//                        super.handle(event);
+//                    }
+                    /*else
+                    {
+                        errorLabel.setText("Enter Valid Login Info or go back");
+                        errorLabel.setTextFill(Color.RED);
+                    }*/
                 }
                 catch (SQLException e) {
                     e.printStackTrace();
