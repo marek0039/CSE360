@@ -31,7 +31,7 @@ public class PatientSendMessage extends StackPane
         title.setFont(Font.font("Plantagenet Cherokee", 23));
         title.setFill(mainColor);
 
-        //black text labeling the name of the patient and dob of the patient
+        // get the name and date of birth of current patient using the system
         String patient_name = null;
         String patient_dob = null;
         try {
@@ -50,6 +50,8 @@ public class PatientSendMessage extends StackPane
         } catch (Exception e) {
             System.out.print(e);
         }
+
+        // Black text labeling the name of the patient and dob of the patient
         welcome = new Text("Patient: " + patient_name);
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);
