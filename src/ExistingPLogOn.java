@@ -102,7 +102,6 @@ public class ExistingPLogOn extends StackPane
 
     private class PatientLoginButton extends ForwardButton
     {
-        private int num_rows;
         private PatientLoginButton(int caseInt)
         {
             super(caseInt);
@@ -111,9 +110,9 @@ public class ExistingPLogOn extends StackPane
         @Override
         public void handle(ActionEvent event)
         {
-            //Format = YYYY-MM-DD
 
-            ResultSet rs = null;
+            //Format = YYYY-MM-DD
+            ResultSet rs;
             String[] delim = dobPicker.getText().split("-");
 
             if(fNameField.getText().isEmpty() || lNameField.getText().isEmpty() || dobPicker.getText().isEmpty())
@@ -121,14 +120,14 @@ public class ExistingPLogOn extends StackPane
                 errorLabel.setText("Please enter all necessary info");
                 errorLabel.setTextFill(Color.RED);
             }
-            //delim[0].length() == 4 && delim[1].length() == 1 && delim[2].length() == 2
-            else
+
+            else if(delim[0].length() == 4 && delim[1].length() == 1 && delim[2].length() == 2)
             {
                 try {
                     String fName = fNameField.getText();
                     String lName = lNameField.getText();
-                    String birthday = dobPicker.getText();
-                    String sql = "SELECT PatientID FROM Patient WHERE First_Name='"+ fName + "' and Last_Name='"+ lName+ "' and DOB='"+ birthday + "';";
+                    String birthday = dob.getText();
+                    String sql = "select First_Name, Last_Name, DOB, PatientID from Patient where First_Name = " + fName + ", Last_Name = " + lName + ", DOB = " + birthday;
                     rs = HealthPortal.statement.executeQuery(sql);
 
                     rs.last();
