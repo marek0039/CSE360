@@ -182,6 +182,5 @@ public class PatientMessagePortal extends StackPane
 
         //add the border pane to this stack pane
         this.getChildren().add(bp);
-
     } //end constructor
 } //end class
