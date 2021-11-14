@@ -51,7 +51,8 @@ public class NurseSelectPatient extends StackPane
                 //get patient info
                 rs = HealthPortal.statement.executeQuery(getpatients); //execute the query
                 while(rs.next()) {  //iterate through all the rows
-                    patient_names.add(rs.getString("First_Name") + rs.getString("Last_Name"));
+                    patient_names.add(rs.getString("First_Name") +
+                            " " +  rs.getString("Last_Name"));
                     //add each patient name to the patient_names list
                 }
                 name_arr = patient_names.toArray(new String[patient_names.size()]);
@@ -176,12 +177,6 @@ public class NurseSelectPatient extends StackPane
                     System.err.print(e);
                 }
             }
-        }
-    }
-
-    private static class FailedException extends Exception {    //custom exception to print the error message.
-        private FailedException(String errorMessage) {
-            super(errorMessage);
         }
     }
 } //end nurse select patient class
