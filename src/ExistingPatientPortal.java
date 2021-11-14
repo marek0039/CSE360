@@ -97,7 +97,7 @@ public class ExistingPatientPortal extends StackPane
         back = new Button("Back");
         //forward event handler for back button, case 7, takes user back
         //to existing patient log on screen
-        ForwardButton handler4 = new ForwardButton(7);
+        ForwardButton handler4 = new ForwardButton(6);
         back.setOnAction(handler4);
 
         //vertical pane to store all the options and buttons in a stack
