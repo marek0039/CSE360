@@ -2,18 +2,15 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
-import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-import javax.swing.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collection;
 
 public class UserChoiceScreen extends StackPane
 {
@@ -23,17 +20,17 @@ public class UserChoiceScreen extends StackPane
     //and a button to press next and head to the next screen
     private Color mainColor;
     private Text title, question, select;
-    private ComboBox menu;
+    public ComboBox menu;
     private Button next;
     private Label errorLabel;
-    private int caseInt;
+
     //user choice screen constructor
-    public UserChoiceScreen(int case1) {
-        caseInt = case1;
+    public UserChoiceScreen()
+    {
         errorLabel = new Label();
 
         //establish color Falu Red as done on home screen
-        mainColor = Color.rgb(128, 32, 32);
+        mainColor = Color.rgb(128,32,32);
 
         //create borderpane and virtual/horizontal panes
         //to hold elements
@@ -60,28 +57,16 @@ public class UserChoiceScreen extends StackPane
         //options 'Patient' and 'Medical Professional'
         menu = new ComboBox();
         menu.getItems().addAll("Patient", "Medical Professional");
-        String selected = String.valueOf(menu.getItems().get(0));
-        if(menu.getItems().get(0) == menu.getOnMouseClicked())
-        {
 
-            caseInt = 2;
-        }
-
-        else
-        {
-            caseInt = 14;
-        }
         //next button to move to the next screen
         next = new Button("Next");
         //add forward method to handle where this button takes the user
         //this is case 2 in the switch statement for forward
-        ForwardButton handler = new ForwardButton(caseInt);
+        ForwardButton handler = new ForwardButton(2);
         next.setOnAction(handler);
-
 
         //add combobox and button to the horizontal pane to be side
         //by side underneath text
-        //attributes.getChildren().add(menu);
         attributes.getChildren().add(menu);
         attributes.getChildren().add(next);
 
@@ -90,6 +75,7 @@ public class UserChoiceScreen extends StackPane
         //these attributes
         middleText.getChildren().add(question);
         middleText.getChildren().add(select);
+        middleText.getChildren().add(errorLabel);
         middleText.getChildren().add(attributes);
 
         //put the vertical pane in the center of the borderpane
