@@ -3,6 +3,7 @@ import com.jcraft.jsch.Session;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class Connector {
@@ -39,7 +40,8 @@ public class Connector {
             Class.forName(jdbc_driver);
             Connection connection = DriverManager.getConnection(url+db, db_user, db_pswd); //connect to sql db
 
-            statement = connection.createStatement(); //create a statement which will execute an sql cmd.
+            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); //create a statement which will execute an sql cmd.
+
         } catch(Exception e) {  //catch exceptions
             System.err.print(e);
         }
