@@ -9,10 +9,11 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import java.sql.ResultSet;
 
 public class NurseSendMessage extends StackPane
 {
-    //attributes of this class
+    // attributes of this class
     private Color mainColor;
     private Text title, welcome, patient, dob, directions;
     private TextArea message;
@@ -20,29 +21,46 @@ public class NurseSendMessage extends StackPane
 
     public NurseSendMessage()
     {
-        //establish color Falu Red as done on home screen
+        // establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
-        //title and its color/size/font
+        // title and its color/size/font
         title = new Text("SunDevil Pediatric Health Portal");
         title.setFont(Font.font("Plantagenet Cherokee", 23));
         title.setFill(mainColor);
 
-        //black text labeling the name of the patient and dob of the patient
-        //as well as which nurse is currently logged on
-        //Note: these will need to be read in from the patient list the nurse chose from
-        //text fields/areas so they will end up being parsed input rather than this dummy default text
+        // get the name and date of birth of current nurse using the system
+        String nurse_name = null;
+        int patient_id = 0;
+        String patient_name = null;
+        String patient_dob = null;
+        try {
+            // the following string is an SQL query to get the name of the current user/nurse
+            String nurseNameQuery = "SELECT Last_Name, DOB from Nurse WHERE ID=" +
+                    HealthPortal.currUser + ";";
+            // execute the query
+            ResultSet rs = HealthPortal.statement.executeQuery(nurseNameQuery);
+            rs.last(); // jump to the last row of the query
+            if (rs.getRow() == 1) { // check to make sure 1 patient was found
+                nurse_name = "Nurse " + rs.getString("Last_Name");
+            } else { // otherwise, throw an exception.
+                throw new PatientSendMessage.FailedException("Cannot find user: " + HealthPortal.currUser);
+            }
+        } catch (Exception e) {
+            System.out.print(e);
+        }
+
+        // Black text labeling the name of the patient and dob of the patient
+        // as well as which nurse is currently logged on
+        // Note: these will need to be read in from the patient list the nurse chose from
+        // text fields/areas so they will end up being parsed input rather than this dummy default text
         welcome = new Text("Welcome in, Nurse Jackson");
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);
-
-        patient = new Text("Patient: Adam Samler");
-        patient.setFont(Font.font("Times New Roman", 14));
-        patient.setFill(Color.BLACK);
-
-        dob = new Text("DOB: 01/09/2007");
+        dob = new Text("DOB: " + patient_dob);
         dob.setFont(Font.font("Times New Roman", 14));
         dob.setFill(Color.BLACK);
+
 
         directions = new Text("Please type your message below:");
         directions.setFont(Font.font("Times New Roman", 14));

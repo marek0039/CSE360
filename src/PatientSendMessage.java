@@ -52,7 +52,7 @@ public class PatientSendMessage extends StackPane
         }
 
         // Black text labeling the name of the patient and dob of the patient
-        welcome = new Text("Patient: " + patient_name);
+        welcome = new Text("Welcome in, " + patient_name);
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);
 
