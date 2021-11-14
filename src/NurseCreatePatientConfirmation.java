@@ -35,15 +35,16 @@ public class NurseCreatePatientConfirmation extends StackPane
             } else {    //otherwise, throw and exception.
                 throw new FailedException("Cannot find User: " + HealthPortal.currUser);
             }
-            String getpatient = "SELECT First_Name, Last_Name, DOB FROM Patient WHERE PatientID=" + HealthPortal.currPatient;
+            String getpatient = "SELECT First_Name, Last_Name, DOB FROM Patient WHERE PatientID=" +
+                    HealthPortal.currPatient;
             //get patient info
             rs = HealthPortal.statement.executeQuery(getpatient); //execute the query
-            rs.last();
-            if (rs.getRow() == 1) {
+            rs.last(); //get the last row
+            if (rs.getRow() == 1) { //if the index of the row is 1, then store values
                 p_name = rs.getString("First_Name") + " " + rs.getString("Last_Name");
                 p_dob = rs.getString("DOB");
             }
-            else {
+            else { //otherwise, throw exception
                 throw new FailedException("Cannot find Patient: " + HealthPortal.currPatient);
             }
         } catch (Exception e) {
@@ -60,8 +61,6 @@ public class NurseCreatePatientConfirmation extends StackPane
 
         //black text labeling the name of the nurse who is logged on
         //as well as the new patient's name and dob that they have just created
-        //to be read in
-        //text fields/areas so they will end up being parsed input rather than this dummy default text
         welcome = new Text("Welcome in, Nurse " + nurse_name);
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);

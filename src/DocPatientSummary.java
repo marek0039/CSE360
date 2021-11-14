@@ -41,7 +41,7 @@ public class DocPatientSummary extends StackPane
             rs.last();  //get the last row of the query
             if (rs.getRow() == 1) { //there should only be 1 row but checking
                 doc_name = rs.getString("Last_Name"); //store the last name
-            } else {    //otherwise, throw and exception.
+            } else {    //otherwise, throw an exception.
                 throw new FailedException("Cannot find User: " + HealthPortal.currUser);
             }
             String getpatient = "SELECT * FROM Patient WHERE PatientID=" + HealthPortal.currPatient;
@@ -49,6 +49,7 @@ public class DocPatientSummary extends StackPane
             rs = HealthPortal.statement.executeQuery(getpatient); //execute the query
             rs.last();
             if (rs.getRow() == 1) {
+                //store every column into their respective variable
                 p_name = rs.getString("First_Name") + " " + rs.getString("Last_Name");
                 p_email = rs.getString("Email");
                 p_phone = rs.getString("Phone_Number");
@@ -129,18 +130,19 @@ public class DocPatientSummary extends StackPane
         medHis.setFill(Color.BLACK);
 
         //step 3, parse the Visit table and get the two most recent visits of the patient
-        String[] results = new String[16];
+        String[] results = new String[16]; //array which will hold visit values
         try
         {
             String get_visits = "SELECT * FROM Visit WHERE ID=" + HealthPortal.currPatient +
                     "AND Date IN (SELECT t1.Date FROM Visit t1 LEFT JOIN Visit t2 ON t1.Date <= t2.Date " +
-                    "GROUP BY t1.Date HAVING COUNT(DISTINCT t2.Date)<=2)";
-            rs = HealthPortal.statement.executeQuery(get_visits);
-            int i = 0;
-            if (rs.first())
+                    "GROUP BY t1.Date HAVING COUNT(DISTINCT t2.Date)<=2)"; //query to execute
+            rs = HealthPortal.statement.executeQuery(get_visits); //executing query
+            int i = 0;  //index to iterate through array.
+            if (rs.first()) //check if we got some rows.
             {
-                while(rs.next())
+                while(rs.next())//iterate through result
                 {
+                    //add each column value into the array
                     results[i] = rs.getString("Date");
                     results[i+1] = rs.getString("Height");
                     results[i+2] = rs.getString("Weight");
@@ -152,7 +154,7 @@ public class DocPatientSummary extends StackPane
                     i = i+8;
                 }
             }
-            else {
+            else {  //if we aren't at first then throw exception.
                 throw new FailedException("SQL QUERY FAILED!!!");
             }
         }

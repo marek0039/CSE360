@@ -20,9 +20,10 @@ public class DocMemoConfirmation extends StackPane
 
     public DocMemoConfirmation()
     {
-        //get the doctor's last name
+        //get the doctor's last name as well as the current patient's name + DOB
         String doc_name = null;
         ResultSet rs = null;
+        String p_name = null, p_dob = null;
         try {
             String getConnection = "SELECT Last_Name from Professional WHERE ID="
                     + HealthPortal.currUser + ";";
@@ -33,6 +34,18 @@ public class DocMemoConfirmation extends StackPane
                 doc_name = rs.getString("Last_Name"); //store the last name
             } else {    //otherwise, throw and exception.
                 throw new FailedException("Cannot find User: " + HealthPortal.currUser);
+            }
+            String getpatient = "SELECT First_Name, Last_Name, DOB FROM Patient WHERE PatientID=" +
+                    HealthPortal.currPatient;
+            //get patient info
+            rs = HealthPortal.statement.executeQuery(getpatient); //execute the query
+            rs.last(); //get the last row
+            if (rs.getRow() == 1) { //if the index of the row is 1, then store values
+                p_name = rs.getString("First_Name") + " " + rs.getString("Last_Name");
+                p_dob = rs.getString("DOB");
+            }
+            else { //otherwise, throw exception
+                throw new FailedException("Cannot find Patient: " + HealthPortal.currPatient);
             }
         } catch (Exception e) {
             System.err.print(e);
@@ -47,17 +60,15 @@ public class DocMemoConfirmation extends StackPane
         title.setFill(mainColor);
 
         //black text labeling the name of the patient and dob of the patient
-        //Note: these will need to be read in from the previous New patient form
-        //text fields/areas so they will end up being parsed input rather than this dummy default text
         welcome = new Text("Welcome in, Doctor " + doc_name);
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);
 
-        patient = new Text("Patient: Adam Samler");
+        patient = new Text("Patient: " + p_name);
         patient.setFont(Font.font("Times New Roman", 14));
         patient.setFill(Color.BLACK);
 
-        dob = new Text("DOB: 01/09/2007");
+        dob = new Text("DOB: " + p_dob);
         dob.setFont(Font.font("Times New Roman", 14));
         dob.setFill(Color.BLACK);
 

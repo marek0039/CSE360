@@ -35,7 +35,7 @@ public class NurseCreatePatient extends StackPane
             rs.last();  //get the last row of the query
             if (rs.getRow() == 1) { //there should only be 1 row but checking
                 nurse_name = rs.getString("Last_Name"); //store the last name
-                docID = rs.getInt("Connection");
+                docID = rs.getInt("Connection"); //also getting connected DoctorID for adding the patient.
             } else {    //otherwise, throw and exception.
                 throw new FailedException("Cannot find User: " + HealthPortal.currUser);
             }
@@ -119,8 +119,7 @@ public class NurseCreatePatient extends StackPane
         finish.setFill(Color.BLACK);
 
         //text fields for their corresponding items
-        //the medical history, date of birth
-        //are NOT text fields
+        //the medical history is NOT a text field
 
         //Note: I added the prompt text for the mailing address
         //and the * to all required fields as specified, the * is
@@ -272,24 +271,27 @@ public class NurseCreatePatient extends StackPane
         this.getChildren().add(bp);
     } //end constructor
 
-    private class CreatePatientNurseButton extends ForwardButton {
+    private class CreatePatientNurseButton extends ForwardButton { //button which makes sure all fields are filled in.
         private CreatePatientNurseButton(int caseInt) {
             super(caseInt);
         }
 
         @Override
         public void handle(ActionEvent event) {
+            //first check to see if none of the required fields are empty.
             if (fNameField.getText().isEmpty() || lNameField.getText().isEmpty() || emailField.getText().isEmpty() ||
                 pharmField.getText().isEmpty() || numField.getText().isEmpty() || insField.getText().isEmpty() ||
                 insNumField.getText().isEmpty() || mailField1.getText().isEmpty() || mailField3.getText().isEmpty() ||
                 mailField4.getText().isEmpty() || dobPicker.getText().isEmpty()) {
 
+                //if any are empty update the label for the user.
                 errLabel.setText("Please enter all necessary info");
                 errLabel.setTextFill(Color.RED);
             }
             else {
-                String[] dob_split = dobPicker.getText().split("-");
+                String[] dob_split = dobPicker.getText().split("-"); //split the DOB string to check if it's valid
                 if ((dob_split[0].length() == 4) && (dob_split[1].length() == 2) && (dob_split[2].length() == 2)) {
+                    //if so, then store all the fields into variables
                     try {
                         String p_fname = fNameField.getText();
                         String p_lname = lNameField.getText();
@@ -301,33 +303,37 @@ public class NurseCreatePatient extends StackPane
                         String p_dob = dobPicker.getText();
                         String p_med = medHisField.getText();
                         String p_address;
+                        // I have to check if mailField2 is empty or not because it affects address formatting.
                         if (mailField2.getText().isEmpty()) {
                             p_address = mailField1.getText() + "\n" + mailField3.getText() + " " + mailField4.getText();
                         } else {
                             p_address = mailField1.getText() + " " + mailField2.getText() + "\n" + mailField3.getText()
                                     + " " + mailField4.getText();
                         }
+                        // now need to generate a new patientID
                         String patientInt = "12";
                         int rand = (int) (Math.random() * 9000) + 1000;
                         String p_id = patientInt + String.valueOf(rand);
                         int final_p_id = Integer.parseInt(p_id);
+                        //now I can finally execute the query.
                         String ins = "INSERT INTO Patient VALUES ('" + p_fname + "', '" + p_lname + "', " + final_p_id +
                                 ", '" + p_email + "', '" + p_phone + "', '" + p_address + "', '" + p_pharmacy + "', '" +
                                 p_insurance + "', '" + p_insurance_num + "', '" + p_dob + "', '" + p_med + "', " +
                                 docID + ");";
-                        boolean result = HealthPortal.statement.execute(ins);
+                        boolean result = HealthPortal.statement.execute(ins); //return a boolean if it inserted or not
                         if (result) {
+                            //if it did then update current patient as well as called ForwardButton's handle
                             HealthPortal.currPatient = final_p_id;
                             super.handle(event);
                         }
-                        else {
+                        else { //otherwise, throw an exception.
                             throw new FailedException("INSERTING NEW PATIENT FAILED!!!");
                         }
                     } catch (Exception e) {
                         System.err.print(e);
                     }
                 }
-                else {
+                else {  //this is in the case that the DOB is not formatted correctly.
                     errLabel.setText("Please Enter in The Date of Birth in the Correct Format.");
                     errLabel.setTextFill(Color.RED);
                 }
