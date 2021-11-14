@@ -30,10 +30,10 @@ public class NurseSendMessage extends StackPane
         title.setFill(mainColor);
 
         // attributes from database to be defined
-        String nurse_name = null;
+        String nurse_name = "null";
         int patient_id = 0;
-        String patient_name = null;
-        String patient_dob = null;
+        String patient_name = "null";
+        String patient_dob = "null";
 
         // get the name of current nurse using the system
         try {
@@ -46,7 +46,7 @@ public class NurseSendMessage extends StackPane
             if (rs.getRow() == 1) { // check to make sure 1 patient was found
                 nurse_name = "Nurse " + rs.getString("Last_Name");
             } else { // otherwise, throw an exception.
-                throw new PatientSendMessage.FailedException("Cannot find user: " + HealthPortal.currUser);
+                throw new NurseSendMessage.FailedException("Cannot find user: " + HealthPortal.currUser);
             }
         } catch (Exception e) {
             System.out.print(e);
@@ -102,4 +102,12 @@ public class NurseSendMessage extends StackPane
         //add the border pane to this stack pane
         this.getChildren().add(bp);
     } //end constructor
+
+    // the following class is a custom exception to print error messages
+    private static class FailedException extends Exception {
+        private FailedException(String errorMessage) {
+            super(errorMessage);
+        } // end constructor
+    } // end FailedException class
+
 } //end nurse send message class
