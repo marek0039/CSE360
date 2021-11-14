@@ -70,7 +70,7 @@ public class DocPatientSummary extends StackPane
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
-        //step 2, display all the information in text labels
+        //step 2, display all the contact information in text labels
         //title and its color/size/font
         title = new Text("SunDevil Pediatric Health Portal");
         title.setFont(Font.font("Plantagenet Cherokee", 23));
@@ -132,7 +132,7 @@ public class DocPatientSummary extends StackPane
         String[] results = new String[16];
         try
         {
-            String get_visits = "SELECT * FROM Visit WHERE Recipient =" + HealthPortal.currPatient +
+            String get_visits = "SELECT * FROM Visit WHERE ID=" + HealthPortal.currPatient +
                     "AND Date IN (SELECT t1.Date FROM Visit t1 LEFT JOIN Visit t2 ON t1.Date <= t2.Date " +
                     "GROUP BY t1.Date HAVING COUNT(DISTINCT t2.Date)<=2)";
             rs = HealthPortal.statement.executeQuery(get_visits);
@@ -160,6 +160,8 @@ public class DocPatientSummary extends StackPane
         {
             System.err.print(e);
         }
+
+        //step 4, display visit information.
         //Shows information on the last two visits
         date1 = new Text("Visit Date: " + results[0]);
         date1.setFont(Font.font("Times New Roman", 14));
@@ -170,8 +172,6 @@ public class DocPatientSummary extends StackPane
         date2.setFill(Color.BLACK);
 
         //these are nurse's categories of what they take at each appointment
-        //there are 2 of each because this screen displays 2 dummy previous visits
-        //these will all be parsed in, ex. Height: + [string that holds height] from nurse's input
         height = new Text("Height: " + results[1] + " inches");
         height.setFont(Font.font("Times New Roman", 14));
         height.setFill(Color.BLACK);

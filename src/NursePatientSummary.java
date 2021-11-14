@@ -1,10 +1,13 @@
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
+import java.sql.ResultSet;
 
 public class NursePatientSummary extends StackPane
 {
@@ -12,33 +15,70 @@ public class NursePatientSummary extends StackPane
     private Color mainColor;
     private Text title, welcome, patient, dob, contactInfo, email, sendMessage;
     private Text phone, medHisTitle, medHis, pharmacy, insurance, insuranceNum, address, doctorNotes, notes;
-    private Text date1, date2, height, weight, bloodPressure, bodyTemp, allergies, prescription;
-    private Text height2, weight2, bloodPressure2, bodyTemp2, allergies2, prescription2;
+    private Text date1, date2, height, weight, bloodPressure, bodyTemp, allergies, prescription, memo;
+    private Text height2, weight2, bloodPressure2, bodyTemp2, allergies2, prescription2, memo2;
     private Button back, go;
 
     public NursePatientSummary()
     {
+        //step 1, get nurse last name as well as all the contact information of the patient.
+        ResultSet rs = null;
+        String nurse_name = null;
+        String p_name = null, p_email = null, p_phone = null, p_address = null, p_pharmacy = null, p_insurance = null,
+                p_insurance_num = null, p_dob = null, p_med = null;
+        try {
+            String getConnection = "SELECT Last_Name from Professional WHERE ID="
+                    + HealthPortal.currUser + ";";
+            //using the current user, get the nurse's last name
+            rs = HealthPortal.statement.executeQuery(getConnection);  //execute the query
+            rs.last();  //get the last row of the query
+            if (rs.getRow() == 1) { //there should only be 1 row but checking
+                nurse_name = rs.getString("Last_Name"); //store the last name
+            } else {    //otherwise, throw and exception.
+                throw new FailedException("Cannot find User: " + HealthPortal.currUser);
+            }
+            String getpatient = "SELECT * FROM Patient WHERE PatientID=" + HealthPortal.currPatient;
+            //get patient info
+            rs = HealthPortal.statement.executeQuery(getpatient); //execute the query
+            rs.last();
+            if (rs.getRow() == 1) {
+                p_name = rs.getString("First_Name") + " " + rs.getString("Last_Name");
+                p_email = rs.getString("Email");
+                p_phone = rs.getString("Phone_Number");
+                p_address = rs.getString("Address");
+                p_pharmacy = rs.getString("Pharmacy");
+                p_insurance = rs.getString("Insurance");
+                p_insurance_num = rs.getString("Insurance_Number");
+                p_dob = rs.getString("DOB");
+                p_med = rs.getString("Medical_History");
+            }
+            else {
+                throw new FailedException("Cannot find Patient: " + HealthPortal.currPatient);
+            }
+        } catch (Exception e) {
+            System.err.print(e);
+        }
+
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
+        //step 2, display all the contact information in text labels
         //title and its color/size/font
         title = new Text("SunDevil Pediatric Health Portal");
         title.setFont(Font.font("Plantagenet Cherokee", 23));
         title.setFill(mainColor);
 
         //black text labeling the name of the patient and dob of the patient
-        //as well as the nurse currently logged on
-        //Note: these will need to be read in from the patient list the nurse chose from
-        //text fields/areas so they will end up being parsed input rather than this dummy default text
-        welcome = new Text("Welcome in, Nurse Jackson");
+        //as well as the doctor who is logged on currently
+        welcome = new Text("Welcome in, Doctor " + nurse_name);
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);
 
-        patient = new Text("Patient: Adam Samler");
+        patient = new Text("Patient: " + p_name);
         patient.setFont(Font.font("Times New Roman", 14));
         patient.setFill(Color.BLACK);
 
-        dob = new Text("DOB: 01/09/2007");
+        dob = new Text("DOB: " + p_dob);
         dob.setFont(Font.font("Times New Roman", 14));
         dob.setFill(Color.BLACK);
 
@@ -47,113 +87,138 @@ public class NursePatientSummary extends StackPane
         contactInfo.setFont(Font.font("Times New Roman", 14));
         contactInfo.setFill(Color.BLACK);
 
-        //these will be parsed in from the patient's profile, Note: that
-        //mailing address and insurance number are not included on summary
-        //screen, but the rest of the information is
-        phone = new Text("Phone: 123-456-7890");
+        phone = new Text("Phone: " + p_phone);
         phone.setFont(Font.font("Times New Roman", 14));
         phone.setFill(Color.BLACK);
 
-        email = new Text("Email: asamler@yahoo.com");
+        email = new Text("Email: " + p_email);
         email.setFont(Font.font("Times New Roman", 14));
         email.setFill(Color.BLACK);
 
-        insurance = new Text("Insurance: Aetna");
+        insurance = new Text("Insurance: " + p_insurance);
         insurance.setFont(Font.font("Times New Roman", 14));
         insurance.setFill(Color.BLACK);
 
-        pharmacy = new Text("Pharmacy: CVS #602");
-        pharmacy.setFont(Font.font("Times New Roman", 14));
-        pharmacy.setFill(Color.BLACK);
-
-        address = new Text("Address: 12345 E University Dr.\nTempe, AZ 85281");
+        address = new Text("Address: " + p_address);
         address.setFont(Font.font("Times New Roman", 14));
         address.setFill(Color.BLACK);
 
-        insuranceNum = new Text("Insurance Number: 6352");
+        insuranceNum = new Text("Insurance Number: " + p_insurance_num);
         insuranceNum.setFont(Font.font("Times New Roman", 14));
         insuranceNum.setFill(Color.BLACK);
+
+        pharmacy = new Text("Pharmacy: " + p_pharmacy);
+        pharmacy.setFont(Font.font("Times New Roman", 14));
+        pharmacy.setFill(Color.BLACK);
 
         //labels previous medical history
         medHisTitle = new Text("Previous Medical History:");
         medHisTitle.setFont(Font.font("Times New Roman", 14));
         medHisTitle.setFill(Color.BLACK);
 
-        medHis = new Text("-Surgery, right foot, Jan. 2012\n-HepC Vaccine, Oct. 2020");
+        medHis = new Text(p_med);
         medHis.setFont(Font.font("Times New Roman", 14));
         medHis.setFill(Color.BLACK);
 
-        //these are dummy dates for fake previous visits
-        //Note: we need to decide how we will keep track of
-        //visit dates
-        date1 = new Text("Visit Date: 08/15/2020");
+        //step 3, parse the Visit table and get the two most recent visits of the patient
+        String[] results = new String[16];
+        try
+        {
+            String get_visits = "SELECT * FROM Visit WHERE ID=" + HealthPortal.currPatient +
+                    "AND Date IN (SELECT t1.Date FROM Visit t1 LEFT JOIN Visit t2 ON t1.Date <= t2.Date " +
+                    "GROUP BY t1.Date HAVING COUNT(DISTINCT t2.Date)<=2)";
+            rs = HealthPortal.statement.executeQuery(get_visits);
+            int i = 0;
+            if (rs.first())
+            {
+                while(rs.next())
+                {
+                    results[i] = rs.getString("Date");
+                    results[i+1] = rs.getString("Height");
+                    results[i+2] = rs.getString("Weight");
+                    results[i+3] = rs.getString("Pressure");
+                    results[i+4] = rs.getString("Temp");
+                    results[i+5] = rs.getString("Allergies");
+                    results[i+6] = rs.getString("Prescription");
+                    results[i+7] = rs.getString("Memo");
+                    i = i+8;
+                }
+            }
+            else {
+                throw new FailedException("SQL QUERY FAILED!!!");
+            }
+        }
+        catch (Exception e)
+        {
+            System.err.print(e);
+        }
+
+        //step 4, display visit information.
+        //Shows information on the last two visits
+        date1 = new Text("Visit Date: " + results[0]);
         date1.setFont(Font.font("Times New Roman", 14));
         date1.setFill(Color.BLACK);
 
-        date2 = new Text("Visit Date: 03/04/2021");
+        date2 = new Text("Visit Date: " + results[8]);
         date2.setFont(Font.font("Times New Roman", 14));
         date2.setFill(Color.BLACK);
 
         //these are nurse's categories of what they take at each appointment
-        //there are 2 of each because this screen displays 2 dummy previous visits
-        //these will all be parsed in, ex. Height: + [string that holds height] from nurse's input
-        height = new Text("Height: 5 feet 7 inches");
+        height = new Text("Height: " + results[1] + " inches");
         height.setFont(Font.font("Times New Roman", 14));
         height.setFill(Color.BLACK);
 
-        height2 = new Text("Height: 5 feet 9 inches, grew 2 inches");
+        height2 = new Text("Height: " + results[9] + " inches");
         height2.setFont(Font.font("Times New Roman", 14));
         height2.setFill(Color.BLACK);
 
-        weight = new Text("Weight: 120 lbs");
+        weight = new Text("Weight: " + results[2] + " lbs");
         weight.setFont(Font.font("Times New Roman", 14));
         weight.setFill(Color.BLACK);
 
-        weight2 = new Text("Weight: 122 lbs, gained 2 lbs");
+        weight2 = new Text("Weight: " + results[10] + " lbs");
         weight2.setFont(Font.font("Times New Roman", 14));
         weight2.setFill(Color.BLACK);
 
-        bloodPressure = new Text("Blood Pressure: 120/80mmHg");
+        bloodPressure = new Text("Blood Pressure: " + results[3] + " mmHg");
         bloodPressure.setFont(Font.font("Times New Roman", 14));
         bloodPressure.setFill(Color.BLACK);
 
-        bloodPressure2 = new Text("Blood Pressure: 120/80mmHg");
+        bloodPressure2 = new Text("Blood Pressure: " + results[11] + " mmHg");
         bloodPressure2.setFont(Font.font("Times New Roman", 14));
         bloodPressure2.setFill(Color.BLACK);
 
-        bodyTemp = new Text("Body Temperature: 96.8 degrees");
+        bodyTemp = new Text("Body Temperature: " + results[4] + " degrees");
         bodyTemp.setFont(Font.font("Times New Roman", 14));
         bodyTemp.setFill(Color.BLACK);
 
-        bodyTemp2 = new Text("Body Temperature: 96.8 degrees");
+        bodyTemp2 = new Text("Body Temperature: " + results[12] + " degrees");
         bodyTemp2.setFont(Font.font("Times New Roman", 14));
         bodyTemp2.setFill(Color.BLACK);
 
-        allergies = new Text("Allergies: Peanuts");
+        allergies = new Text("Allergies: " + results[5]);
         allergies.setFont(Font.font("Times New Roman", 14));
         allergies.setFill(Color.BLACK);
 
-        allergies2 = new Text("Allergies: Peanuts");
+        allergies2 = new Text("Allergies: " + results[13]);
         allergies2.setFont(Font.font("Times New Roman", 14));
         allergies2.setFill(Color.BLACK);
 
-        prescription = new Text("Prescription: Epinephrine 'EpiPen'");
+        prescription = new Text("Prescription: " + results[6]);
         prescription.setFont(Font.font("Times New Roman", 14));
         prescription.setFill(Color.BLACK);
 
-        prescription2 = new Text("Prescription: Epinephrine 'EpiPen'");
+        prescription2 = new Text("Prescription: " + results[14]);
         prescription2.setFont(Font.font("Times New Roman", 14));
         prescription2.setFill(Color.BLACK);
 
-        //doctor's notes will be parsed in as well, this is the label for them
-        doctorNotes = new Text("Doctor/Nurse's Notes:");
-        doctorNotes.setFont(Font.font("Times New Roman", 14));
-        doctorNotes.setFill(Color.BLACK);
+        memo = new Text("Memo: " + results[7]);
+        memo.setFont(Font.font("Times New Roman", 14));
+        memo.setFill(Color.BLACK);
 
-        //these will be taken from the doctor's notes input as a string
-        notes = new Text("-03/04 - slight pain in knee, likely baseball, tylenol referral");
-        notes.setFont(Font.font("Times New Roman", 14));
-        notes.setFill(Color.BLACK);
+        memo2 = new Text("Memo: " + results[15]);
+        memo2.setFont(Font.font("Times New Roman", 14));
+        memo2.setFill(Color.BLACK);
 
         //text labeling the option for the nurse currently logged on to send
         //a message to the patient whose summary they are viewing
@@ -165,6 +230,12 @@ public class NursePatientSummary extends StackPane
         back = new Button("Back");
         //go button takes the user to their message portal with this patient to view/send messages
         go = new Button("Go");
+        //when the user presses Go, they are sent to the message portal. Case 27
+        ForwardButton forward1 = new ForwardButton(27);
+        go.setOnAction(forward1);
+        //when the user presses Back, they are sent back to the patient select screen. Case 21
+        ForwardButton forward2 = new ForwardButton(21);
+        back.setOnAction(forward2);
 
         //vertical panes for each group of information on the page, to be placed
         //in column vertical panes and then in a horizontal pane for display purposes
@@ -186,10 +257,10 @@ public class NursePatientSummary extends StackPane
         visitBox.getChildren().addAll(date1, date2);
 
         VBox visit1Box = new VBox(2);
-        visit1Box.getChildren().addAll(height, weight, bloodPressure, bodyTemp, allergies, prescription);
+        visit1Box.getChildren().addAll(height, weight, bloodPressure, bodyTemp, allergies, prescription, memo);
 
         VBox visit2Box = new VBox(2);
-        visit2Box.getChildren().addAll(height2, weight2, bloodPressure2, bodyTemp2, allergies2, prescription2);
+        visit2Box.getChildren().addAll(height2, weight2, bloodPressure2, bodyTemp2, allergies2, prescription2, memo2);
 
         VBox messageBox = new VBox(2);
         messageBox.getChildren().addAll(sendMessage, go, back);

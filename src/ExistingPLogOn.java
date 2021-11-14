@@ -121,7 +121,7 @@ public class ExistingPLogOn extends StackPane
                 errorLabel.setTextFill(Color.RED);
             }
 
-            else if(delim[0].length() == 4 && delim[1].length() == 1 && delim[2].length() == 2)
+            else if(delim[0].length() == 4 && delim[1].length() == 2 && delim[2].length() == 2)
             {
                 try {
                     String fName = fNameField.getText();

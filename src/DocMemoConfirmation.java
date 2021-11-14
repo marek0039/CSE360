@@ -9,6 +9,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.sql.ResultSet;
+
 public class DocMemoConfirmation extends StackPane
 {
     //create attributes for this screen
@@ -18,6 +20,24 @@ public class DocMemoConfirmation extends StackPane
 
     public DocMemoConfirmation()
     {
+        //get the doctor's last name
+        String doc_name = null;
+        ResultSet rs = null;
+        try {
+            String getConnection = "SELECT Last_Name from Professional WHERE ID="
+                    + HealthPortal.currUser + ";";
+            //using the current user, get the doctor's last name
+            rs = HealthPortal.statement.executeQuery(getConnection);  //execute the query
+            rs.last();  //get the last row of the query
+            if (rs.getRow() == 1) { //there should only be 1 row but checking
+                doc_name = rs.getString("Last_Name"); //store the last name
+            } else {    //otherwise, throw and exception.
+                throw new FailedException("Cannot find User: " + HealthPortal.currUser);
+            }
+        } catch (Exception e) {
+            System.err.print(e);
+        }
+
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -29,7 +49,7 @@ public class DocMemoConfirmation extends StackPane
         //black text labeling the name of the patient and dob of the patient
         //Note: these will need to be read in from the previous New patient form
         //text fields/areas so they will end up being parsed input rather than this dummy default text
-        welcome = new Text("Welcome in, Doctor Sparky");
+        welcome = new Text("Welcome in, Doctor " + doc_name);
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);
 
@@ -49,6 +69,9 @@ public class DocMemoConfirmation extends StackPane
         //inputted information, and back takes them back to the new patient form
         //page incase they need to go back to a field
         patientChoice = new Button("Patient Choice Home");
+        //when the user presses Go, they are sent to the patient summary page. Case 15
+        ForwardButton forward = new ForwardButton(15);
+        patientChoice.setOnAction(forward);
 
         //Vertical pane to put the patient's name and dob stacked
         VBox patientInfo = new VBox(3);
