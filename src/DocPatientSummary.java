@@ -2,7 +2,6 @@ import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
@@ -24,7 +23,6 @@ public class DocPatientSummary extends StackPane
     private Text sendMessage, newMeds;
     private TextField notesField, presField;
     private Button back, go , submit;
-    private Label errLabel;
 
     public DocPatientSummary()
     {
@@ -304,9 +302,9 @@ public class DocPatientSummary extends StackPane
         VBox column3 = new VBox(16);
         column3.getChildren().addAll(visit1Box, visit2Box);
 
-        //vbox for title and doctor greeting as well as the error label.
+        //vbox for title and doctor greeting
         VBox titleBox = new VBox(2);
-        titleBox.getChildren().addAll(title, welcome, errLabel);
+        titleBox.getChildren().addAll(title, welcome);
 
         //vbox for send message label and buttons
         VBox messageBox = new VBox(2);
