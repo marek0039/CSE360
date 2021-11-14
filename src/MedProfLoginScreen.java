@@ -23,6 +23,7 @@ public class MedProfLoginScreen extends StackPane
     private TextField uNameField, passField;
     private Button login, back;
     private Label errorLabel;
+    private int caseInt;
 
     public MedProfLoginScreen()
     {
@@ -57,6 +58,8 @@ public class MedProfLoginScreen extends StackPane
         //buttons to allow the user to submit and log in, or go back to the
         //previous page in case they did not mean to enter this one
         login = new Button("Login");
+        MedicalProfLoginButton handler1 = new MedicalProfLoginButton(caseInt);
+        login.setOnAction(handler1);
         back = new Button("Back");
         //back button forward event handler, case 1, go back to user choice screen
         ForwardButton handler = new ForwardButton(1);
@@ -64,7 +67,7 @@ public class MedProfLoginScreen extends StackPane
 
         //Vertical pane to put the title and existing patient label together
         VBox titleBox = new VBox(5);
-        titleBox.getChildren().addAll(title, label);
+        titleBox.getChildren().addAll(title, label, errorLabel);
 
         //Vertical pane to put the log on requirements in the center of the page
         VBox centerElements = new VBox(8);
@@ -88,10 +91,10 @@ public class MedProfLoginScreen extends StackPane
         this.getChildren().add(bp);
     } //end constructor
 
-    private class MedicalProfessionalLoginButton extends ForwardButton
+    private class MedicalProfLoginButton extends ForwardButton
     {
         private int num_rows;
-        private MedicalProfessionalLoginButton(int caseInt)
+        private MedicalProfLoginButton(int caseInt)
         {
             super(caseInt);
         }
@@ -99,50 +102,42 @@ public class MedProfLoginScreen extends StackPane
         @Override
         public void handle(ActionEvent event)
         {
-            //Format = YYYY-MM-DD
-
             ResultSet rs = null;
-            //String[] delim = dobPicker.getText().split("-");
 
             if(uNameField.getText().isEmpty() || passField.getText().isEmpty())
             {
                 errorLabel.setText("Please enter all necessary login info");
                 errorLabel.setTextFill(Color.RED);
             }
-            //delim[0].length() == 4 && delim[1].length() == 1 && delim[2].length() == 2
+
             else
             {
                 try {
                     String username = uNameField.getText();
                     String password = passField.getText();
-                    String sql = "SELECT ID FROM Professional WHERE username='"+ username + "' and password='"+ password+ "';";
+                    int isDoc = -1;
+
+                    String sql = "SELECT ID, IsDoctor FROM Professional WHERE username='"+ username + "' and password='"+ password+ "';";
                     rs = HealthPortal.statement.executeQuery(sql);
 
-                    if(rs.next())
+                    rs.last();
+                    if(rs.getRow() == 1)
                     {
-                        this.num_rows++;
-                    }
-                    if(rs.getRow() == 1) {
-                        while (rs.next()) {
-                            int id = rs.getInt("ID");
-                            HealthPortal.currUser = id;
+                        int id = rs.getInt("ID");
+                        HealthPortal.currUser = id;
+                        int isDoc1 = rs.getInt("IsDoctor");
+
+                        if(isDoc1 == 1)
+                        {
+                            super.setcI(16);
+                        }
+                        else
+                        {
+                            super.setcI(21);
                         }
                         super.handle(event);
                     }
 
-//                    rs.next();
-//                    if (rs.getRow() == 1) {
-//                        System.out.print("Error6\n");
-//                        rs.first();
-//                       int pFirstName = rs.getInt("PatientID");
-//                        System.out.print(pFirstName + "\n");
-//                        String pLastName = rs.getString("Last_Name");
-//                        System.out.print(pLastName + "\n");
-//                        String dob = rs.getString("DOB");
-//                        System.out.print(dob + "\n");
-//                        HealthPortal.currUser = rs.getInt("PatientID");
-//                        super.handle(event);
-//                    }
                     else
                     {
                         errorLabel.setText("Enter Valid Login Info or go back");
@@ -153,8 +148,6 @@ public class MedProfLoginScreen extends StackPane
                     e.printStackTrace();
                 }
             }
-            //if(//info is right)
-
         }
     }
 } //end med prof log on class

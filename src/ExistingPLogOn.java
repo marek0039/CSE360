@@ -131,17 +131,34 @@ public class ExistingPLogOn extends StackPane
                     String sql = "SELECT PatientID FROM Patient WHERE First_Name='"+ fName + "' and Last_Name='"+ lName+ "' and DOB='"+ birthday + "';";
                     rs = HealthPortal.statement.executeQuery(sql);
 
-                    if(rs.next())
+                    rs.last();
+                    if(rs.getRow() == 1)
                     {
-                        this.num_rows++;
-                    }
-                    if(rs.getRow() == 1) {
-                        while (rs.next()) {
-                            int id = rs.getInt("PatientID");
-                            HealthPortal.currUser = id;
-                        }
+                        int id = rs.getInt("PatientID");
+                        HealthPortal.currUser = id;
                         super.handle(event);
                     }
+
+                    else
+                    {
+                        errorLabel.setText("Enter Valid Login Info or go back");
+                        errorLabel.setTextFill(Color.RED);
+                    }
+
+                    /*if(rs.next())
+                    {
+                        this.num_rows++;
+                    }*/
+                    /*if(rs.getRow() == 1) {
+                        rs.();
+                        while (rs.next()) {
+                            int id = rs.getInt("PatientID");
+                            System.out.print(id);
+                            HealthPortal.currUser = id;
+                        }
+
+                        super.handle(event);
+                    }*/
 
 //                    rs.next();
 //                    if (rs.getRow() == 1) {
@@ -156,11 +173,11 @@ public class ExistingPLogOn extends StackPane
 //                        HealthPortal.currUser = rs.getInt("PatientID");
 //                        super.handle(event);
 //                    }
-                    else
+                    /*else
                     {
                         errorLabel.setText("Enter Valid Login Info or go back");
                         errorLabel.setTextFill(Color.RED);
-                    }
+                    }*/
                 }
                 catch (SQLException e) {
                     e.printStackTrace();
