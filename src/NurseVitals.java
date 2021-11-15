@@ -27,8 +27,21 @@ public class NurseVitals extends StackPane {
         String patientFName = null;
         String patientLName = null;
         String patientDOB = null;
+        String patientPhone = null;
+        String patientEmail = null;
+        String patientInsurance = null;
+        String patientPharmacy = null;
+        String medicalHistory = null;
+
+        String dateOfVisit = null;
+        String pHeight = null;
+        String pWeight = null;
+        String pBloodPress = null;
+        String pBodyTemp = null;
+        String pAllergies = null;
+        String nurseNotes = null;
+
         ResultSet rs = null;
-        ResultSet rs1 = null;
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128, 32, 32);
 
@@ -43,7 +56,7 @@ public class NurseVitals extends StackPane {
         //text fields/areas so they will end up being parsed input rather than this dummy default text
         try {
             String sql = "SELECT Last_Name FROM Professional WHERE ID='" + HealthPortal.currUser + "';";
-            String sql1 = "SELECT First_Name, Last_Name, DOB FROM Patient WHERE PatientID='" + HealthPortal.currPatient + "';";
+            String sql1 = "SELECT * FROM Patient WHERE PatientID='" + HealthPortal.currPatient + "';";
             rs = HealthPortal.statement.executeQuery(sql);
 
             rs.last();  //get the last row of the query
@@ -54,9 +67,15 @@ public class NurseVitals extends StackPane {
             rs = HealthPortal.statement.executeQuery(sql1); //execute the query
             rs.last();
             if (rs.getRow() == 1) {
-                patientFName = rs1.getString("First_Name");
-                patientLName = rs1.getString("Last_Name");
-                patientDOB = rs1.getString("DOB");
+                patientFName = rs.getString("First_Name");
+                patientLName = rs.getString("Last_Name");
+                patientDOB = rs.getString("DOB");
+                patientPhone = rs.getString("Phone_Number");
+                patientEmail = rs.getString("Email");
+                patientInsurance = rs.getString("Insurance");
+                patientPharmacy = rs.getString("Pharmacy");
+                medicalHistory = rs.getString("Medical_History");
+
             }
         }
         catch (SQLException throwables) {
@@ -83,19 +102,19 @@ public class NurseVitals extends StackPane {
             //these will be parsed in from the patient's profile, Note: that
             //mailing address and insurance number are not included on summary
             //screen, but the rest of the information is
-            phone = new Text("Phone: 123-456-7890");
+            phone = new Text("Phone: " + patientPhone);
             phone.setFont(Font.font("Times New Roman", 14));
             phone.setFill(Color.BLACK);
 
-            email = new Text("Email: asamler@yahoo.com");
+            email = new Text("Email: " + patientEmail);
             email.setFont(Font.font("Times New Roman", 14));
             email.setFill(Color.BLACK);
 
-            insurance = new Text("Insurance: Aetna");
+            insurance = new Text("Insurance: " + patientInsurance);
             insurance.setFont(Font.font("Times New Roman", 14));
             insurance.setFill(Color.BLACK);
 
-            pharmacy = new Text("Pharmacy: CVS #602");
+            pharmacy = new Text("Pharmacy: " + patientPharmacy);
             pharmacy.setFont(Font.font("Times New Roman", 14));
             pharmacy.setFill(Color.BLACK);
 
@@ -104,7 +123,7 @@ public class NurseVitals extends StackPane {
             medHisTitle.setFont(Font.font("Times New Roman", 14));
             medHisTitle.setFill(Color.BLACK);
 
-            medHis = new Text("-Surgery, right foot, Jan. 2012\n-HepC Vaccine, Oct. 2020");
+            medHis = new Text("-"+medicalHistory);
             medHis.setFont(Font.font("Times New Roman", 14));
             medHis.setFill(Color.BLACK);
 
@@ -145,23 +164,48 @@ public class NurseVitals extends StackPane {
 
             //textfields
             heightField = new TextField();
+            pHeight = heightField.getText();
+
             weightField = new TextField();
+            pWeight = weightField.getText();
+
             bloodPField = new TextField();
+            pBloodPress = bloodPField.getText();
+
             bodyTempField = new TextField();
+            pBodyTemp = bodyTempField.getText();
+
             allergyField = new TextField();
+            pAllergies = allergyField.getText();
 
             //text area for the doctors/nurses notes
             docNotes = new TextArea();
+            nurseNotes = docNotes.getText();
 
             //date picker for the date of the visit selection
             visitDate = new DatePicker();
+            //dateOfVisit = DatePicker.getText();
 
-            //back button takes the user to the choose a patient page
+            try {
+                String sql = "INSERT INTO Visit (Height, Weight, Pressure, Temp, Allergies, Notes, Prescription, Memo) VALUES(" + pHeight + "," + pWeight + "," + pBloodPress + "," + pBodyTemp + "," + pAllergies + "," + nurseNotes + ",NULL,NULL);";
+                rs = HealthPortal.statement.executeQuery(sql);
+            } catch (SQLException throwables) {
+                throwables.printStackTrace();
+            }
+        //back button takes the user to the choose a patient page
             //go button takes user to send a message to the patient they are currently on
             //submit allows user to send in notes/medication added to the page via the textfields
             back = new Button("Back");
+            ForwardButton handler = new ForwardButton(21);
+            back.setOnAction(handler);
+
             go = new Button("Go");
+            ForwardButton handler2 = new ForwardButton(27);
+            go.setOnAction(handler2);
+
             submit = new Button("Submit");
+            ForwardButton handler3 = new ForwardButton(25);
+            submit.setOnAction(handler3);
 
             //vertical panes for each group of information on the page, to be placed
             //in column vertical panes and then in a horizontal pane for display purposes
