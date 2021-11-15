@@ -1,13 +1,13 @@
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
+import java.sql.ResultSet;
 
 public class NurseCreatePatient extends StackPane
 {
@@ -17,11 +17,33 @@ public class NurseCreatePatient extends StackPane
     private TextField fNameField, lNameField, emailField, pharmField, numField, insField, insNumField;
     private TextField mailField1, mailField2, mailField3, mailField4;
     private TextArea medHisField;
-    private DatePicker dobPicker;
+    private TextField dobPicker;
     private Button submit, back;
+    private Label errLabel;
+    private int docID;
 
     public NurseCreatePatient()
     {
+        //step 1, get nurse's last name
+        ResultSet rs = null;
+        String nurse_name = null;
+        try {
+            String getConnection = "SELECT Last_Name, Connection from Professional WHERE ID="
+                    + HealthPortal.currUser + ";";
+            //using the current user, get the nurse's last name
+            rs = HealthPortal.statement.executeQuery(getConnection);  //execute the query
+            rs.last();  //get the last row of the query
+            if (rs.getRow() == 1) { //there should only be 1 row but checking
+                nurse_name = rs.getString("Last_Name"); //store the last name
+                docID = rs.getInt("Connection"); //also getting connected DoctorID for adding the patient.
+            } else {    //otherwise, throw and exception.
+                throw new FailedException("Cannot find User: " + HealthPortal.currUser);
+            }
+        } catch (Exception e) {
+            System.err.println(e);
+        }
+
+        errLabel = new Label();
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -34,7 +56,7 @@ public class NurseCreatePatient extends StackPane
         //and red text labeling what is required for the patient
         //to fill in
         //nurse welcome which will be read in when the nurse logs in
-        welcome = new Text("Welcome in, Nurse Jackson");
+        welcome = new Text("Welcome in, Nurse " + nurse_name);
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);
 
@@ -60,7 +82,7 @@ public class NurseCreatePatient extends StackPane
         lName.setFont(Font.font("Times New Roman", 12));
         lName.setFill(Color.BLACK);
 
-        dob = new Text("Patient Date of Birth:");
+        dob = new Text("Patient Date of Birth: (Use Format: YYYY-MM-DD)");
         dob.setFont(Font.font("Times New Roman", 12));
         dob.setFill(Color.BLACK);
 
@@ -97,8 +119,7 @@ public class NurseCreatePatient extends StackPane
         finish.setFill(Color.BLACK);
 
         //text fields for their corresponding items
-        //the medical history, date of birth
-        //are NOT text fields
+        //the medical history is NOT a text field
 
         //Note: I added the prompt text for the mailing address
         //and the * to all required fields as specified, the * is
@@ -155,7 +176,7 @@ public class NurseCreatePatient extends StackPane
 
         //date picker object in order for the patient
         //to pick their date of birth most effectively
-        dobPicker = new DatePicker();
+        dobPicker = new TextField();
         dobPicker.setPromptText("*");
         //Note: this isn't working to set the prompt * color to red
         //for the date picker so another method must be tried later
@@ -168,6 +189,12 @@ public class NurseCreatePatient extends StackPane
         //these will be handled in the event handlers for these buttons
         submit = new Button("Submit");
         back = new Button("Back");
+        //when user presses Submit, they read all the boxes filled in and attempts to submit the new patient. Case 23
+        CreatePatientNurseButton memo_submit = new CreatePatientNurseButton(23);
+        submit.setOnAction(memo_submit);
+        //when the user presses Back, they are sent to patient select menu, Case 21
+        ForwardButton forward = new ForwardButton(21);
+        back.setOnAction(forward);
 
         //vertical panes to attach the text element to it's corresponding
         //method of user input so textfield/area etc.
@@ -226,7 +253,7 @@ public class NurseCreatePatient extends StackPane
         //create a vertical pane for the title, new patient form text,
         //and required text
         VBox topText = new VBox(5);
-        topText.getChildren().addAll(title, welcome, form, required);
+        topText.getChildren().addAll(title, welcome, form, required, errLabel);
 
         //add the top text with its contents to the top left
         //of this stack pane
@@ -243,4 +270,74 @@ public class NurseCreatePatient extends StackPane
         //add the border pane to this stack pane
         this.getChildren().add(bp);
     } //end constructor
+
+    private class CreatePatientNurseButton extends ForwardButton { //button which makes sure all fields are filled in.
+        private CreatePatientNurseButton(int caseInt) {
+            super(caseInt);
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
+            //first check to see if none of the required fields are empty.
+            if (fNameField.getText().isEmpty() || lNameField.getText().isEmpty() || emailField.getText().isEmpty() ||
+                pharmField.getText().isEmpty() || numField.getText().isEmpty() || insField.getText().isEmpty() ||
+                insNumField.getText().isEmpty() || mailField1.getText().isEmpty() || mailField3.getText().isEmpty() ||
+                mailField4.getText().isEmpty() || dobPicker.getText().isEmpty()) {
+
+                //if any are empty update the label for the user.
+                errLabel.setText("Please enter all necessary info");
+                errLabel.setTextFill(Color.RED);
+            }
+            else {
+                String[] dob_split = dobPicker.getText().split("-"); //split the DOB string to check if it's valid
+                if ((dob_split[0].length() == 4) && (dob_split[1].length() == 2) && (dob_split[2].length() == 2)) {
+                    //if so, then store all the fields into variables
+                    try {
+                        String p_fname = fNameField.getText();
+                        String p_lname = lNameField.getText();
+                        String p_email = emailField.getText();
+                        String p_phone = numField.getText();
+                        String p_pharmacy = pharmField.getText();
+                        String p_insurance = insField.getText();
+                        String p_insurance_num = insNumField.getText();
+                        String p_dob = dobPicker.getText();
+                        String p_med = medHisField.getText();
+                        String p_address;
+                        // I have to check if mailField2 is empty or not because it affects address formatting.
+                        if (mailField2.getText().isEmpty()) {
+                            p_address = mailField1.getText() + "\n" + mailField3.getText() + " " + mailField4.getText();
+                        } else {
+                            p_address = mailField1.getText() + " " + mailField2.getText() + "\n" + mailField3.getText()
+                                    + " " + mailField4.getText();
+                        }
+                        // now need to generate a new patientID
+                        String patientInt = "12";
+                        int rand = (int) (Math.random() * 9000) + 1000;
+                        String p_id = patientInt + String.valueOf(rand);
+                        int final_p_id = Integer.parseInt(p_id);
+                        //now I can finally execute the query.
+                        String ins = "INSERT INTO Patient VALUES ('" + p_fname + "', '" + p_lname + "', " + final_p_id +
+                                ", '" + p_email + "', '" + p_phone + "', '" + p_address + "', '" + p_pharmacy + "', '" +
+                                p_insurance + "', '" + p_insurance_num + "', '" + p_dob + "', '" + p_med + "', " +
+                                docID + ");";
+                        int result = HealthPortal.statement.executeUpdate(ins); //return a boolean if it inserted or not
+                        if (result == 1) {
+                            //if it did then update current patient as well as called ForwardButton's handle
+                            HealthPortal.currPatient = final_p_id;
+                            super.handle(event);
+                        }
+                        else { //otherwise, throw an exception.
+                            throw new FailedException("INSERTING NEW PATIENT FAILED!!!");
+                        }
+                    } catch (Exception e) {
+                        System.err.println(e);
+                    }
+                }
+                else {  //this is in the case that the DOB is not formatted correctly.
+                    errLabel.setText("Please Enter in The Date of Birth in the Correct Format.");
+                    errLabel.setTextFill(Color.RED);
+                }
+            }
+        }
+    }
 } //end nurse create patient class

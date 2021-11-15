@@ -59,7 +59,7 @@ public class UserChoiceScreen extends StackPane
         //add forward method to handle where this button takes the user
         //this is case 2 in the switch statement for forward
 
-        UserSelectButton handler = new UserSelectButton(caseInt);
+        UserSelectButton handler = new UserSelectButton(2);
         next.setOnAction(handler);
 
         //ForwardButton handler = new ForwardButton(2);
