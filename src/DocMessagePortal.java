@@ -2,13 +2,11 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Accordion;
 import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TitledPane;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -100,29 +98,56 @@ public class DocMessagePortal extends StackPane
         back.setOnAction(handler2);
 
         //SQL for the messages to be displayed on this users screen
-        String[] results = new String[6];
+        String[] results = new String[4];
         ResultSet rs2 = null;
         try
         {
-            String sql2 = "SELECT Sender, Text, Date From Message WHERE Recipient =" + HealthPortal.currUser + "And Date IN (SELECT t1.Date FROM Message t1 left join Message t2 on t1.Date <= t2.Date group by t1.Date having count(distinct t2.Date)<=2)";
+            //SQL query for the messages between the doctor currently logged in and their patient whose profile they are currently on
+            String sql2 = "Select Text,Date From Message Where Sender=" + HealthPortal.currPatient + "And Recipient=" + HealthPortal.currUser;
             rs2 = HealthPortal.statement.executeQuery(sql2);
-            int i = 0;
-            if (rs2.first())
+            rs2.last(); //set the result selection to last row
+            //if they have NO messages, the following will be displayed in the panes
+            if(!(rs2.first()))
             {
-                while(rs2.next())
+                sender1 = "N/A";
+                text1 = "\n\nYou have no messages.\n\n\n";
+                date1 = "N/A";
+                sender2 = "N/A";
+                text2 = "\n\nYou have no messages.\n\n\n";
+                date2 = "N/A";
+            }
+            //if they have ONE message, set the sender to the current patient's name, and the text and date
+            //from the table, the other message will say 'N/A' etc.
+            else if(rs2.isFirst() && rs2.isLast())
+            {
+                sender1 = pFirstName + " " + pLastName;
+                text1 = rs2.getString("Text");
+                date1 = rs2.getString("Date");
+                sender2 = "N/A";
+                text2 = "\n\nYou have no messages.\n\n\n";
+                date2 = "N/A";
+            }
+            //if they have 2+ messages, read in the message contents and dates for two of them and set both the
+            //senders as the current patient, as this is the person whose profile we are currently on
+            else
+            {
+                int i = 0;
+                if (rs2.first())
                 {
-                    results[i] = rs2.getString("Sender");
-                    results[i+1] = rs2.getString("Text");
-                    results[i+2] = rs2.getString("Date");
-                    i = i+3;
-                }
+                    while (rs2.next())
+                    {
+                        results[i] = rs2.getString("Text");
+                        results[i + 1] = rs2.getString("Date");
+                        i = i + 2;
+                    }
 
-                sender1 = results[0];
-                text1 = results[1];
-                date1 = results[2];
-                sender2 = results[3];
-                text2 = results[4];
-                date2 = results[5];
+                    sender1 = pFirstName + " " + pLastName;
+                    text1 = results[0];
+                    date1 = results[1];
+                    sender2 = pFirstName + " " + pLastName;
+                    text2 = results[2];
+                    date2 = results[3];
+                }
             }
         }
         catch (SQLException e)
@@ -131,11 +156,11 @@ public class DocMessagePortal extends StackPane
         }
 
         //text objects for the messages
-        message1 = new Text(text1);
+        message1 = new Text("\n\n" + text1 + "\n\n\n");
         message1.setFont(Font.font("Times New Roman", 10));
         message1.setFill(Color.BLACK);
 
-        message2 = new Text(text2);
+        message2 = new Text("\n\n" + text2 + "\n\n\n");
         message2.setFont(Font.font("Times New Roman", 10));
         message2.setFill(Color.BLACK);
 
