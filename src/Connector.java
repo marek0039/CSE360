@@ -3,6 +3,7 @@ import com.jcraft.jsch.Session;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.Statement;
 
 public class Connector {
@@ -29,7 +30,7 @@ public class Connector {
 
             Session session = jsch.getSession(ssh_user, ssh_host);  //start the ssh session
             session.connect();  //connect
-            int assigned_port=session.setPortForwardingL(client_port, db_host, db_port); //set the port on your machine
+            int assigned_port = session.setPortForwardingL(client_port, db_host, db_port); //set the port on your machine
             System.out.println("localhost:"+assigned_port+" -> "+db_host+":"+db_port);  //for debugging purposes
 
             String jdbc_driver = "com.mysql.cj.jdbc.Driver"; //driver to use for sql connection
@@ -39,7 +40,8 @@ public class Connector {
             Class.forName(jdbc_driver);
             Connection connection = DriverManager.getConnection(url+db, db_user, db_pswd); //connect to sql db
 
-            statement = connection.createStatement(); //create a statement which will execute an sql cmd.
+            statement = connection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY); //create a statement which will execute an sql cmd.
+
         } catch(Exception e) {  //catch exceptions
             System.err.print(e);
         }
