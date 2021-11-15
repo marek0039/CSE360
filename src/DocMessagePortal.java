@@ -52,7 +52,7 @@ public class DocMessagePortal extends StackPane
         ResultSet rs3 = null;
         try
         {
-            String sql = "select First_Name, Last_Name, from Professional where ID =" + HealthPortal.currUser + ";";
+            String sql = "Select First_Name, Last_Name from Professional where ID =" + HealthPortal.currUser + ";";
             rs3 = HealthPortal.statement.executeQuery(sql);
             rs3.last();
             if (rs3.getRow() == 1)
@@ -103,7 +103,7 @@ public class DocMessagePortal extends StackPane
         try
         {
             //SQL query for the messages between the doctor currently logged in and their patient whose profile they are currently on
-            String sql2 = "Select Text,Date From Message Where Sender=" + HealthPortal.currPatient + "And Recipient=" + HealthPortal.currUser;
+            String sql2 = "Select Text,Date From Message Where Sender=" + HealthPortal.currPatient + " And Recipient=" + HealthPortal.currUser + ";";
             rs2 = HealthPortal.statement.executeQuery(sql2);
             rs2.last(); //set the result selection to last row
             //if they have NO messages, the following will be displayed in the panes
