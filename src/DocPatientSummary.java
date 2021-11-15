@@ -64,7 +64,7 @@ public class DocPatientSummary extends StackPane
                 throw new FailedException("Cannot find Patient: " + HealthPortal.currPatient);
             }
         } catch (Exception e) {
-            System.err.print(e);
+            System.err.println(e);
         }
 
         errLabel = new Label(); //label which will display an error done by the user.
@@ -160,7 +160,7 @@ public class DocPatientSummary extends StackPane
         }
         catch (Exception e)
         {
-            System.err.print(e);
+            System.err.println(e);
         }
 
         //step 4, display visit information.
@@ -370,7 +370,7 @@ public class DocPatientSummary extends StackPane
                         super.handle(event);    //call forward button's handle.
                     }
                 } catch(Exception e) {  //catch exception
-                    System.err.print(e);
+                    System.err.println(e);
                 }
             }
         }

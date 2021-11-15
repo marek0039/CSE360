@@ -57,7 +57,7 @@ public class NursePatientSummary extends StackPane
                 throw new FailedException("Cannot find Patient: " + HealthPortal.currPatient);
             }
         } catch (Exception e) {
-            System.err.print(e);
+            System.err.println(e);
         }
 
         //establish color Falu Red as done on home screen
@@ -152,7 +152,7 @@ public class NursePatientSummary extends StackPane
         }
         catch (Exception e)
         {
-            System.err.print(e);
+            System.err.println(e);
         }
 
         //step 4, display visit information.

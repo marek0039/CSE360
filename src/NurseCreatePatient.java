@@ -40,7 +40,7 @@ public class NurseCreatePatient extends StackPane
                 throw new FailedException("Cannot find User: " + HealthPortal.currUser);
             }
         } catch (Exception e) {
-            System.err.print(e);
+            System.err.println(e);
         }
 
         errLabel = new Label();
@@ -320,8 +320,8 @@ public class NurseCreatePatient extends StackPane
                                 ", '" + p_email + "', '" + p_phone + "', '" + p_address + "', '" + p_pharmacy + "', '" +
                                 p_insurance + "', '" + p_insurance_num + "', '" + p_dob + "', '" + p_med + "', " +
                                 docID + ");";
-                        boolean result = HealthPortal.statement.execute(ins); //return a boolean if it inserted or not
-                        if (result) {
+                        int result = HealthPortal.statement.executeUpdate(ins); //return a boolean if it inserted or not
+                        if (result == 1) {
                             //if it did then update current patient as well as called ForwardButton's handle
                             HealthPortal.currPatient = final_p_id;
                             super.handle(event);
@@ -330,7 +330,7 @@ public class NurseCreatePatient extends StackPane
                             throw new FailedException("INSERTING NEW PATIENT FAILED!!!");
                         }
                     } catch (Exception e) {
-                        System.err.print(e);
+                        System.err.println(e);
                     }
                 }
                 else {  //this is in the case that the DOB is not formatted correctly.
