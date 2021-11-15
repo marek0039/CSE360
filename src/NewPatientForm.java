@@ -262,8 +262,6 @@ public class NewPatientForm extends StackPane {
         private int num_rows;
 
         private NewPatientFormButton(int caseInt) {
-
-
             super(caseInt);
         }
 
