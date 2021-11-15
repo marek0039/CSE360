@@ -9,6 +9,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class ExistingPatientPortal extends StackPane
 {
     //attributes of this class to be displayed on the pane
@@ -18,6 +21,8 @@ public class ExistingPatientPortal extends StackPane
 
     public ExistingPatientPortal()
     {
+        String pFirstName = null;
+        String dOfBirth = null;
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -29,11 +34,26 @@ public class ExistingPatientPortal extends StackPane
         //black text labeling the name of the patient and dob of the patient
         //Note: these will need to be read in from the previous New patient form
         //text fields/areas so they will end up being parsed input rather than this dummy default text
-        welcome = new Text("Welcome, Patient Adam Samler");
+        ResultSet rs = null;
+        try
+        {
+            String sql = "SELECT First_Name, DOB FROM Patient WHERE PatientID ='"+ HealthPortal.currUser + "';";
+            rs = HealthPortal.statement.executeQuery(sql);
+            rs.last();
+            if(rs.getRow() == 1)
+            {
+                pFirstName = rs.getString("First_Name");
+                dOfBirth = rs.getString("DOB");
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+
+        welcome = new Text("Welcome, Patient " + pFirstName);
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);
 
-        dob = new Text("DOB: 01/09/2007");
+        dob = new Text("DOB: " + dOfBirth);
         dob.setFont(Font.font("Times New Roman", 14));
         dob.setFill(Color.BLACK);
 

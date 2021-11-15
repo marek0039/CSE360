@@ -1,6 +1,8 @@
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
@@ -9,6 +11,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class MedProfLoginScreen extends StackPane
 {
@@ -22,6 +27,7 @@ public class MedProfLoginScreen extends StackPane
 
     public MedProfLoginScreen()
     {
+        errorLabel = new Label();
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
