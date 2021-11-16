@@ -9,6 +9,9 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class NurseVitalsConfirmation extends StackPane
 {
     //create attributes for this screen
@@ -18,6 +21,11 @@ public class NurseVitalsConfirmation extends StackPane
 
     public NurseVitalsConfirmation()
     {
+        ResultSet rs = null;
+        String nurseName = null;
+        String patientFName = null;
+        String patientLName = null;
+        String pDateOfBirth = null;
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -30,15 +38,37 @@ public class NurseVitalsConfirmation extends StackPane
         //and the nurse who is currently logged in
         //Note: these will need to be read in from the previous New patient form
         //text fields/areas so they will end up being parsed input rather than this dummy default text
-        welcome = new Text("Welcome in, Nurse Jackson");
+
+        try {
+            String sql = "SELECT Last_Name FROM Professional WHERE ID='" + HealthPortal.currUser + "';";
+            String sql1 = "SELECT * FROM Patient WHERE PatientID='" + HealthPortal.currPatient + "';";
+            rs = HealthPortal.statement.executeQuery(sql);
+
+            rs.last();  //get the last row of the query
+            if (rs.getRow() == 1) { //there should only be 1 row but checking
+                nurseName = rs.getString("Last_Name"); //store the last name
+            }
+
+            rs = HealthPortal.statement.executeQuery(sql1); //execute the query
+            rs.last();
+            if (rs.getRow() == 1) {
+                patientFName = rs.getString("First_Name");
+                patientLName = rs.getString("Last_Name");
+                pDateOfBirth = rs.getString("DOB");
+            }
+        }
+        catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        welcome = new Text("Welcome in, Nurse " + nurseName);
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);
 
-        patient = new Text("Patient: Adam Samler");
+        patient = new Text("Patient: " + patientFName + " " + patientLName);
         patient.setFont(Font.font("Times New Roman", 14));
         patient.setFill(Color.BLACK);
 
-        dob = new Text("DOB: 01/09/2007");
+        dob = new Text("DOB: " + pDateOfBirth);
         dob.setFont(Font.font("Times New Roman", 14));
         dob.setFill(Color.BLACK);
 
@@ -50,7 +80,12 @@ public class NurseVitalsConfirmation extends StackPane
         //of the patient they have currently selected, go back leads
         //the user to the previous screen of entering nurse vitals
         patientSummary = new Button("Patient Summary");
+        ForwardButton handler = new ForwardButton(26);
+        patientSummary.setOnAction(handler);
+
         back = new Button("Back");
+        ForwardButton handler1 = new ForwardButton(21);
+        back.setOnAction(handler1);
 
         //Vertical pane to put the patient's name and dob stacked
         VBox patientInfo = new VBox(3);
