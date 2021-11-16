@@ -14,7 +14,7 @@ public class NursePatientSummary extends StackPane
     //create attributes for this screen
     private Color mainColor;
     private Text title, welcome, patient, dob, contactInfo, email, sendMessage;
-    private Text phone, medHisTitle, medHis, pharmacy, insurance, insuranceNum, address, doctorNotes, notes;
+    private Text phone, medHisTitle, medHis, pharmacy, insurance, insuranceNum, address;
     private Text date1, date2, height, weight, bloodPressure, bodyTemp, allergies, prescription, memo;
     private Text height2, weight2, bloodPressure2, bodyTemp2, allergies2, prescription2, memo2;
     private Button back, go;
@@ -270,13 +270,8 @@ public class NursePatientSummary extends StackPane
         VBox.setMargin(back, new Insets(0,0,0,210));
         VBox.setMargin(go, new Insets(0,0,0,215));
 
-        //back button is in this box as it is displayed low on the screen and has some
-        //insets for aesthetic
-        VBox docBox = new VBox(2);
-        docBox.getChildren().addAll(doctorNotes, notes);
-
         VBox bottomBox = new VBox(2);
-        bottomBox.getChildren().addAll(docBox, messageBox);
+        bottomBox.getChildren().addAll(messageBox);
 
         //vertical panes for each column
         VBox column1 = new VBox(8);
