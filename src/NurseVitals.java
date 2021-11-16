@@ -1,9 +1,7 @@
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
@@ -21,7 +19,14 @@ public class NurseVitals extends StackPane {
     private DatePicker visitDate;
     private TextArea docNotes;
     private Button back, go, submit;
-
+    private Label errorLabel;
+    private String dateOfVisit = null;
+    private String pHeight = null;
+    private String pWeight = null;
+    private String pBloodPress = null;
+    private String pBodyTemp = null;
+    private String pAllergies = null;
+    private String nurseNotes = null;
     public NurseVitals() {
         String nurseName = null;
         String patientFName = null;
@@ -33,13 +38,9 @@ public class NurseVitals extends StackPane {
         String patientPharmacy = null;
         String medicalHistory = null;
 
-        String dateOfVisit = null;
-        String pHeight = null;
-        String pWeight = null;
-        String pBloodPress = null;
-        String pBodyTemp = null;
-        String pAllergies = null;
-        String nurseNotes = null;
+
+
+        errorLabel = new Label();
 
         ResultSet rs = null;
         //establish color Falu Red as done on home screen
@@ -164,34 +165,21 @@ public class NurseVitals extends StackPane {
 
             //textfields
             heightField = new TextField();
-            pHeight = heightField.getText();
 
             weightField = new TextField();
-            pWeight = weightField.getText();
 
             bloodPField = new TextField();
-            pBloodPress = bloodPField.getText();
 
             bodyTempField = new TextField();
-            pBodyTemp = bodyTempField.getText();
 
             allergyField = new TextField();
-            pAllergies = allergyField.getText();
 
             //text area for the doctors/nurses notes
             docNotes = new TextArea();
-            nurseNotes = docNotes.getText();
 
             //date picker for the date of the visit selection
             visitDate = new DatePicker();
-            //dateOfVisit = DatePicker.getText();
 
-            try {
-                String sql = "INSERT INTO Visit (Height, Weight, Pressure, Temp, Allergies, Notes, Prescription, Memo) VALUES(" + pHeight + "," + pWeight + "," + pBloodPress + "," + pBodyTemp + "," + pAllergies + "," + nurseNotes + ",NULL,NULL);";
-                rs = HealthPortal.statement.executeQuery(sql);
-            } catch (SQLException throwables) {
-                throwables.printStackTrace();
-            }
         //back button takes the user to the choose a patient page
             //go button takes user to send a message to the patient they are currently on
             //submit allows user to send in notes/medication added to the page via the textfields
@@ -204,8 +192,9 @@ public class NurseVitals extends StackPane {
             go.setOnAction(handler2);
 
             submit = new Button("Submit");
-            ForwardButton handler3 = new ForwardButton(25);
-            submit.setOnAction(handler3);
+            //ForwardButton handler1 = new ForwardButton(25);
+            NurseVitalsSubmitButton handler1 = new NurseVitalsSubmitButton(25);
+            submit.setOnAction(handler1);
 
             //vertical panes for each group of information on the page, to be placed
             //in column vertical panes and then in a horizontal pane for display purposes
@@ -259,8 +248,8 @@ public class NurseVitals extends StackPane {
             column2.getChildren().addAll(dateBox, heightBox, weightBox, bloodPBox, bodyTempBox, allergyBox);
 
             //vbox for title and doctor greeting
-            VBox titleBox = new VBox(2);
-            titleBox.getChildren().addAll(title, welcome);
+            VBox titleBox = new VBox(5);
+            titleBox.getChildren().addAll(title, welcome, errorLabel);
 
             //horizontal pane to store columns
             HBox colBox = new HBox(8);
@@ -281,4 +270,42 @@ public class NurseVitals extends StackPane {
             //add the border pane to this stack pane
             this.getChildren().add(bp);
         } //end constructor
+    private class NurseVitalsSubmitButton extends ForwardButton {
+        private int num_rows;
+
+        private NurseVitalsSubmitButton(int caseInt) {
+            super(caseInt);
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
+            //visitDate.getAccessibleText().isEmpty() ||heightField.getText().isEmpty() || weightField.getText().isEmpty() || bloodPField.getText().isEmpty() || bodyTempField.getText().isEmpty() || allergyField.getText().isEmpty()
+            ResultSet rs = null;
+            if (visitDate.getValue() == null ||  weightField.getText().isEmpty() || bloodPField.getText().isEmpty() || bodyTempField.getText().isEmpty() || allergyField.getText().isEmpty())
+            {
+                errorLabel.setText("Please enter all necessary info");
+                errorLabel.setTextFill(Color.RED);
+            }
+            else
+            {
+                try {
+                    dateOfVisit = visitDate.getValue().toString();
+                    pHeight = heightField.getText();
+                    pWeight = weightField.getText();
+                    pBloodPress = bloodPField.getText();
+                    pBodyTemp = bodyTempField.getText();
+                    pAllergies = allergyField.getText();
+                    nurseNotes = docNotes.getText();
+                    String sql = "INSERT INTO Visit VALUES("+ HealthPortal.currPatient + ",'" + dateOfVisit + "'," + pHeight + "," + pWeight + ",'" + pBloodPress + "'," + pBodyTemp + ",'" + pAllergies + "','" +nurseNotes +"','N/A');";
+                    System.out.println(sql);
+                    HealthPortal.statement.executeUpdate(sql);
+                    super.handle(event);
+                }
+                catch (SQLException throwables)
+                {
+                    throwables.printStackTrace();
+                }
+            }
+        }
+    }
 } //end nurse vitals class
