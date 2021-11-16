@@ -16,7 +16,7 @@ public class DocMessagePortal extends StackPane
     private Color mainColor;
     private Text title, welcome, patient, dob, prevMessages, message1, message2;
     private Button sendMessage, back;
-    private String pFirstName, pLastName, dateOfBirth, docFirstName, docLastName;
+    private String pFirstName, pLastName, dateOfBirth, docLastName;
     private String sender1, text1, date1, sender2, text2, date2;
 
     public DocMessagePortal()
@@ -52,12 +52,11 @@ public class DocMessagePortal extends StackPane
         ResultSet rs3 = null;
         try
         {
-            String sql = "Select First_Name, Last_Name from Professional where ID =" + HealthPortal.currUser + ";";
+            String sql = "Select Last_Name from Professional where ID =" + HealthPortal.currUser + ";";
             rs3 = HealthPortal.statement.executeQuery(sql);
             rs3.last();
             if (rs3.getRow() == 1)
             {
-                docFirstName = rs3.getString("First_Name");
                 docLastName = rs3.getString("Last_Name");
             }
         }
@@ -70,7 +69,7 @@ public class DocMessagePortal extends StackPane
         //as well as which doctor is logged on currently
         //Note: these will need to be read in from the patient list the doctor chose from
         //text fields/areas so they will end up being parsed input rather than this dummy default text
-        welcome = new Text("Welcome in, Doctor " + docFirstName + " " + docLastName);
+        welcome = new Text("Welcome in, Doctor " + docLastName);
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);
 
@@ -134,8 +133,9 @@ public class DocMessagePortal extends StackPane
                 int i = 0;
                 if (rs2.first())
                 {
-                    while (rs2.next())
+                    while (rs2.getRow() < 3)
                     {
+                        rs2.next();
                         results[i] = rs2.getString("Text");
                         results[i + 1] = rs2.getString("Date");
                         i = i + 2;

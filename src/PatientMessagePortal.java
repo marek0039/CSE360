@@ -159,8 +159,9 @@ public class PatientMessagePortal extends StackPane
                     int i = 0;
                     if (rs2.first())
                     {
-                        while (rs2.next())
+                        while (rs2.getRow() < 3)
                         {
+                            rs2.next();
                             results[i] = rs2.getString("Sender");
                             results[i + 1] = rs2.getString("Text");
                             results[i + 2] = rs2.getString("Date");

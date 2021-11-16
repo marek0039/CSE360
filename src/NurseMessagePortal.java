@@ -7,7 +7,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -17,7 +16,7 @@ public class NurseMessagePortal extends StackPane
     private Color mainColor;
     private Text title, welcome, patient, dob, prevMessages, message1, message2;
     private Button sendMessage, back;
-    private String nurseFName, nurseLName, pFirstName, pLastName, dateOfBirth;
+    private String nurseLName, pFirstName, pLastName, dateOfBirth;
     private String sender1, text1, date1, sender2, text2, date2;
 
     public NurseMessagePortal()
@@ -35,7 +34,7 @@ public class NurseMessagePortal extends StackPane
         ResultSet rs = null;
         try
         {
-            String sql = "select First_Name, Last_Name, DOB from Patient where PatientID =" + HealthPortal.currPatient;
+            String sql = "select First_Name, Last_Name, DOB from Patient where PatientID =" + HealthPortal.currPatient + ";";
             rs = HealthPortal.statement.executeQuery(sql);
             rs.last();
             if (rs.getRow() == 1)
@@ -54,13 +53,12 @@ public class NurseMessagePortal extends StackPane
         ResultSet rs3 = null;
         try
         {
-            String sql = "select First_Name, Last_Name from Professional where ID =" + HealthPortal.currUser;
+            String sql = "Select Last_Name from Professional where ID =" + HealthPortal.currUser + ";";
             rs3 = HealthPortal.statement.executeQuery(sql);
             rs3.last();
             if (rs3.getRow() == 1)
             {
-                nurseFName = rs.getString("First_Name");
-                nurseLName = rs.getString("Last_Name");
+                nurseLName = rs3.getString("Last_Name");
             }
         }
         catch (SQLException e)
@@ -72,7 +70,7 @@ public class NurseMessagePortal extends StackPane
         //as well as which nurse is logged on currently
         //Note: these will need to be read in from the patient chosen by the nurse
         //text fields/areas so they will end up being parsed input rather than this dummy default text
-        welcome = new Text("Welcome in, Nurse " + nurseFName + " " + nurseLName);
+        welcome = new Text("Welcome in, Nurse " + nurseLName);
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);
 
@@ -125,8 +123,9 @@ public class NurseMessagePortal extends StackPane
                 int i = 0;
                 if (rs2.first())
                 {
-                    while (rs2.next())
+                    while (rs2.getRow() < 3)
                     {
+                        rs2.next();
                         results[i] = rs2.getString("Text");
                         results[i + 1] = rs2.getString("Date");
                         i = i + 2;
