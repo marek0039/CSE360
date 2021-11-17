@@ -83,29 +83,161 @@ public class PatientMessagePortal extends StackPane
 
         //SQL for the messages to be displayed on this users screen
         String[] results = new String[6];
+        //the 2 result set objects for the next two queries
         ResultSet rs2 = null;
+        ResultSet rs3 = null;
+        //is doc integers to eventually store whether the sender of the message is a doctor or not
+        //to give the proper title to display on the screen
+        int isDoc = -1;
+        int isDoc2 = -1;
+
         try
         {
-            String sql2 = "SELECT Sender, Text, Date From Message WHERE Recipient = " + HealthPortal.currUser + "And Date IN (SELECT t1.Date FROM Message t1 left join Message t2 on t1.Date <= t2.Date group by t1.Date having count(distinct t2.Date)<=2)";
+            //Query to grab the sender, text, and date from the message table where the current
+            //patient logged in is the recipient of that message
+            String sql2 = "Select Sender,Text,Date From Message Where Recipient=" + HealthPortal.currUser;
             rs2 = HealthPortal.statement.executeQuery(sql2);
-            int i = 0;
-            if (rs2.first() == true)
-            {
-                while(rs2.next())
+            rs2.last(); //set the result to the last row
+            //if the current patient has NO messages, the following will be displayed in the two message panes:
+                if(!(rs2.first()))
                 {
-                    results[i] = rs2.getString("Sender");
-                    results[i+1] = rs2.getString("Text");
-                    results[i+2] = rs2.getString("Date");
-                    i = i+3;
+                   sender1 = "N/A";
+                   text1 = "\n\nYou have no messages.\n\n\n";
+                   date1 = "N/A";
+                   sender2 = "N/A";
+                   text2 = "\n\nYou have no messages.\n\n\n";
+                   date2 = "N/A";
                 }
+                //if the current patient has ONE message, the message content/sender/date will be stored
+                //to be displayed and the other message will have N/A with no content
+                else if(rs2.isFirst() && rs2.isLast())
+                {
+                    sender1 = rs2.getString("Sender");
+                    text1 = rs2.getString("Text");
+                    date1 = rs2.getString("Date");
+                    sender2 = "N/A";
+                    text2 = "\n\nYou have no messages.\n\n\n";
+                    date2 = "N/A";
 
-                sender1 = results[0];
-                text1 = results[1];
-                date1 = results[2];
-                sender2 = results[3];
-                text2 = results[4];
-                date2 = results[5];
-            }
+                    //since the user has ONE message, get the medical professional's last name
+                    //who sent the message by pulling from the professional table where the ID matches
+                    //the sender, and pull if they are a doctor or not as well
+                    int senderId = Integer.parseInt(sender1);
+                    try
+                    {
+                        String sql3 = "Select Last_Name, IsDoctor From Professional Where ID=" + senderId;
+                        rs3 = HealthPortal.statement.executeQuery(sql3);
+
+                        rs3.last();
+                        if (rs3.getRow() == 1)
+                        {
+                            sender1 = rs3.getString("Last_Name");
+                            isDoc = rs3.getInt("IsDoctor");
+                        }
+                    }
+                    catch (SQLException e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                    //if they are a doctor, place Doctor in front of their last name, Nurse otherwise
+                    if(isDoc == 1)
+                    {
+                        String doc = "Doctor ";
+                        sender1 = doc + sender1;
+                    }
+                    else
+                    {
+                        String nur = "Nurse ";
+                        sender1 = nur + sender1;
+                    }
+                }
+                //Finally if the patient has 2+ messages, display 2 messages by traversing the result set
+                //and taking the senders, message contents, and dates
+                else
+                {
+                    int i = 0;
+                    if (rs2.first())
+                    {
+                        while (rs2.getRow() < 3)
+                        {
+                            rs2.next();
+                            results[i] = rs2.getString("Sender");
+                            results[i + 1] = rs2.getString("Text");
+                            results[i + 2] = rs2.getString("Date");
+                            i = i + 3;
+                        }
+                        sender1 = results[0];
+                        text1 = results[1];
+                        date1 = results[2];
+                        sender2 = results[3];
+                        text2 = results[4];
+                        date2 = results[5];
+                    }
+
+                    //repeat the steps from the previous if statement to select the doctor or nurse's last
+                    //name who sent these messages, NOTE: they can be different so this must happen twice
+                    int senderId1 = Integer.parseInt(sender1);
+                    int senderId2 = Integer.parseInt(sender2);
+
+                    try
+                    {
+                        String sql3 = "Select Last_Name, IsDoctor From Professional Where ID=" + senderId1;
+                        rs3 = HealthPortal.statement.executeQuery(sql3);
+
+                        rs3.last();
+                        if (rs3.getRow() == 1)
+                        {
+                            sender1 = rs3.getString("Last_Name");
+                            isDoc = rs3.getInt("IsDoctor");
+                        }
+                    }
+                    catch (SQLException e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                    //again, if they are a doctor or a nurse put the proper title before their last name for
+                    //both queries
+                    if(isDoc == 1)
+                    {
+                        String doc = "Doctor ";
+                        sender1 = doc + sender1;
+                    }
+                    else
+                    {
+                        String nur = "Nurse ";
+                        sender1 = nur + sender1;
+                    }
+
+                    try
+                    {
+                        String sql3 = "Select Last_Name, IsDoctor From Professional Where ID=" + senderId2;
+                        rs3 = HealthPortal.statement.executeQuery(sql3);
+
+                        rs3.last();
+                        if (rs3.getRow() == 1)
+                        {
+                            sender2 = rs3.getString("Last_Name");
+                            isDoc2 = rs3.getInt("IsDoctor");
+                        }
+                    }
+                    catch (SQLException e)
+                    {
+                        e.printStackTrace();
+                    }
+
+                    if(isDoc2 == 1)
+                    {
+                        String doc = "Doctor ";
+                        sender2 = doc + sender2;
+                    }
+                    else
+                    {
+                        String nur = "Nurse ";
+                        sender2 = nur + sender2;
+                    }
+                }
         }
         catch (SQLException e)
         {
@@ -113,17 +245,17 @@ public class PatientMessagePortal extends StackPane
         }
 
         //text objects for the messages
-        message1 = new Text(text1);
+        message1 = new Text("\n\n" + text1 + "\n\n\n");
         message1.setFont(Font.font("Times New Roman", 10));
         message1.setFill(Color.BLACK);
 
-        message2 = new Text(text2);
+        message2 = new Text("\n\n" + text2 + "\n\n\n");
         message2.setFont(Font.font("Times New Roman", 10));
         message2.setFill(Color.BLACK);
 
         //titled pane to store the previous messages
         //the string array has the message titles and messages, for the titles we will have to figure out if we
-        //want to parse these in in any way or just say 'message 1' 'message 2' etc.
+        //want to parse these in any way or just say 'message 1' 'message 2' etc.
         //as defaults that don't change, for now it's the same as our mockup
         String[] messageTitles = new String[] {date1 + " " + sender1, date2 + " " + sender2};
         Text[] message = new Text[] {message1, message2};
