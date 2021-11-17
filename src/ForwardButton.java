@@ -165,13 +165,13 @@ public class ForwardButton implements EventHandler<ActionEvent>
                 //it takes them back to med prof login screen
 
                 /* Testing... delete this later */
-                HealthPortal.root.getChildren().clear();
-                newPForm = new NewPatientForm();
-                HealthPortal.root.getChildren().add(newPForm);
+                //HealthPortal.root.getChildren().clear();
+                //newPForm = new NewPatientForm();
+                //HealthPortal.root.getChildren().add(newPForm);
 
-        //        HealthPortal.root.getChildren().clear();
-         //       mpls = new MedProfLoginScreen();
-         //       HealthPortal.root.getChildren().add(mpls);
+                HealthPortal.root.getChildren().clear();
+                mpls = new MedProfLoginScreen();
+                HealthPortal.root.getChildren().add(mpls);
                 break;
             case 15://doctor selects patient from list and hits go
                 //to be taken to their patient page

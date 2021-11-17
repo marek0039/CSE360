@@ -15,8 +15,8 @@ public class NurseVitals extends StackPane {
     private Text title, welcome, dob, contactInfo, email;
     private Text phone, medHisTitle, medHis, pharmacy, insurance, doctorNotes, pName;
     private Text visit, height, weight, bloodPressure, bodyTemp, allergies, sendMessage;
-    private TextField heightField, weightField, bloodPField, bodyTempField, allergyField;
-    private DatePicker visitDate;
+    private TextField heightField, weightField, bloodPField, bodyTempField, allergyField, visitDateField;
+    //private DatePicker visitDate;
     private TextArea docNotes;
     private Button back, go, submit, patientSum;
     private Label errorLabel;
@@ -128,7 +128,7 @@ public class NurseVitals extends StackPane {
 
             //these will need to be filled in to save as the patient's vitals/notes for
             //the day to display on the patient summary page
-            visit = new Text("Date of Visit(Today):");
+            visit = new Text("Date of Visit (Today's date, please use Format: YYYY-MM-DD):");
             visit.setFont(Font.font("Times New Roman", 14));
             visit.setFill(Color.BLACK);
 
@@ -176,7 +176,7 @@ public class NurseVitals extends StackPane {
             docNotes = new TextArea();
 
             //date picker for the date of the visit selection
-            visitDate = new DatePicker();
+            visitDateField = new TextField();
 
         //back button takes the user to the choose a patient page
             //go button takes user to send a message to the patient they are currently on
@@ -213,7 +213,7 @@ public class NurseVitals extends StackPane {
             prevMedBox.getChildren().addAll(medHisTitle, medHis);
 
             VBox dateBox = new VBox(2);
-            dateBox.getChildren().addAll(visit, visitDate);
+            dateBox.getChildren().addAll(visit, visitDateField);
 
             VBox heightBox = new VBox(2);
             heightBox.getChildren().addAll(height, heightField);
@@ -282,17 +282,23 @@ public class NurseVitals extends StackPane {
 
         @Override
         public void handle(ActionEvent event) {
-            //visitDate.getAccessibleText().isEmpty() ||heightField.getText().isEmpty() || weightField.getText().isEmpty() || bloodPField.getText().isEmpty() || bodyTempField.getText().isEmpty() || allergyField.getText().isEmpty()
+            String[] date_split = visitDateField.getText().split("-");
             ResultSet rs = null;
-            if (visitDate.getValue() == null ||  weightField.getText().isEmpty() || bloodPField.getText().isEmpty() || bodyTempField.getText().isEmpty() || allergyField.getText().isEmpty())
+            if (visitDateField.getText().isEmpty() ||  weightField.getText().isEmpty() || bloodPField.getText().isEmpty() || bodyTempField.getText().isEmpty() || allergyField.getText().isEmpty())
             {
                 errorLabel.setText("Please enter all necessary info");
+                errorLabel.setTextFill(Color.RED);
+            }
+
+            else if ((date_split[0].length() != 4) || (date_split[1].length() != 2) && (date_split[2].length() == 2))
+            {
+                errorLabel.setText("Please enter date in correct format");
                 errorLabel.setTextFill(Color.RED);
             }
             else
             {
                 try {
-                    dateOfVisit = visitDate.getValue().toString();
+                    dateOfVisit = visitDateField.getText();
                     pHeight = heightField.getText();
                     pWeight = weightField.getText();
                     pBloodPress = bloodPField.getText();
