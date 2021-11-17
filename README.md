@@ -72,6 +72,7 @@ This formats known_hosts so that the script works.
 <br />
 Once you do all that then the final step you need to do is to make sure that you have a JDK version which supports JavaFX and also <br />
 the two JAR files located in the Libraries directory are added to your project sturcutre so that you can use their imports. <br />
+The file which runs the script is "HealthPortal.java". <br />
 <br />
 <br />
 USEFUL INFORMATION FOR TESTING PURPOSES: <br />
