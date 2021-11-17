@@ -83,7 +83,7 @@ the two JAR files located in the Libraries directory are added to your project s
 USEFUL INFORMATION FOR TESTING PURPOSES: <br />
 Here are screenshots of each of our tables our database has <br />
 Patient Table: <br />
-![alt text](https://github.com/marek0039/CSE360/blob/main/Images/Patient_Table.png?raw=true)
+![alt text](https://github.com/marek0039/CSE360/blob/main/Images/Patient_Table.png?raw=true) <br /> <br /> <br />
 
 Professional Table:
 ![alt text](https://github.com/marek0039/CSE360/blob/main/Images/Professional_Table.png?raw=true) <br /> <br /> <br />
