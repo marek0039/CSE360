@@ -1,3 +1,4 @@
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
@@ -8,8 +9,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class PatientUpdateInfo extends StackPane
-{
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class PatientUpdateInfo extends StackPane {
     //create attributes for this screen
     private Color mainColor;
     private Text title, welcome, dob, directions, email;
@@ -19,10 +22,11 @@ public class PatientUpdateInfo extends StackPane
     private TextArea medHisField;
     private Button submit, back;
 
-    public PatientUpdateInfo()
-    {
+    public PatientUpdateInfo() {
+
+
         //establish color Falu Red as done on home screen
-        mainColor = Color.rgb(128,32,32);
+        mainColor = Color.rgb(128, 32, 32);
 
         //title and its color/size/font
         title = new Text("SunDevil Pediatric Health Portal");
@@ -32,11 +36,11 @@ public class PatientUpdateInfo extends StackPane
         //black text labeling the name of the patient and dob of the patient
         //Note: these will need to be read in from the previous New patient form
         //text fields/areas so they will end up being parsed input rather than this dummy default text
-        welcome = new Text("Welcome, Patient Adam Samler");
+        welcome = new Text("Welcome, Patient: ");
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);
 
-        dob = new Text("DOB: 01/09/2007");
+        dob = new Text("DOB: ");
         dob.setFont(Font.font("Times New Roman", 14));
         dob.setFill(Color.BLACK);
 
@@ -84,6 +88,8 @@ public class PatientUpdateInfo extends StackPane
         //the previous medical history uses a text area
         emailField = new TextField();
 
+        numField = new TextField();
+
         pharmField = new TextField();
 
         numField = new TextField();
@@ -93,15 +99,6 @@ public class PatientUpdateInfo extends StackPane
 
         mailField1 = new TextField();
         mailField1.setPromptText("Line 1");
-
-        mailField2 = new TextField();
-        mailField2.setPromptText("Line 2");
-
-        mailField3 = new TextField();
-        mailField3.setPromptText("City, State");
-
-        mailField4 = new TextField();
-        mailField4.setPromptText("Zip Code");
 
         //text area for the previous
         //medical history because it needs a larger space
@@ -115,7 +112,7 @@ public class PatientUpdateInfo extends StackPane
         submit = new Button("Submit");
         //forward event handler for submit button after patient had updated
         //their personal information, they will be taken to confirmation page, case 8
-        ForwardButton handler1 = new ForwardButton(8);
+        UpdateInfo handler1 = new UpdateInfo(8);
         submit.setOnAction(handler1);
 
         back = new Button("Patient Menu");
@@ -138,7 +135,7 @@ public class PatientUpdateInfo extends StackPane
         pharmBox.getChildren().addAll(pharmacy, pharmField);
 
         VBox mailBox = new VBox(2);
-        mailBox.getChildren().addAll(mailAddress, mailField1, mailField2, mailField3, mailField4);
+        mailBox.getChildren().addAll(mailAddress, mailField1);
 
         VBox insBox = new VBox(2);
         insBox.getChildren().addAll(insurance, insField);
@@ -179,8 +176,85 @@ public class PatientUpdateInfo extends StackPane
         StackPane.setAlignment(titleBox, Pos.TOP_LEFT);
         StackPane.setMargin(titleBox, new Insets(10, 0, 0, 10));
         this.getChildren().add(titleBox);
-
+        //handle();
         //add the border pane to this stack pane
         this.getChildren().add(bp);
+        System.out.println("Handle Method getting called");
+        String getpatient = "SELECT * FROM Patient WHERE PatientID=" + HealthPortal.currUser;
+        //get patient info
+        try {
+            ResultSet rs = null;
+            String p_name = null, p_email = null, p_phone = null, p_address = null, p_pharmacy = null, p_insurance = null,
+                    p_insurance_num = null, p_dob = null, p_med = null;
+
+
+            rs = HealthPortal.statement.executeQuery(getpatient); //execute the query
+            rs.next();
+            if (rs.getRow() == 1) {
+                //store every column in their respective variable
+                p_name = rs.getString("First_Name") + " " + rs.getString("Last_Name");
+                p_email = rs.getString("Email");
+                p_phone = rs.getString("Phone_Number");
+                p_address = rs.getString("Address");
+                p_pharmacy = rs.getString("Pharmacy");
+                p_insurance = rs.getString("Insurance");
+                p_insurance_num = rs.getString("Insurance_Number");
+                p_dob = rs.getString("DOB");
+                p_med = rs.getString("Medical_History");
+
+                welcome.setText(welcome.getText() + p_name);
+                dob.setText(dob.getText() + p_dob);
+
+                emailField.setText(p_email);
+                pharmField.setText(p_pharmacy);
+                numField.setText(p_phone);
+                insNumField.setText(p_insurance_num);
+                insField.setText(p_insurance);
+                mailField1.setText(p_address);
+                medHisField.setText(p_med);
+
+            } else {
+                System.out.println("Cannot field Patient: " + HealthPortal.currPatient);
+                System.out.println(getpatient);
+                //throw new FailedException("Cannot find Patient: " + HealthPortal.currPatient);
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println(e);
+        }
     } //end constructor
-} //end class
+    private class UpdateInfo extends ForwardButton {
+        private int num_rows;
+
+        private UpdateInfo(int caseInt) {
+
+            super(caseInt);
+        }
+        @Override
+
+    public void handle(ActionEvent event) {
+            System.out.println("Running Update Patient SQL");
+        try {
+            String sql2 = "UPDATE Patient SET Email ='" + emailField.getText() + "', Phone_Number ='" + numField.getText() + "',Address ='"
+                    + mailField1.getText() + "', Pharmacy ='" + pharmField.getText() + "', Insurance='"
+                    + insField.getText() + "', Insurance_Number='"
+                    + insNumField.getText() + "', Medical_History ='" + medHisField.getText() + "'WHERE PatientID =" + HealthPortal.currUser;
+            HealthPortal.statement.executeUpdate(sql2);
+            super.setcI(8);
+            super.handle(event);
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println(e);
+        }
+    }
+
+
+
+
+    }
+}
+
+//end class
