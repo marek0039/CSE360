@@ -5,7 +5,6 @@ import javafx.scene.layout.*;
 import javafx.event.ActionEvent;	
 import javafx.event.EventHandler;
 import javafx.geometry.*;
-
 import java.sql.Statement;
 import java.util.Locale;
 import javafx.application.Application;
@@ -21,8 +20,6 @@ public class HealthPortal extends Application
 	public static Statement statement;
 	
 	//home screen and user choice panes displayed to all
-
-
 	//need to keep track of the current user that is logged in
 	
 	public void start(Stage stage) 
@@ -32,9 +29,12 @@ public class HealthPortal extends Application
 		statement = connect.getStatement();
 		HomeScreen home = new HomeScreen();
 		root.getChildren().add(home);
+		//styling to add image to the background of the root with our dr.sparky character
+		root.setStyle("-fx-background-image: url('drsparky.JPG'); " +
+				"-fx-background-repeat: no-repeat;" + "-fx-background-size: 900px 550px;");
 	
 		//set the scene/stage and put the default size as 900 x 500 with root displayed
-		Scene scene = new Scene(root, 900, 500);
+		Scene scene = new Scene(root, 900, 550);
 	    stage.setScene(scene);
 	    stage.show();
 	}

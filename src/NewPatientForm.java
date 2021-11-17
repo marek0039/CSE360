@@ -1,3 +1,4 @@
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.*;
@@ -6,23 +7,27 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
-public class NewPatientForm extends StackPane
-{
+import java.sql.*;
+
+public class NewPatientForm extends StackPane {
     //create attributes for this screen
     private Color mainColor;
     private Text title, form, required, fName, lName, dob, email;
     private Text phone, medHis, pharmacy, mailAddress, insurance, insNum, finish, doctorChoice;
-    private TextField fNameField, lNameField, emailField, pharmField, numField, insField, insNumField;
-    private TextField mailField1, mailField2, mailField3, mailField4;
-    private TextArea medHisField;
-    private DatePicker dobPicker;
+    private TextField fNameField, lNameField, patientIDField, emailField, pharmField, numField, insField, insNumField;
+    private TextArea medHisField, mailField1;
+    private TextField dobPicker;
     private ComboBox doctorsList;
     private Button submit, back;
+    private Label errorLabel;
+    private String fname, lname, birthdate, email_p, phonenumber, mh, pharm, insu, insu_n, mailaddress1, mailaddress2, mailaddress3, mailaddress4, patientID;
 
-    public NewPatientForm()
-    {
+    Connector connectorObj = new Connector();
+
+    public NewPatientForm() {
+        errorLabel = new Label();
         //establish color Falu Red as done on home screen
-        mainColor = Color.rgb(128,32,32);
+        mainColor = Color.rgb(128, 32, 32);
 
         //title and its color/size/font
         title = new Text("SunDevil Pediatric Health Portal");
@@ -49,6 +54,7 @@ public class NewPatientForm extends StackPane
         lName = new Text("Patient Last Name:");
         lName.setFont(Font.font("Times New Roman", 12));
         lName.setFill(Color.BLACK);
+
 
         dob = new Text("Patient Date of Birth: (Use Format YYYY-MM-DD");
         dob.setFont(Font.font("Times New Roman", 12));
@@ -105,6 +111,10 @@ public class NewPatientForm extends StackPane
         lNameField.setPromptText("*");
         lNameField.setStyle("-fx-prompt-text-fill: red");
 
+        patientIDField = new TextField();
+        patientIDField.setPromptText("*");
+        patientIDField.setStyle("-fx-prompt-text-fill: red");
+
         emailField = new TextField();
         emailField.setPromptText("*");
         emailField.setStyle("-fx-prompt-text-fill: red");
@@ -125,20 +135,10 @@ public class NewPatientForm extends StackPane
         insNumField.setPromptText("*");
         insNumField.setStyle("-fx-prompt-text-fill: red");
 
-        mailField1 = new TextField();
+        mailField1 = new TextArea();
         mailField1.setPromptText("* Line 1");
         mailField1.setStyle("-fx-prompt-text-fill: red");
 
-        mailField2 = new TextField();
-        mailField2.setPromptText("Line 2");
-
-        mailField3 = new TextField();
-        mailField3.setPromptText("* City, State");
-        mailField3.setStyle("-fx-prompt-text-fill: red");
-
-        mailField4 = new TextField();
-        mailField4.setPromptText("* Zip Code");
-        mailField4.setStyle("-fx-prompt-text-fill: red");
 
         //text area for the previous
         //medical history because it needs a larger space
@@ -149,8 +149,9 @@ public class NewPatientForm extends StackPane
 
         //date picker object in order for the patient
         //to pick their date of birth most effectively
-        dobPicker = new DatePicker();
+        dobPicker = new TextField();
         dobPicker.setPromptText("*");
+        dobPicker.setStyle("-fx-prompt-text-fill: red");
         //Note: this isn't working to set the prompt * color to red
         //for the date picker so another method must be tried later
         //dobPicker.setStyle("-fx-prompt-text-fill: red");
@@ -162,7 +163,7 @@ public class NewPatientForm extends StackPane
         //NOTE we are going to have to figure out if we want to
         //take the doctor's names from the doctors who log in
         //or just have these default dummy doctors
-        doctorsList.getItems().addAll("Doctor Johnson", "Doctor Peters", "Doctor Anderson");
+        doctorsList.getItems().addAll("Jordan Cameron", "Tim Morgan", "Riley James", "Kelly Morgan", "Cameron Miller");
 
         //buttons for submitting the form or going back to the previous page
         //if submit is pressed, the program should read in every field
@@ -171,7 +172,7 @@ public class NewPatientForm extends StackPane
         //these will be handled in the event handlers for these buttons
         submit = new Button("Submit");
         //forward event handler for submit button, case 4, takes user to confirmation page
-        ForwardButton handler1 = new ForwardButton(3);
+        NewPatientFormButton handler1 = new NewPatientFormButton(3);
         submit.setOnAction(handler1);
 
         back = new Button("Back");
@@ -203,7 +204,7 @@ public class NewPatientForm extends StackPane
         pharmBox.getChildren().addAll(pharmacy, pharmField);
 
         VBox mailBox = new VBox(2);
-        mailBox.getChildren().addAll(mailAddress, mailField1, mailField2, mailField3, mailField4);
+        mailBox.getChildren().addAll(mailAddress, mailField1);
 
         VBox insuranceBox = new VBox(2);
         insuranceBox.getChildren().addAll(insurance, insField);
@@ -256,4 +257,184 @@ public class NewPatientForm extends StackPane
         //add the border pane to this stack pane
         this.getChildren().add(bp);
     } //end constructor
-}//end new patient form class
+
+    private class NewPatientFormButton extends ForwardButton {
+        private int num_rows;
+
+        private NewPatientFormButton(int caseInt) {
+            super(caseInt);
+        }
+
+        @Override
+        public void handle(ActionEvent event) {
+            System.out.println("Handle Method getting called");
+            ResultSet rs = null;
+            // String[] deLim = dobPicker.getText().split(());
+
+            //this takes
+            if ((fNameField.getText().isEmpty()) || (lNameField.getText().isEmpty())
+                     || (dobPicker.getText().isEmpty())
+                    || (emailField.getText().isEmpty()) || (numField.getText().isEmpty())
+                    || (medHisField.getText().isEmpty()) || (pharmField.getText().isEmpty())
+                    || (insField.getText().isEmpty()) || (insNumField.getText().isEmpty())
+                    || (mailField1.getText().isEmpty())) {
+                System.out.println("Handle Method Failed Method Validation");
+                errorLabel.setText("Please fill in all required fields denoted by the *");
+                errorLabel.setTextFill(Color.RED);
+            } else {
+                try {
+                    //String [] results = new String[12];
+                    String patientInt = "12";
+                    int randomNum = (int) (Math.random() * 9000) + 1000;
+                    String result = String.valueOf(randomNum);
+                    String patientId = patientInt + result;
+                    HealthPortal.currUser = Integer.parseInt(patientId);
+                    // resultSet rs = 2;
+                    String doctorName = (String) doctorsList.getValue();
+
+                    if(doctorsList.getValue() == null) {
+                        System.out.println("Randomly selecting a doctor");
+                        String docnames[] = {"Jordan Cameron", "Tim Morgan", "Riley James", "Kelly Morgan", "Cameron Miller"};
+                        int randomIndex =  (int)(Math.random()*docnames.length);
+                        doctorName = docnames[randomIndex];
+
+                    }
+                    System.out.println("Doctor Name "+ doctorName);
+                    String [] doctorNameArray = doctorName.split("\\s+");
+                    String sql2 = "INSERT INTO Patient VALUES('" + fNameField.getText() + "','"
+                            + lNameField.getText() + "'," + HealthPortal.currUser + ",'"
+                            + emailField.getText() + "', '" + numField.getText() + "','"
+                            + mailField1.getText() + "','" + pharmField.getText() + "', '"
+                            + insField.getText() + "','"
+                            + insNumField.getText() + "','" + dobPicker.getText() + "','"
+                            + medHisField.getText() + "'," + "(SELECT ID FROM Professional WHERE First_Name = '"
+                            + doctorNameArray[0]+"' AND Last_Name = '"+ doctorNameArray[1] +"'))";
+                    System.out.println(sql2);
+                    HealthPortal.statement.executeUpdate(sql2);
+                    super.setcI(3);
+                    super.handle(event);
+
+
+                    String doctor_names;
+
+                    int i = 0;
+
+
+                    if(doctorsList.getValue() != null) {
+                        String docnames[] = {"Doctor Cameron", "Doctor Miller", "Doctor James", "Doctor Morgan", "Doctor Brown"};
+                        int randomIndex =  (int)(Math.random()*docnames.length);
+                        String name = docnames[randomIndex];
+
+                    }
+
+
+
+
+
+
+
+
+                    //{
+                        /*while(rs2.next()){
+                            results[i] = rs2.getString("First Name");
+                            results [i+1] = rs2.getString("Last Name");
+                            results [i+2] = rs2.getString( "Last Name");
+                            results[i+3] = rs2.getString("Date of Birth");
+                            results[i+4] = rs2.getString("Email");
+                            results[i+5] = rs2.getString( "Phone Number");
+                            results[i+6] = rs2.getString( " Medical History");
+                            results[i+7] = rs2.getString("Pharmacy");
+                            results[i+8] = rs2.getString("Insurance");
+                            results[i+9] = rs2.getString("Insurance Number");
+                            results[i+10] = rs2.getString("Mailing Address 1");
+                            results[i+11] = rs2.getString( "Mailing Address 2");
+                            results[i+12] = rs2.getString("Mailing Address 3");
+                            results[i+13] = rs2.getString("Mailing Address 4");
+                            i = i + 14;
+                            //results
+                        }*/
+                      /*  fname = results[0];
+                        lname = results[1];
+                        birthdate = results[2];
+                        email_p = results[3];
+                       phonenumber = results[4];
+                        mh = results[5];
+                        pharm = results[6];
+                        insu = results[7];
+                        insu_n= results[8];
+                       mailaddress1 = results[9];
+                       mailaddress2 = results[10];
+                        mailaddress3 = results[11];
+                       mailaddress4 = results[12];
+                    }*/
+
+
+                    //Statement statement = connectorObj.getStatement();
+
+
+                    //String sqlExample = "INSERT INTO Patient VALUES (" + fName + ", " + lName + ", " + dob + ", " + email + ", " + phone + ", " + medHis + ", " + pharmacy
+                    //    + ", " + insurance + ", " + insNum + ", " + mailAddress + ");";
+                    //System.out.println(fName + ", " + lName + ", " + dob + ", " + email + ", " + phone + ", " + medHis + ", " + pharmacy
+                    //  + ", " + insurance + ", " + insNum + ", " + mailAddress);
+                    // statement.executeUpdate(sqlExample);
+                    //int i = 0;
+                    //if()
+
+
+                    /*String fName = fNameField.getText();
+                    String lName = lNameField.getText();
+                    String birthday = dobPicker.getText();
+                    String email = emailField.getText();
+                    String phone = numField.getText();
+                    String medHis = medHisField.getText();
+                    String pharmacy = pharmField.getText();
+                    String insurance= insField.getText();
+                    String insNum = insNumField.getText();
+                    String mailAddress = mailField1.getText();
+
+
+
+                    String sql = "SELECT PatientID FROM Patient WHERE First_Name='"+ fName + "' and Last_Name='"+ lName+ "' and DOB='"+ birthday + "';";
+                    rs = HealthPortal.statement.executeQuery(sql);
+
+                    if(rs.next())
+                    {
+                        this.num_rows++;
+                    }
+                    if(rs.getRow() == 1) {
+                        while (rs.next()) {
+                            int id = rs.getInt("PatientID");
+                            HealthPortal.currUser = id;
+                        }
+                        super.handle(event);
+                    }
+
+//
+//                    } */
+
+                   /* else
+                    {
+                        errorLabel.setText("Enter Valid Login Info or go back");
+                        errorLabel.setTextFill(Color.RED);
+                    } */
+                    //throw new SQLException();
+                } catch (SQLException e) {
+                    System.out.println("Message:" + e.getMessage()) ;
+                     e.printStackTrace();
+
+                }
+
+                //if(//info is right)
+
+            }
+        }
+    } //end existing patient log on class
+}
+
+//if(//info is right)
+
+
+
+
+//end new patient form class
+
