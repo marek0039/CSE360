@@ -133,29 +133,53 @@ public class DocPatientSummary extends StackPane
         String[] results = new String[16]; //array which will hold visit values
         try
         {
-            String get_visits = "SELECT * FROM Visit WHERE ID=" + HealthPortal.currPatient +
-                    "AND Date IN (SELECT t1.Date FROM Visit t1 LEFT JOIN Visit t2 ON t1.Date <= t2.Date " +
-                    "GROUP BY t1.Date HAVING COUNT(DISTINCT t2.Date)<=2)"; //query to execute
+            String get_visits = "SELECT * FROM Visit WHERE ID=" + HealthPortal.currPatient + ";"; //query to execute
             rs = HealthPortal.statement.executeQuery(get_visits); //executing query
-            int i = 0;  //index to iterate through array.
-            if (rs.first()) //check if we got some rows.
+            int i; //used to index results
+            rs.last();  //check to see how many rows we have
+            if (!(rs.first())) //check if we zero rows
             {
-                while(rs.next())//iterate through result
-                {
-                    //add each column value into the array
-                    results[i] = rs.getString("Date");
-                    results[i+1] = rs.getString("Height");
-                    results[i+2] = rs.getString("Weight");
-                    results[i+3] = rs.getString("Pressure");
-                    results[i+4] = rs.getString("Temp");
-                    results[i+5] = rs.getString("Allergies");
-                    results[i+6] = rs.getString("Prescription");
-                    results[i+7] = rs.getString("Memo");
-                    i = i+8;
+                //iterate through results and set them all to N/A
+                for (i = 0; i < results.length; i++) {
+                    results[i] = "N/A";
                 }
             }
-            else {  //if we aren't at first then throw exception.
-                throw new FailedException("SQL QUERY FAILED!!!");
+            else if (rs.isFirst() && rs.isLast()) { //if there is only one message.
+                //then add the query to the first 8 indices in the array
+                results[0] = rs.getString("Date");
+                results[1] = rs.getString("Height");
+                results[2] = rs.getString("Weight");
+                results[3] = rs.getString("Pressure");
+                results[4] = rs.getString("Temp");
+                results[5] = rs.getString("Allergies");
+                results[6] = rs.getString("Prescription");
+                results[7] = rs.getString("Memo");
+                //and the rest set to N/A
+                for(i = 8; i<results.length; i++) {
+                    results[i] = "N/A";
+                }
+            }
+            else {
+                i = 0; //otherwise, go back to the beginning
+                if (rs.first()) {   //go back to first.
+                    while (rs.getRow() < 3)//iterate through result
+                    {
+                        //add each column value into the array
+                        results[i] = rs.getString("Date");
+                        results[i + 1] = rs.getString("Height");
+                        results[i + 2] = rs.getString("Weight");
+                        results[i + 3] = rs.getString("Pressure");
+                        results[i + 4] = rs.getString("Temp");
+                        results[i + 5] = rs.getString("Allergies");
+                        results[i + 6] = rs.getString("Prescription");
+                        results[i + 7] = rs.getString("Memo");
+                        i = i + 8;
+                        rs.next();
+                    }
+                }
+                else {  //if I can't go back to first throw exception.
+                    throw new FailedException("SQL QUERY FAILED!!!");
+                }
             }
         }
         catch (Exception e)
