@@ -18,7 +18,7 @@ public class NurseVitals extends StackPane {
     private TextField heightField, weightField, bloodPField, bodyTempField, allergyField;
     private DatePicker visitDate;
     private TextArea docNotes;
-    private Button back, go, submit;
+    private Button back, go, submit, patientSum;
     private Label errorLabel;
     private String dateOfVisit = null;
     private String pHeight = null;
@@ -196,6 +196,10 @@ public class NurseVitals extends StackPane {
             NurseVitalsSubmitButton handler1 = new NurseVitalsSubmitButton(25);
             submit.setOnAction(handler1);
 
+            patientSum = new Button("Patient Summary");
+            ForwardButton handler3 = new ForwardButton(26);
+            patientSum.setOnAction(handler3);
+
             //vertical panes for each group of information on the page, to be placed
             //in column vertical panes and then in a horizontal pane for display purposes
             VBox nameBox = new VBox(2);
@@ -231,8 +235,9 @@ public class NurseVitals extends StackPane {
             //back button is in this box as it is displayed low on the screen and has some
             //insets for aesthetic
             VBox docBox = new VBox(5);
-            docBox.getChildren().addAll(doctorNotes, docNotes, submit);
+            docBox.getChildren().addAll(doctorNotes, docNotes, submit, patientSum);
             VBox.setMargin(submit, new Insets(10, 0, 0, 200));
+            VBox.setMargin(patientSum, new Insets(10, 0, 0, 180));
 
             //vbox for send message label and buttons
             VBox messageBox = new VBox(2);
