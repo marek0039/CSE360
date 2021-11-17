@@ -25,6 +25,8 @@ public class NurseSendMessage extends StackPane
 
     public NurseSendMessage()
     {
+        ResultSet rs = null;
+
         // establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -34,10 +36,10 @@ public class NurseSendMessage extends StackPane
         title.setFill(mainColor);
 
         // attributes from database to be defined
-        String nurse_name = null;
+        String nurse_name = "";
         int patient_id = 0;
-        String patient_name = null;
-        String patient_dob = null;
+        String patient_name = "";
+        String patient_dob = "";
 
         // get the name of current nurse using the system
         try {
@@ -45,7 +47,7 @@ public class NurseSendMessage extends StackPane
             String nurseNameQuery = "SELECT Last_Name from Professional WHERE ID=" +
                     HealthPortal.currUser + ";";
             // execute the query
-            ResultSet rs = HealthPortal.statement.executeQuery(nurseNameQuery);
+            rs = HealthPortal.statement.executeQuery(nurseNameQuery);
             rs.last(); // jump to the last row of the query
             if (rs.getRow() == 1) { // check to make sure 1 nurse was found
                 nurse_name = "Nurse " + rs.getString("Last_Name");
@@ -59,10 +61,10 @@ public class NurseSendMessage extends StackPane
         // get the name and date of birth of the selected patient
         try {
             // the following string is an SQL query to get the name and dob of the selected patient
-            String patientQuery = "SELECT First_Name, Last_Name, DOB from Patient WHERE ID=" +
+            String patientQuery = "SELECT First_Name, Last_Name, DOB from Patient WHERE PatientID=" +
                     HealthPortal.currPatient + ";";
             // execute the query
-            ResultSet rs = HealthPortal.statement.executeQuery(patientQuery);
+            rs = HealthPortal.statement.executeQuery(patientQuery);
             rs.last(); // jump to the last row of the query
             if (rs.getRow() == 1) { // check to make sure 1 patient was found
                 patient_name = rs.getString("First_Name") + " " + rs.getString("Last_Name");
@@ -74,7 +76,7 @@ public class NurseSendMessage extends StackPane
             System.out.print(e);
         }
 
-        errLabel = new Label(); // label which will display if an error is done by the user.
+        errLabel = new Label(""); // label which will display if an error is done by the user.
         // Black text labeling the name of the patient and dob of the patient
         // as well as which nurse is currently logged on
         welcome = new Text("Welcome in, " + nurse_name);
@@ -101,7 +103,7 @@ public class NurseSendMessage extends StackPane
         send = new Button("Send");
         // forward event handler for the patient to go to message confirmation page
         // after they have sent the message, case 12
-        ForwardButton handler1 = new SendMessageButton(12);
+        SendMessageButton handler1 = new SendMessageButton(12);
         send.setOnAction(handler1);
 
         back = new Button("Back");
@@ -132,7 +134,7 @@ public class NurseSendMessage extends StackPane
 
         // add the border pane to this stack pane
         this.getChildren().add(bp);
-    } // end constructor
+    } // end NurseSendMessage constructor
 
     // the following class is a custom exception to print error messages
     private static class FailedException extends Exception {
@@ -150,29 +152,28 @@ public class NurseSendMessage extends StackPane
 
         @Override // override the handle method from ForwardButton
         public void handle(ActionEvent event) {
-            String text = message.getText().trim();
-
-            if (text.equals("")) { // if the message box is empty, display error message
+            if (message.getText().trim().equals("") || message.getText() == null) { // if the message box is empty,
+                // display error message
                 errLabel.setText("Please Enter a Message");
                 errLabel.setTextFill(Color.RED);
             } else { // otherwise, update message table in SQL database
                 try {
+                    // get the text from the message box
+                    String text = message.getText().trim();
+                    text = text.replace("'", "''"); // avoid SQL injection
+
                     // The following is an SQL query to update the message table
-                    String update = "INSERT INTO Message (Sender, Recipient, Date, Text) " +
-                            "VALUES(" +
+                    String update = "INSERT INTO Message VALUES(" +
                             HealthPortal.currUser + ", " + // Sender
                             HealthPortal.currPatient + ", " + // Recipient
-                            java.time.LocalDate.now() +  ", " + // Date
-                            text + ");"; // Text
-                    //ResultSet rs = HealthPortal.statement.executeQuery(query); // execute the query
-                    //rs.last(); // get the last row.
+                            "'" + java.time.LocalDate.now() +  "', " + // Date
+                            "'" + text + "');"; // Message
                     int result = HealthPortal.statement.executeUpdate(update);
-                    //if (rs.getRow() == 0) { // if the row index is 0, then the query failed.
-                    //    throw new FailedException("SQL Query FAILED!!!");
-                    //} else { // otherwise, call the forward button's handle.
-                    //    super.handle(event);
-                    //}
-                    super.handle(event);
+                    if (result == 1) { // update was successful
+                        super.handle(event);
+                    } else {
+                        throw new FailedException("INSERTING NEW MESSAGE FAILED!!!");
+                    }
                 } catch(Exception e) { // catch exception
                     System.err.print(e);
                 }

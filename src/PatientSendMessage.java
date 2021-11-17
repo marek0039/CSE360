@@ -81,7 +81,7 @@ public class PatientSendMessage extends StackPane
         send = new Button("Send");
         //forward event handler for the patient to go to message confirmation page
         //after they have sent the message, case 12
-        ForwardButton handler1 = new SendMessageButton(12);
+        SendMessageButton handler1 = new SendMessageButton(12);
         send.setOnAction(handler1);
 
         back = new Button("Back");
@@ -212,6 +212,7 @@ public class PatientSendMessage extends StackPane
                     recipient_name = (String) medList.getValue();
                     recipient_name = recipient_name.split(" ", 2)[1].trim(); // access only their last name
                     recipient_name = recipient_name.replace("'", "''"); // avoid SQL injection
+
                     // The following is an SQL query to get the ID of the chosen professional
                     String query = "select ID from Professional where Last_Name='" + recipient_name + "';";
                     ResultSet rs = HealthPortal.statement.executeQuery(query);
