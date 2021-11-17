@@ -9,6 +9,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
+import java.sql.ResultSet;
+
 public class UpdateInfoConfirmation extends StackPane
 {
     //create attributes for this screen
@@ -18,6 +20,27 @@ public class UpdateInfoConfirmation extends StackPane
 
     public UpdateInfoConfirmation()
     {
+        String patient_name = null;
+        String patient_dob = null;
+        ResultSet rs = null;
+        String p_name = null, p_dob = null;
+        try {
+            String getpatient = "SELECT First_Name, Last_Name, DOB FROM Patient WHERE PatientID=" +
+                    HealthPortal.currUser;
+            //get patient info
+            rs = HealthPortal.statement.executeQuery(getpatient); //execute the query
+            rs.last(); //get the last row
+            if (rs.getRow() == 1) { //if the index of the row is 1, then store values
+                p_name = rs.getString("First_Name") + " " + rs.getString("Last_Name");
+                p_dob = rs.getString("DOB");
+            }
+            else { //otherwise, throw exception
+                throw new FailedException("Cannot find Patient: " + HealthPortal.currPatient);
+            }
+        } catch (Exception e) {
+            System.err.println(e);
+
+        }
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -29,11 +52,11 @@ public class UpdateInfoConfirmation extends StackPane
         //black text labeling the name of the patient and dob of the patient
         //Note: these will need to be read in from the patient logging on's
         //text fields/areas so they will end up being parsed input rather than this dummy default text
-        welcome = new Text("Welcome, Patient Adam Samler");
+        welcome = new Text("Welcome in, Patient " + p_name);
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);
 
-        dob = new Text("DOB: 01/09/2007");
+        dob = new Text("DOB: " + p_dob);
         dob.setFont(Font.font("Times New Roman", 14));
         dob.setFill(Color.BLACK);
 

@@ -163,7 +163,7 @@ public class NewPatientForm extends StackPane {
         //NOTE we are going to have to figure out if we want to
         //take the doctor's names from the doctors who log in
         //or just have these default dummy doctors
-        doctorsList.getItems().addAll("Doctor Cameron", "Doctor Morgan", "Doctor James", "Doctor Morgan", "Doctor Miller");
+        doctorsList.getItems().addAll("Jordan Cameron", "Tim Morgan", "Riley James", "Kelly Morgan", "Cameron Miller");
 
         //buttons for submitting the form or going back to the previous page
         //if submit is pressed, the program should read in every field
@@ -267,11 +267,18 @@ public class NewPatientForm extends StackPane {
 
         @Override
         public void handle(ActionEvent event) {
+            System.out.println("Handle Method getting called");
             ResultSet rs = null;
             // String[] deLim = dobPicker.getText().split(());
 
             //this takes
-            if ((fNameField.getText().isEmpty()) || (lNameField.getText().isEmpty()) || (patientIDField.getText().isEmpty()) || (dobPicker.getText().isEmpty()) || (emailField.getText().isEmpty()) || (numField.getText().isEmpty()) || (medHisField.getText().isEmpty()) || (pharmField.getText().isEmpty()) || (insField.getText().isEmpty()) || (insNumField.getText().isEmpty()) || (mailField1.getText().isEmpty())) {
+            if ((fNameField.getText().isEmpty()) || (lNameField.getText().isEmpty())
+                     || (dobPicker.getText().isEmpty())
+                    || (emailField.getText().isEmpty()) || (numField.getText().isEmpty())
+                    || (medHisField.getText().isEmpty()) || (pharmField.getText().isEmpty())
+                    || (insField.getText().isEmpty()) || (insNumField.getText().isEmpty())
+                    || (mailField1.getText().isEmpty())) {
+                System.out.println("Handle Method Failed Method Validation");
                 errorLabel.setText("Please fill in all required fields denoted by the *");
                 errorLabel.setTextFill(Color.RED);
             } else {
@@ -283,13 +290,50 @@ public class NewPatientForm extends StackPane {
                     String patientId = patientInt + result;
                     HealthPortal.currUser = Integer.parseInt(patientId);
                     // resultSet rs = 2;
-                   String sql2 =  "INSERT INTO Patient(First_Name,Last_Name,PatientID,Email,Phone_Number,Address,Pharmacy,Insurance,Insurance_Number,DOB,Medical_History,Doctor) VALUES('" + fNameField.getText() + "','" + lNameField.getText() + "'," + HealthPortal.currUser + ",'" + emailField.getText() + "', '" + numField.getText() + "','" + mailField1.getText() + "','" + pharmField.getText() + "', '" + insField.getText() + "','"
-                            + insNumField.getText() + "','" + dobPicker.getText() + "','" + medHisField.getText() + "'," + 333333;
-                    HealthPortal.statement.execute(sql2);
+                    String doctorName = (String) doctorsList.getValue();
+
+                    if(doctorsList.getValue() == null) {
+                        System.out.println("Randomly selecting a doctor");
+                        String docnames[] = {"Jordan Cameron", "Tim Morgan", "Riley James", "Kelly Morgan", "Cameron Miller"};
+                        int randomIndex =  (int)(Math.random()*docnames.length);
+                        doctorName = docnames[randomIndex];
+
+                    }
+                    System.out.println("Doctor Name "+ doctorName);
+                    String [] doctorNameArray = doctorName.split("\\s+");
+                    String sql2 = "INSERT INTO Patient VALUES('" + fNameField.getText() + "','"
+                            + lNameField.getText() + "'," + HealthPortal.currUser + ",'"
+                            + emailField.getText() + "', '" + numField.getText() + "','"
+                            + mailField1.getText() + "','" + pharmField.getText() + "', '"
+                            + insField.getText() + "','"
+                            + insNumField.getText() + "','" + dobPicker.getText() + "','"
+                            + medHisField.getText() + "'," + "(SELECT ID FROM Professional WHERE First_Name = '"
+                            + doctorNameArray[0]+"' AND Last_Name = '"+ doctorNameArray[1] +"'))";
+                    System.out.println(sql2);
+                    HealthPortal.statement.executeUpdate(sql2);
                     super.setcI(3);
                     super.handle(event);
-                    //int i = 0;
-                    //if(rs2.first() == true)
+
+
+                    String doctor_names;
+
+                    int i = 0;
+
+
+                    if(doctorsList.getValue() != null) {
+                        String docnames[] = {"Doctor Cameron", "Doctor Miller", "Doctor James", "Doctor Morgan", "Doctor Brown"};
+                        int randomIndex =  (int)(Math.random()*docnames.length);
+                        String name = docnames[randomIndex];
+
+                    }
+
+
+
+
+
+
+
+
                     //{
                         /*while(rs2.next()){
                             results[i] = rs2.getString("First Name");
@@ -373,10 +417,10 @@ public class NewPatientForm extends StackPane {
                         errorLabel.setText("Enter Valid Login Info or go back");
                         errorLabel.setTextFill(Color.RED);
                     } */
-                    throw new SQLException();
+                    //throw new SQLException();
                 } catch (SQLException e) {
-                    //System.out.println("Message:" + e.getMessage()) ;
-                    // e.printStackTrace();
+                    System.out.println("Message:" + e.getMessage()) ;
+                     e.printStackTrace();
 
                 }
 
