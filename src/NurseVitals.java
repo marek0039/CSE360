@@ -38,8 +38,6 @@ public class NurseVitals extends StackPane {
         String patientPharmacy = null;
         String medicalHistory = null;
 
-
-
         errorLabel = new Label();
 
         ResultSet rs = null;
