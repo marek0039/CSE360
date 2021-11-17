@@ -130,11 +130,14 @@ public class ExistingPLogOn extends StackPane
                     String birthday = dobPicker.getText();
                     String sql = "SELECT PatientID FROM Patient WHERE First_Name='"+ fName + "' and Last_Name='"+ lName+ "' and DOB='"+ birthday + "';";
                     rs = HealthPortal.statement.executeQuery(sql);
-
-                    rs.last();
+                    //could be more than one row if there is two or more of the same with
+                    // the patient id so i changed it to the next
+                    rs.next();
+                    System.out.println("rs.getRow():"+ rs.getRow());
                     if(rs.getRow() == 1)
                     {
                         int id = rs.getInt("PatientID");
+                        System.out.println("PatientID:" + id);
                         HealthPortal.currUser = id;
                         super.handle(event);
                     }
