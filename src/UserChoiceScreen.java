@@ -117,15 +117,15 @@ public class UserChoiceScreen extends StackPane
                 if(menu.getValue() == "Patient")
                 {
                     super.setcI(2);
+                    super.handle(event);
                 }
 
                 else
                 {
                     super.setcI(14);
+                    super.handle(event);
                 }
             }
-
-            super.handle(event);
         }
     }
 }//end user choice screen class
