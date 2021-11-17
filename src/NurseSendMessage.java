@@ -42,7 +42,7 @@ public class NurseSendMessage extends StackPane
         // get the name of current nurse using the system
         try {
             // the following string is an SQL query to get the name of the current user/nurse
-            String nurseNameQuery = "SELECT Last_Name, from Professional WHERE ID=" +
+            String nurseNameQuery = "SELECT Last_Name from Professional WHERE ID=" +
                     HealthPortal.currUser + ";";
             // execute the query
             ResultSet rs = HealthPortal.statement.executeQuery(nurseNameQuery);
@@ -59,7 +59,7 @@ public class NurseSendMessage extends StackPane
         // get the name and date of birth of the selected patient
         try {
             // the following string is an SQL query to get the name and dob of the selected patient
-            String patientQuery = "SELECT First_Name, Last_Name, DOB, from Patient WHERE ID=" +
+            String patientQuery = "SELECT First_Name, Last_Name, DOB from Patient WHERE ID=" +
                     HealthPortal.currPatient + ";";
             // execute the query
             ResultSet rs = HealthPortal.statement.executeQuery(patientQuery);
@@ -158,19 +158,21 @@ public class NurseSendMessage extends StackPane
             } else { // otherwise, update message table in SQL database
                 try {
                     // The following is an SQL query to update the message table
-                    String query = "INSERT INTO Message (Sender, Recipient, Date, Text) " +
+                    String update = "INSERT INTO Message (Sender, Recipient, Date, Text) " +
                             "VALUES(" +
                             HealthPortal.currUser + ", " + // Sender
                             HealthPortal.currPatient + ", " + // Recipient
                             java.time.LocalDate.now() +  ", " + // Date
                             text + ");"; // Text
-                    ResultSet rs = HealthPortal.statement.executeQuery(query); // execute the query
-                    rs.last(); // get the last row.
-                    if (rs.getRow() == 0) { // if the row index is 0, then the query failed.
-                        throw new FailedException("SQL Query FAILED!!!");
-                    } else { // otherwise, call the forward button's handle.
-                        super.handle(event);
-                    }
+                    //ResultSet rs = HealthPortal.statement.executeQuery(query); // execute the query
+                    //rs.last(); // get the last row.
+                    int result = HealthPortal.statement.executeUpdate(update);
+                    //if (rs.getRow() == 0) { // if the row index is 0, then the query failed.
+                    //    throw new FailedException("SQL Query FAILED!!!");
+                    //} else { // otherwise, call the forward button's handle.
+                    //    super.handle(event);
+                    //}
+                    super.handle(event);
                 } catch(Exception e) { // catch exception
                     System.err.print(e);
                 }

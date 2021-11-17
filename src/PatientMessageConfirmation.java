@@ -32,7 +32,7 @@ public class PatientMessageConfirmation extends StackPane
         String patient_dob = null;
         try {
             // the following string is an SQL query to get the patient name of the current user
-            String patientNameQuery = "SELECT First_Name, Last_Name, DOB from Patient WHERE ID=" +
+            String patientNameQuery = "SELECT First_Name, Last_Name, DOB from Patient WHERE PatientID=" +
                     HealthPortal.currUser + ";";
             // execute the query
             ResultSet rs = HealthPortal.statement.executeQuery(patientNameQuery);
