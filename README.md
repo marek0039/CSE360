@@ -35,46 +35,40 @@ We used SSH to first connect to physical hardware where the sql server is locate
 In order to make the SSH connection we used RSA SSH keys so you need to set that up. <br />
 Here are the following steps to setting up an rsa key to be used by ssh: <br />
 <br />
-1. Go to your .ssh directory (typically a hidden directory under your user directory) <br />
+1. Go to your .ssh directory (typically a hidden directory under your user directory)
 ```console
 $ cd .ssh
 ```
-<br />
-2. Check to see if you have an id_rsa and id_rsa.pub file <br />
+2. Check to see if you have an id_rsa and id_rsa.pub file
 ```console
 $ ls
 ```
-<br />
-3. If you do not have these files run this command to generate a key. <br />
+3. If you do not have these files run this command to generate a key.
 ```console
 $ ssh-keygen -t rsa
 ```
 When prompted set the name of the file as "id_rsa" and do not set a password (just hit enter when prompted). <br />
-<br />
-4. After generating the key or if you already have the key, we need to set the key to the correct format <br />
+4. After generating the key or if you already have the key, we need to set the key to the correct format
 ```console
  $ ssh-keygen -p -f id_rsa -m PEM -P "" -N ""
 ```
-<br />
 5. Now, all we need to do to connect to the server is to add your public key to the authorized keys on the server. <br />
 In order to do this, PLEASE EMAIL your id_rsa.pub to marek at "mniemyjs@asu.edu". <br />
 Once marek receive your public key he will add it to the authorized keys on the server. <br />
-<br />
-6. Once marek has email you back saying he has added your public key, run this command to make sure that it worked. <br />
+6. Once marek has email you back saying he has added your public key, run this command to make sure that it worked.
 ```console
 $ ssh marek@70.162.165.24
 ```
-if you successfully connect just run this command <br />
+if you successfully connect just run this command
 ```console
 $ exit
 ```
-<br />
-7. One last step in order to finish setting up the ssh connection. <br />
-Our program checks your known_hosts file to see if you are authorized to connect so go back to your .ssh directory and run this <br />
+7. One last step in order to finish setting up the ssh connection.
+Our program checks your known_hosts file to see if you are authorized to connect so go back to your .ssh directory and run this
 ```console
 $ ssh-keyscan -H -t rsa 70.162.165.24 >> known_hosts
 ```
-This formats known_hosts so that the script works. <br />
+This formats known_hosts so that the script works.
 <br />
 Once you do all that then the final step you need to do is to make sure that you have a JDK version which supports JavaFX and also <br />
 the two JAR files located in the Libraries directory are added to your project sturcutre so that you can use their imports. <br />
@@ -83,8 +77,7 @@ the two JAR files located in the Libraries directory are added to your project s
 USEFUL INFORMATION FOR TESTING PURPOSES: <br />
 Here are screenshots of each of our tables our database has <br />
 Patient Table:
-![alt text](https://github.com/marek0039/CSE360/blob/main/Images/Patient_Table.png?raw=true)
-![alt text](https://github.com/marek0039/CSE360/blob/main/Images/Patient_Table.png?raw=true)
+![alt text](https://github.com/marek0039/CSE360/blob/main/Images/Patient.png?raw=true)  <br /> <br /> <br />
 
 Professional Table:
 ![alt text](https://github.com/marek0039/CSE360/blob/main/Images/Professional_Table.png?raw=true) <br /> <br /> <br />
