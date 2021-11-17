@@ -143,7 +143,7 @@ public class PatientSummary extends StackPane {
                     results[i] = "N/A";
                 }
 
-            }else if (rs2.isFirst() && rs2.isLast())//iterate through result
+            }else if (rs.isFirst() && rs.isLast())//iterate through result
             {
                 //add each column value into the array
                 results[0] = rs.getString("Date");
