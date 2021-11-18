@@ -8,6 +8,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+
+import javax.xml.transform.Result;
 import java.sql.ResultSet;
 
 public class PatientMessageConfirmation extends StackPane
@@ -19,6 +21,8 @@ public class PatientMessageConfirmation extends StackPane
 
     public PatientMessageConfirmation()
     {
+        ResultSet rs = null;
+
         // establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -35,7 +39,7 @@ public class PatientMessageConfirmation extends StackPane
             String patientNameQuery = "SELECT First_Name, Last_Name, DOB from Patient WHERE PatientID=" +
                     HealthPortal.currUser + ";";
             // execute the query
-            ResultSet rs = HealthPortal.statement.executeQuery(patientNameQuery);
+            rs = HealthPortal.statement.executeQuery(patientNameQuery);
             rs.last(); // jump to the last row of the query
             if (rs.getRow() == 1) { // check to make sure 1 patient was found
                 patient_name = rs.getString("First_Name") + " " + rs.getString("Last_Name");

@@ -101,9 +101,9 @@ public class NurseSendMessage extends StackPane
         // buttons for the user to send their message IF they have put message content,
         // or go back to the previous page
         send = new Button("Send");
-        // forward event handler for the patient to go to message confirmation page
+        // forward event handler for the nurse to go to message confirmation page
         // after they have sent the message, case 12
-        SendMessageButton handler1 = new SendMessageButton(12);
+        SendMessageButton handler1 = new SendMessageButton(29);
         send.setOnAction(handler1);
 
         back = new Button("Back");
