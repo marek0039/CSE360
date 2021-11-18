@@ -1,8 +1,10 @@
+import javafx.event.ActionEvent;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.Label;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
@@ -10,6 +12,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import java.sql.ResultSet;
 
 public class PatientSendMessage extends StackPane
 {
@@ -19,9 +22,12 @@ public class PatientSendMessage extends StackPane
     private ComboBox medList;
     private TextArea message;
     private Button send, back;
+    private Label errLabel = new Label("");
 
     public PatientSendMessage()
     {
+        ResultSet rs = null;
+
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -30,14 +36,32 @@ public class PatientSendMessage extends StackPane
         title.setFont(Font.font("Plantagenet Cherokee", 23));
         title.setFill(mainColor);
 
-        //black text labeling the name of the patient and dob of the patient
-        //Note: these will need to be read in from the existing patient log in
-        //text fields/areas so they will end up being parsed input rather than this dummy default text
-        welcome = new Text("Patient: Adam Samler");
+        // get the name and date of birth of current patient using the system
+        String patient_name = "";
+        String patient_dob = "";
+        try {
+            // the following string is an SQL query to get the patient name of the current user
+            String patientNameQuery = "select First_Name, Last_Name, DOB from Patient where PatientID=" +
+                    HealthPortal.currUser + ";";
+            // execute the query
+            rs = HealthPortal.statement.executeQuery(patientNameQuery);
+            rs.last(); // jump to the last row of the query
+            if (rs.getRow() == 1) { // check to make sure 1 patient was found
+                patient_name = rs.getString("First_Name") + " " + rs.getString("Last_Name");
+                patient_dob = rs.getString("DOB");
+            } else { // otherwise, throw an exception.
+                throw new FailedException("Cannot find user: " + HealthPortal.currUser);
+            }
+        } catch (Exception e) {
+            System.out.print(e);
+        }
+
+        // Black text labeling the name of the patient and dob of the patient
+        welcome = new Text("Welcome in, " + patient_name);
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);
 
-        dob = new Text("DOB: 01/09/2007");
+        dob = new Text("DOB: " + patient_dob);
         dob.setFont(Font.font("Times New Roman", 14));
         dob.setFill(Color.BLACK);
 
@@ -57,7 +81,7 @@ public class PatientSendMessage extends StackPane
         send = new Button("Send");
         //forward event handler for the patient to go to message confirmation page
         //after they have sent the message, case 12
-        ForwardButton handler1 = new ForwardButton(12);
+        SendMessageButton handler1 = new SendMessageButton(12);
         send.setOnAction(handler1);
 
         back = new Button("Back");
@@ -65,16 +89,71 @@ public class PatientSendMessage extends StackPane
         ForwardButton handler2 = new ForwardButton(10);
         back.setOnAction(handler2);
 
-        //combo box with a list of medical professionals to send the message to
-        //again Note: we need to figure out if we want to pull these from doctors/nurses
-        //in our data base or have automatic default ones and create a list so we
-        //can add additional ones when knew medical professionals are created
-        medList = new ComboBox();
-        medList.getItems().addAll("Doctor Anderson", "Doctor Sparky", "Nurse Johnson", "Nurse Stevens");
+        // get the list of medical professionals associated with the patient
+        int doctor_id = 0;
+        int nurse_id = 0;
+        String doctor_name = "";
+        String nurse_name = "";
 
-        //vertical boxes to store the title and it's contents and the middle of the page contents
+        // get the Doctor's patient ID
+        try {
+            // the following string is an SQL query to get the patient's doctor's ID
+            String patientNameQuery = "select Doctor from Patient where PatientID=" +
+                    HealthPortal.currUser + ";";
+            // execute the query
+            rs = HealthPortal.statement.executeQuery(patientNameQuery);
+            rs.last(); // jump to the last row of the query
+            if (rs.getRow() == 1) { // check to make sure 1 patient was found
+                doctor_id = rs.getInt("Doctor");
+            } else { // otherwise, throw an exception.
+                throw new FailedException("Cannot find user: " + HealthPortal.currUser);
+            }
+        } catch (Exception e) {
+            System.out.print(e);
+        }
+
+        // Get the doctor's last name and the nurse ID that is connected to them
+        try {
+            // the following string is an SQL query to get the patient's doctor and nurse
+            String profNameQuery = "select First_Name, Last_Name, Connection from Professional where ID=" +
+                    doctor_id + ";";
+            // execute the query
+            rs = HealthPortal.statement.executeQuery(profNameQuery);
+            rs.last(); // jump to the last row of the query
+            if (rs.getRow() == 1) { // check to make sure 1 doctor was found
+                doctor_name = "Doctor " + rs.getString("Last_Name");
+                nurse_id = rs.getInt("Connection");
+            } else { // otherwise, throw an exception.
+                throw new FailedException("Cannot find doctor: " + doctor_id);
+            }
+        } catch (Exception e) {
+            System.out.print(e);
+        }
+
+        // Get the nurse's last name
+        try {
+            // the following string is an SQL query to get the nurse's first and last name
+            String nurseNameQuery = "select First_Name, Last_Name from Professional where ID=" +
+                    nurse_id + ";";
+            // execute the query
+            rs = HealthPortal.statement.executeQuery(nurseNameQuery);
+            rs.last(); // jump to the last row of the query
+            if (rs.getRow() == 1) { // check to make sure 1 nurse was found
+                nurse_name = "Nurse " + rs.getString("Last_Name");
+            } else { // otherwise, throw an exception.
+                throw new FailedException("Cannot find nurse: " + nurse_id);
+            }
+        } catch (Exception e) {
+            System.out.print(e);
+        }
+
+        // create combo box to display the patient's nurse and doctor.
+        medList = new ComboBox();
+        medList.getItems().addAll(doctor_name, nurse_name);
+
+        // vertical boxes to store the title and it's contents and the middle of the page contents
         VBox titleBox = new VBox(2);
-        titleBox.getChildren().addAll(title, welcome, dob);
+        titleBox.getChildren().addAll(title, welcome, dob, errLabel);
 
         VBox messageBox = new VBox(8);
         messageBox.getChildren().addAll(directions, message, select, medList, send, back);
@@ -96,5 +175,73 @@ public class PatientSendMessage extends StackPane
 
         //add the border pane to this stack pane
         this.getChildren().add(bp);
-    } //end constructor
-} //end class
+    } //end PatientSendMessage constructor
+
+    // the following class is a custom exception to print error messages
+    private static class FailedException extends Exception {
+        private FailedException(String errorMessage) {
+            super(errorMessage);
+        } // end constructor
+    } // end FailedException class
+
+    // the following class is button which handles sending messages
+    private class SendMessageButton extends ForwardButton {
+        // constructor
+        private SendMessageButton(int caseInt) {
+            super(caseInt); // call the ForwardButton constructor
+        }
+
+        @Override // override the handle method from ForwardButton
+        public void handle(ActionEvent event) {
+            int recipient_id = 0;
+            String recipient_name = "";
+
+            if (message.getText().trim().equals("") || message.getText() == null) { // if the message box is empty,
+                // display error message
+                errLabel.setText("Please Enter a Message");
+                errLabel.setTextFill(Color.RED);
+            } else if (medList.getSelectionModel().isEmpty()) { // a professional hasn't been selected from a combo box
+                errLabel.setText("Please Select a Medical Professional");    // if it is empty update the error label.
+                errLabel.setTextFill(Color.RED);
+            } else { // otherwise, update message table in SQL database
+                try {
+                    // get the text from the message box
+                    String text = message.getText().trim();
+
+                    // get the professional the user chose from the combo box
+                    recipient_name = (String) medList.getValue();
+                    recipient_name = recipient_name.split(" ", 2)[1].trim(); // access only their last name
+                    recipient_name = recipient_name.replace("'", "''"); // avoid SQL injection
+
+                    // The following is an SQL query to get the ID of the chosen professional
+                    String query = "select ID from Professional where Last_Name='" + recipient_name + "';";
+                    ResultSet rs = HealthPortal.statement.executeQuery(query);
+                    rs.last(); // jump to last row of the query
+                    if (rs.getRow() == 1) {
+                        recipient_id = rs.getInt("ID");
+                    } else {
+                        throw new FailedException("Cannot find the professional: " + recipient_name);
+                    }
+
+                    // avoid SQL injection:
+                    text = text.replace("'", "''");
+
+                    // The following is an SQL query to update the message table
+                    String update = "INSERT INTO Message VALUES (" +
+                            HealthPortal.currUser + ", " + // Sender
+                            recipient_id + ", " + // Recipient
+                            "'" + java.time.LocalDate.now() +  "', " + // Date
+                            "'" + text + "');"; // Message
+                    int result = HealthPortal.statement.executeUpdate(update);
+                    if (result == 1) { // update was successful
+                        super.handle(event);
+                    } else {
+                        throw new FailedException("INSERTING NEW MESSAGE FAILED!!!");
+                    }
+                } catch(Exception e) { // catch exception
+                    System.err.print(e);
+                }
+            }
+        } // end handle method
+    } // end SendMessageButton class
+} //end PatientSendMessage class

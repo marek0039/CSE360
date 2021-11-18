@@ -8,6 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import java.sql.ResultSet;
 
 public class NurseMessageConfirmation extends StackPane
 {
@@ -18,6 +19,7 @@ public class NurseMessageConfirmation extends StackPane
 
     public NurseMessageConfirmation()
     {
+        ResultSet rs = null;
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
@@ -26,19 +28,55 @@ public class NurseMessageConfirmation extends StackPane
         title.setFont(Font.font("Plantagenet Cherokee", 23));
         title.setFill(mainColor);
 
-        //black text labeling the name of the patient and dob of the patient
-        //and nurse that is logged on currently
-        //Note: these will need to be read in from the patient list the nurse chose from
-        //text fields/areas so they will end up being parsed input rather than this dummy default text
-        welcome = new Text("Welcome in, Nurse Jackson");
+        // get the name and date of birth of the selected patient
+        String patient_name = "";
+        String patient_dob = "";
+        try {
+            // the following string is an SQL query
+            String query = "SELECT First_Name, Last_Name, DOB from Patient WHERE PatientID= " +
+                    HealthPortal.currPatient + ";";
+            // execute query
+            rs = HealthPortal.statement.executeQuery(query);
+            rs.last();
+            if (rs.getRow() == 1) { // check to make sure 1 patient was found
+                patient_name = rs.getString("First_Name") + " " + rs.getString("Last_Name");
+                patient_dob = rs.getString("DOB");
+            } else { // throw exception
+                throw new NurseMessageConfirmation.FailedException("Cannot find patient: " + HealthPortal.currPatient);
+            }
+        } catch (Exception e) {
+            System.out.print(e);
+        }
+
+        // get the name of the nurse logged on currently
+        String nurse_name = "";
+        try {
+            // the following string is an SQL query to get the patient name of the current user
+            String nurseNameQuery = "SELECT Last_Name from Professional WHERE ID = " +
+                    HealthPortal.currUser + ";";
+            // execute th query
+            rs = HealthPortal.statement.executeQuery(nurseNameQuery);
+            rs.last();
+            if (rs.getRow() == 1) {
+                nurse_name = "Nurse " + rs.getString("Last_Name");
+            } else { // otherwise, throw an exception.
+                throw new NurseMessageConfirmation.FailedException("Cannot find user: " + HealthPortal.currUser);
+            }
+        } catch (Exception e) {
+            System.out.print(e);
+        }
+
+        // black text labeling the name of the patient and dob of the patient
+        // and nurse that is logged on currently
+        welcome = new Text("Welcome in, " + nurse_name);
         welcome.setFont(Font.font("Times New Roman", 14));
         welcome.setFill(Color.BLACK);
 
-        patient = new Text("Patient: Adam Samler");
+        patient = new Text("Patient: " + patient_name);
         patient.setFont(Font.font("Times New Roman", 14));
         patient.setFill(Color.BLACK);
 
-        dob = new Text("DOB: 01/09/2007");
+        dob = new Text("DOB: " + patient_dob);
         dob.setFont(Font.font("Times New Roman", 14));
         dob.setFill(Color.BLACK);
 
@@ -47,8 +85,10 @@ public class NurseMessageConfirmation extends StackPane
         confirmation.setFill(Color.BLACK);
 
         //button for the user to go back to their home screen where they are logged
-        //on as a doctor and can select a patient from the patient list
+        //on as a nurse and can select a patient from the patient list
         back = new Button("Back");
+        ForwardButton handler = new ForwardButton(21);
+        back.setOnAction(handler);
 
         //vertical box to store title and welcome contents
         VBox titleBox = new VBox(3);
@@ -73,4 +113,12 @@ public class NurseMessageConfirmation extends StackPane
         this.getChildren().add(titleBox);
         this.getChildren().add(bp);
     } //end constructor
+
+    // the following class is a custom exception to print error messages
+    private static class FailedException extends Exception {
+        private FailedException(String errorMessage) {
+            super(errorMessage);
+        } // end constructor
+    } // end FailedException class
+
 } //end nurse message confirmation class
