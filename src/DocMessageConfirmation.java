@@ -8,6 +8,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
+import java.sql.ResultSet;
 
 public class DocMessageConfirmation extends StackPane
 {
@@ -18,6 +19,7 @@ public class DocMessageConfirmation extends StackPane
 
     public DocMessageConfirmation()
     {
+        ResultSet rs = null;
         //establish color Falu Red as done on home screen
         mainColor = Color.rgb(128,32,32);
 
