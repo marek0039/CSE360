@@ -87,7 +87,7 @@ public class NurseMessageConfirmation extends StackPane
         //button for the user to go back to their home screen where they are logged
         //on as a nurse and can select a patient from the patient list
         back = new Button("Back");
-        ForwardButton handler = new ForwardButton(21); // EDIT: VERIFY IF RIGHT CASE
+        ForwardButton handler = new ForwardButton(21);
         back.setOnAction(handler);
 
         //vertical box to store title and welcome contents
